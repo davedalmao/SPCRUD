@@ -12,42 +12,49 @@ using System.Windows.Forms;
 
 namespace SPCRUD {
     public partial class Form1 : Form {
-        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["SystemDatabaseConnection1"].ConnectionString); // This is set in App.config
-        SqlCommand sqlCmd;
+        static string connectionStringConfig = ConfigurationManager.ConnectionStrings["SystemDatabaseConnection1"].ConnectionString;
         string EmployeeId = "";
 
+        #region Form1
+        //--------------- < region Form1 > ---------------
         public Form1() {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e) {
-            //dgvEmp.AutoGenerateColumns = false; // dgvEmp is DataGridView name  
-            // dgvEmp.DataSource = FetchEmpDetails();
             FetchEmpDetails();
         }
+        //--------------- </ region Form1 > ---------------
+        #endregion
 
         #region Functions
+        //--------------- < region Funtions > ---------------
+
         private void FetchEmpDetails() {
-            if (con.State == ConnectionState.Closed) {
-                con.Open();
+            //Load/Read Data from database
+            using (SqlConnection con = new SqlConnection(connectionStringConfig))
+            using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con)) {
+                try {
+                    con.Open();
+                    DataTable dt = new DataTable();
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sqlCmd.Parameters.AddWithValue("@ActionType", "ReadData");
+                    sqlCmd.Connection = con;
+                    SqlDataAdapter sqlSda = new SqlDataAdapter(sqlCmd);
+                    sqlSda.Fill(dt);
+
+                    dgvEmp.AutoGenerateColumns = false;
+                    dgvEmp.Columns[0].DataPropertyName = "EmployeeId";
+                    dgvEmp.Columns[1].DataPropertyName = "Name";
+                    dgvEmp.Columns[2].DataPropertyName = "City";
+                    dgvEmp.Columns[3].DataPropertyName = "Department";
+                    dgvEmp.Columns[4].DataPropertyName = "Gender";
+                    dgvEmp.DataSource = dt;
+                } catch (Exception ex) {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+
             }
-            DataTable dtData = new DataTable();
-            sqlCmd = new SqlCommand("spCRUD_Operations", con);
-            sqlCmd.CommandType = CommandType.StoredProcedure;
-            sqlCmd.Parameters.AddWithValue("@ActionType", "ReadData");
-            sqlCmd.Connection = con;
-
-            SqlDataAdapter sqlSda = new SqlDataAdapter(sqlCmd);
-            sqlSda.Fill(dtData);
-            con.Close();
-
-            dgvEmp.AutoGenerateColumns = false;
-            dgvEmp.Columns[0].DataPropertyName = "EmployeeId";
-            dgvEmp.Columns[1].DataPropertyName = "Name";
-            dgvEmp.Columns[2].DataPropertyName = "City";
-            dgvEmp.Columns[3].DataPropertyName = "Department";
-            dgvEmp.Columns[4].DataPropertyName = "Gender";
-            dgvEmp.DataSource = dtData;
         }
 
         private void RefreshData() {
@@ -58,175 +65,87 @@ namespace SPCRUD {
             comboBoxGen.SelectedIndex = -1;
             EmployeeId = "";
             btnDelete.Enabled = false;
-            //dgvEmp.AutoGenerateColumns = false;
-            //dgvEmp.DataSource = FetchEmpDetails();
             FetchEmpDetails();
         }
-
+        //--------------- </ region Funtions > ---------------
         #endregion
 
+        #region CRUD
+        //--------------- < region C R U D > ---------------
+
         private void btnSave_Click(object sender, EventArgs e) {
+            //Save or Update btn
             if (string.IsNullOrWhiteSpace(textBoxEmp.Text)) {
                 MessageBox.Show("Enter Employee Name !!!");
-                //textBoxEmp.Select();
             } else if (string.IsNullOrWhiteSpace(textBoxCity.Text)) {
                 MessageBox.Show("Enter Current City !!!");
-                //textBoxCity.Select();
             } else if (string.IsNullOrWhiteSpace(textBoxDept.Text)) {
                 MessageBox.Show("Enter Department !!!");
-                //textBoxDept.Select();
             } else if (comboBoxGen.SelectedIndex <= -1) {
                 MessageBox.Show("Select Gender !!!");
-                //comboBoxGen.Select();
             } else {
-                try {
-                    if (con.State == ConnectionState.Closed) {
-                        con.Open();
-                    }
-
+                using (SqlConnection con = new SqlConnection(connectionStringConfig)) {
+                    con.Open();
                     SqlDataAdapter sda = new SqlDataAdapter("SELECT Name FROM tblEmployee WHERE Name = @Name", con);
                     sda.SelectCommand.Parameters.AddWithValue("@Name", textBoxEmp.Text); //Parameterized query for SqlDataAdapter
                     DataTable dt = new DataTable();
                     sda.Fill(dt);
 
                     if (dt.Rows.Count >= 1) {
-                        MessageBox.Show("Name Already Exists!", "!");
+                        MessageBox.Show($"{textBoxEmp.Text} Already Exists!", "!");
                     } else {
                         using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con)) {
-                            sqlCmd.CommandType = CommandType.StoredProcedure;
-                            sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                            sqlCmd.Parameters.AddWithValue("@Name", textBoxEmp.Text);
-                            sqlCmd.Parameters.AddWithValue("@City", textBoxCity.Text);
-                            sqlCmd.Parameters.AddWithValue("@Department", textBoxDept.Text);
-                            sqlCmd.Parameters.AddWithValue("@Gender", comboBoxGen.Text);
-                            sqlCmd.Parameters.AddWithValue("@ActionType", "CreateOrUpdateData");
-                            sqlCmd.ExecuteNonQuery();
+                            try {
+                                sqlCmd.CommandType = CommandType.StoredProcedure;
+                                sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                                sqlCmd.Parameters.AddWithValue("@Name", textBoxEmp.Text);
+                                sqlCmd.Parameters.AddWithValue("@City", textBoxCity.Text);
+                                sqlCmd.Parameters.AddWithValue("@Department", textBoxDept.Text);
+                                sqlCmd.Parameters.AddWithValue("@Gender", comboBoxGen.Text);
+                                sqlCmd.Parameters.AddWithValue("@ActionType", "CreateOrUpdateData");
+                                sqlCmd.ExecuteNonQuery();
 
-                            if (btnSave.Text == "Save") {
-                                MessageBox.Show("Record Saved Successfully !!!");
-                            } else {
-                                MessageBox.Show("Record Updated Successfully !!!");
+                                if (btnSave.Text == "Save")
+                                    MessageBox.Show("Record Saved Successfully !!!");
+                                else
+                                    MessageBox.Show("Record Updated Successfully !!!");
+
+                                RefreshData();
+                            } catch (Exception ex) {
+                                MessageBox.Show("Error: " + ex.Message);
                             }
-                            RefreshData();
                         }
                     }
-
-                    /*if (numRes > 0) {
-                                                   MessageBox.Show("Record Saved Successfully !!!");
-                                                   RefreshData();
-                                               } else
-                                                   MessageBox.Show("Please Try Again !!! t");*/
-                    /*using (SqlCommand command = new SqlCommand("spCRUD_Operations", con)) {
-                      command.CommandType = CommandType.StoredProcedure;
-                      command.Parameters.AddWithValue("@ActionType", "CheckIfUserExists");
-                      command.Parameters.AddWithValue("@Name", textBoxEmp.Text);
-                      var returnCode = Convert.ToInt32(command.ExecuteScalar());
-                      if (returnCode == 1) {
-                          MessageBox.Show("1");
-                      } else {
-                          MessageBox.Show("0");
-                      }
-                  }
-
-
-               int selectedrowindex = dgvEmp.SelectedCells[0].RowIndex;
-                 DataGridViewRow selectedRow = dgvEmp.Rows[selectedrowindex];
-                 string InitialName = Convert.ToString(selectedRow.Cells["Name"].Value);
-
-                 using (SqlCommand command = new SqlCommand("spCRUD_Operations", con))
-                 {
-                     command.CommandType = CommandType.StoredProcedure;
-                     command.Parameters.AddWithValue("@ActionType", "CheckIfUserExists");
-                     command.Parameters.AddWithValue("@Name", InitialName);
-                     var returnCode = Convert.ToInt32(command.ExecuteScalar());
-                     if (returnCode == 1)
-                     {
-                         using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con))
-                         {
-                             DataTable dtData = new DataTable();
-                             sqlCmd.CommandType = CommandType.StoredProcedure;
-                             sqlCmd.Parameters.AddWithValue("@ActionType", "UpdateData");
-                             sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                             sqlCmd.Parameters.AddWithValue("@Name", textBoxEmp.Text);
-                             sqlCmd.Parameters.AddWithValue("@City", textBoxCity.Text);
-                             sqlCmd.Parameters.AddWithValue("@Department", textBoxDept.Text);
-                             sqlCmd.Parameters.AddWithValue("@Gender", comboBoxGen.Text);
-                             int numRes = sqlCmd.ExecuteNonQuery();
-                             if (numRes > 0)
-                             {
-                                 MessageBox.Show("Record Saved Successfully !!!");
-                                 RefreshData();
-                             }
-                             else
-                                 MessageBox.Show("Please Try Again !!! t");
-                         }
-                     }
-                     else
-                     {
-                         using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con))
-                         {
-                             DataTable dtData = new DataTable();
-                             sqlCmd.CommandType = CommandType.StoredProcedure;
-                             sqlCmd.Parameters.AddWithValue("@ActionType", "CreateData");
-                             sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                             sqlCmd.Parameters.AddWithValue("@Name", textBoxEmp.Text);
-                             sqlCmd.Parameters.AddWithValue("@City", textBoxCity.Text);
-                             sqlCmd.Parameters.AddWithValue("@Department", textBoxDept.Text);
-                             sqlCmd.Parameters.AddWithValue("@Gender", comboBoxGen.Text);
-                             int numRes = sqlCmd.ExecuteNonQuery();
-                             if (numRes > 0)
-                             {
-                                 MessageBox.Show("Record Saved Successfully !!!");
-                                 RefreshData();
-                             }
-                             else
-                                 MessageBox.Show("Please Try Again !!! b");
-                         }
-                     }
-
-                     label1.Text = returnCode.ToString();*/
-                    /* if (userCount > 0)
-                     {
-                         MessageBox.Show("Name Already Exists","!");
-                     }
-                     else
-                     {
-                         using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con))
-                         {
-                             DataTable dtData = new DataTable();
-                             sqlCmd.CommandType = CommandType.StoredProcedure;
-                             sqlCmd.Parameters.AddWithValue("@ActionType", "CreateData");
-                             sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                             sqlCmd.Parameters.AddWithValue("@Name", textBoxEmp.Text);
-                             sqlCmd.Parameters.AddWithValue("@City", textBoxCity.Text);
-                             sqlCmd.Parameters.AddWithValue("@Department", textBoxDept.Text);
-                             sqlCmd.Parameters.AddWithValue("@Gender", comboBoxGen.Text);
-                             int numRes = sqlCmd.ExecuteNonQuery();
-                             if (numRes > 0)
-                             {
-                                 MessageBox.Show("Record Saved Successfully !!!");
-                                 RefreshData();
-                             }
-                             else
-                                 MessageBox.Show("Please Try Again !!!");
-                         }
-                     }
-                }*/
-                } catch (Exception ex) {
-                    MessageBox.Show("Error: " + ex.Message);
-                } finally {
-                    con.Close();
                 }
             }
         }
 
+        private void btnDelete_Click(object sender, EventArgs e) {
+            int selectedRowCount = dgvEmp.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            if (selectedRowCount >= 0) {
+                using (SqlConnection con = new SqlConnection(connectionStringConfig))
+                using (SqlCommand sqlCmd = new SqlCommand("spCRUD_Operations", con)) {
+                    try {
+                        con.Open();
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
+                        sqlCmd.Parameters.AddWithValue("@ActionType", "DeleteData");
+                        sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                        sqlCmd.ExecuteNonQuery();
+                        MessageBox.Show("Record Deleted Successfully !!!");
+                        RefreshData();
+                    } catch (Exception ex) {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
+                }
+            } else {
+                MessageBox.Show("Please Select A Record !!!");
+            }
+        }
+        //--------------- </ region C R U D > ---------------
+        #endregion
+
         private void dgvEmp_CellClick(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex != -1) {
-                /* int selectedrowindex = dgvEmp.SelectedCells[0].RowIndex;
-                 DataGridViewRow selectedRow = dgvEmp.Rows[selectedrowindex];
-                 string InitialName = Convert.ToString(selectedRow.Cells["EmployeeName"].Value); //@Name ni if this exist dont save 
-                 label5.Text = InitialName;*/
-
                 DataGridViewRow row = dgvEmp.Rows[e.RowIndex];
                 EmployeeId = row.Cells[0].Value.ToString(); //The Employee ID is determined here
                 textBoxEmp.Text = row.Cells[1].Value.ToString();
@@ -236,36 +155,6 @@ namespace SPCRUD {
                 btnSave.Text = "Update";
                 btnDelete.Enabled = true;
             }
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e) {
-            int selectedRowCount = dgvEmp.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRowCount >= 0) {
-                try {
-                    if (con.State == ConnectionState.Closed) {
-                        con.Open();
-                    }
-                    DataTable dtData = new DataTable();
-                    sqlCmd = new SqlCommand("spCRUD_Operations", con);
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.AddWithValue("@ActionType", "DeleteData");
-                    sqlCmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                    sqlCmd.ExecuteNonQuery();
-                    MessageBox.Show("Record Deleted Successfully !!!");
-                    RefreshData();
-                } catch (Exception ex) {
-                    MessageBox.Show("Error:- " + ex.Message);
-                }
-            } else {
-                MessageBox.Show("Please Select A Record !!!");
-            }
-            /* con.Open();
-             string query = "TRUNCATE TABLE tblEmployee";
-             SqlCommand sqlCmd = new SqlCommand(query, con);
-             sqlCmd.ExecuteNonQuery();
-             con.Close();
-
-             RefreshData();*/
         }
 
         private void btnClear_Click(object sender, EventArgs e) {
