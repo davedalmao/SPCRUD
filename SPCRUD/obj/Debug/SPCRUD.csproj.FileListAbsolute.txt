@@ -3,10 +3,13 @@ D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\Database_log.ldf
 D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\SPCRUD.exe.config
 D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\SPCRUD.exe
 D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\SPCRUD.pdb
+D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\ComponentFactory.Krypton.Toolkit.dll
+D:\Visual Studio\SPCRUD\SPCRUD\bin\Debug\ComponentFactory.Krypton.Toolkit.pdb
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.Form1.resources
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.Properties.Resources.resources
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csproj.GenerateResource.cache
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csproj.CoreCompileInputs.cache
+D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csproj.CopyComplete
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.exe
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.pdb
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csprojAssemblyReference.cache

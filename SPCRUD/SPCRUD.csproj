@@ -48,9 +48,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentFactory.Krypton.Toolkit">
+      <HintPath>bin\Krypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,6 +85,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -103,6 +108,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Database.mdf</DependentUpon>
     </Content>
+    <None Include="Resources\parent-fill.png" />
+    <None Include="Resources\parent-line.png" />
+    <None Include="Resources\honour-fill.png" />
+    <None Include="Resources\community-fill.png" />
+    <None Include="Resources\user-3-fill %282%29.png" />
+    <None Include="Resources\delete-bin-5-line %281%29.png" />
+    <None Include="Resources\refresh-line %281%29.png" />
+    <None Include="Resources\menu-add-line %281%29.png" />
+    <None Include="Resources\menu-add-line.png" />
+    <None Include="Resources\refresh-line.png" />
+    <None Include="Resources\delete-bin-5-line.png" />
+    <None Include="Resources\menu-add-fill.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
