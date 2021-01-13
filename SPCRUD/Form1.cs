@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Deployment.Application;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,13 +15,14 @@ using System.Windows.Forms;
 
 namespace SPCRUD {
     public partial class Form1 : Form {
-        static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnection1" ].ConnectionString;
+        static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnection" ].ConnectionString;
         string EmployeeId = "";
 
         #region Form1
         //--------------- < region Form1 > ---------------
         public Form1() {
             InitializeComponent();
+            SetAddRemoveProgramsIcon();
         }
 
         private void Form1_Load( object sender, EventArgs e ) {
@@ -64,9 +68,37 @@ namespace SPCRUD {
             textBoxCity1.Text = "";
             textBoxDept1.Text = "";
             comboBoxGen1.SelectedIndex = -1;
+            comboBoxGen1.Text = "";
             EmployeeId = "";
             btnDelete.Enabled = false;
             FetchEmpDetails();
+        }
+
+        private void SetAddRemoveProgramsIcon() {
+            //This Icon is seen in control panel (uninstalling the app)
+            if ( ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun ) {
+                try {
+                    var iconSourcePath = Path.Combine( Application.StartupPath, "briefcase-4-fill.ico" );
+
+                    if ( !File.Exists( iconSourcePath ) ) return;
+
+                    var myUninstallKey = Registry.CurrentUser.OpenSubKey( @"Software\Microsoft\Windows\CurrentVersion\Uninstall" );
+                    if ( myUninstallKey == null ) return;
+
+                    var mySubKeyNames = myUninstallKey.GetSubKeyNames();
+                    foreach ( var subkeyName in mySubKeyNames ) {
+                        var myKey = myUninstallKey.OpenSubKey( subkeyName, true );
+                        var myValue = myKey.GetValue( "DisplayName" );
+                        if ( myValue != null && myValue.ToString() == "SP CRUD" ) // same as in 'Product name:' field
+                        {
+                            myKey.SetValue( "DisplayIcon", iconSourcePath );
+                            break;
+                        }
+                    }
+                } catch ( Exception ex ) {
+                    MessageBox.Show( "Error: " + ex.Message );
+                }
+            }
         }
         //--------------- </ region Funtions > ---------------
         #endregion
