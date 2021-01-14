@@ -116,37 +116,28 @@ namespace SPCRUD {
             } else if ( comboBoxGen1.SelectedIndex <= -1 ) {
                 MessageBox.Show( "Select Gender !!!" );
             } else {
-                using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
-                    con.Open();
-                    SqlDataAdapter sda = new SqlDataAdapter( "SELECT Name FROM tblEmployee WHERE Name = @Name", con );
-                    sda.SelectCommand.Parameters.AddWithValue( "@Name", textBoxEmp1.Text ); //Parameterized query for SqlDataAdapter
-                    DataTable dt = new DataTable();
-                    sda.Fill( dt );
+                using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+                using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+                    try {
+                        con.Open();
+                        DataTable dtData = new DataTable();
 
-                    if ( dt.Rows.Count >= 1 ) {
-                        MessageBox.Show( $"{textBoxEmp1.Text} Already Exists!", "!" );
-                    } else {
-                        using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-                            try {
-                                sqlCmd.CommandType = CommandType.StoredProcedure;
-                                sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
-                                sqlCmd.Parameters.AddWithValue( "@Name", textBoxEmp1.Text );
-                                sqlCmd.Parameters.AddWithValue( "@City", textBoxCity1.Text );
-                                sqlCmd.Parameters.AddWithValue( "@Department", textBoxDept1.Text );
-                                sqlCmd.Parameters.AddWithValue( "@Gender", comboBoxGen1.Text );
-                                sqlCmd.Parameters.AddWithValue( "@ActionType", "CreateOrUpdateData" );
-                                sqlCmd.ExecuteNonQuery();
-
-                                if ( btnSave.Text == "Save" )
-                                    MessageBox.Show( "Record Saved Successfully !!!" );
-                                else
-                                    MessageBox.Show( "Record Updated Successfully !!!" );
-
-                                RefreshData();
-                            } catch ( Exception ex ) {
-                                MessageBox.Show( "Error: " + ex.Message );
-                            }
-                        }
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
+                        sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
+                        sqlCmd.Parameters.AddWithValue( "@Name", textBoxEmp1.Text );
+                        sqlCmd.Parameters.AddWithValue( "@City", textBoxCity1.Text );
+                        sqlCmd.Parameters.AddWithValue( "@Department", textBoxDept1.Text );
+                        sqlCmd.Parameters.AddWithValue( "@Gender", comboBoxGen1.Text );
+                        sqlCmd.Parameters.AddWithValue( "@ActionType", "CreateOrUpdateData" );
+                        int numRes = sqlCmd.ExecuteNonQuery();
+                        string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
+                        if ( numRes > 0 ) {
+                            MessageBox.Show( $"Record {ActionType} Successfully !!!" );
+                            RefreshData();
+                        } else
+                            MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
+                    } catch ( Exception ex ) {
+                        MessageBox.Show( "Error: " + ex.Message );
                     }
                 }
             }
@@ -192,6 +183,7 @@ namespace SPCRUD {
                 btnSave.Text = "Update";
                 btnDelete.Enabled = true;
             }
+
         }
     }
 }

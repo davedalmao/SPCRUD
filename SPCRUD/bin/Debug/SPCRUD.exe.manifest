@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="SPCRUD.exe" version="1.0.0.3" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="SPCRUD.exe" version="1.0.0.4" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="briefcase-4-fill.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -62,7 +62,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PEBXe5cEGuYfwFSb+RAgoQPKB8tN+eTPKg7DpMPErU8=</dsig:DigestValue>
+        <dsig:DigestValue>qNXPtx9dCe7l6Dfkdq9YWoNdASRk09xPFR6bP/8uNhQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -81,7 +81,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>2qUnnwjN0JXTqcO7EnlrsGDPOfYAKRCg8m9T6NArEw0=</dsig:DigestValue>
+      <dsig:DigestValue>8suZc8jIlqM0Nw2TZvwJFFsHzSI0TcF9874e1Ha74UA=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
@@ -90,16 +90,16 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>GD+yzPuTU7BM3z6EUHnvkqAvgjadgu62hCFJU4pyH4c=</dsig:DigestValue>
+      <dsig:DigestValue>WtuZq9CKLQUKpEC6A4mPbWTYEUr6CLADGz6H8fp3W+w=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SPCRUD.exe.config" size="817">
+  <file name="SPCRUD.exe.config" size="820">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>q9Jph5rzrDi1uwyCKhGT1JiidgHlvtg8wOvBxr7T5DI=</dsig:DigestValue>
+      <dsig:DigestValue>8Dc8a2mey+a6VdAw21WGt90JQAV5VTsCHTBAOtXkht8=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>
