@@ -33,7 +33,6 @@ namespace SPCRUD {
 
         #region Functions
         //--------------- < region Funtions > ---------------
-
         private void FetchEmpDetails() {
             //Load/Read Data from database
             using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
@@ -167,7 +166,6 @@ namespace SPCRUD {
         //--------------- </ region Save/Update and Delete > ---------------
         #endregion
 
-
         private void btnRefresh_Click( object sender, EventArgs e ) {
             RefreshData();
         }
@@ -183,7 +181,6 @@ namespace SPCRUD {
                 btnSave.Text = "Update";
                 btnDelete.Enabled = true;
             }
-
         }
     }
 }
