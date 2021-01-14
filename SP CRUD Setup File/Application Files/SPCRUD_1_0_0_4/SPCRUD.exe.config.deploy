@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<startup>
+		<supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2" />
+	</startup>
+	<connectionStrings>
+		<!--Right Click References
+			Add Reference
+			Check System.Configuration
+			Click OK-->
+		<!--Development ConnectionString-->
+		<add name="SystemDatabaseConnectionTemp" connectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Visual Studio\SPCRUD\SPCRUD\Database.mdf;Integrated Security=True" providerName="System.Data.SqlClient"/>
+
+		<!--Final ConnectionString-->
+		<add name="SystemDatabaseConnection" connectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True" providerName="System.Data.SqlClient" />
+
+	</connectionStrings>
+</configuration>

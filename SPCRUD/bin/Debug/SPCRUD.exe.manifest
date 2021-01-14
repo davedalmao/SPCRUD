@@ -62,7 +62,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>qNXPtx9dCe7l6Dfkdq9YWoNdASRk09xPFR6bP/8uNhQ=</dsig:DigestValue>
+        <dsig:DigestValue>lxdoTC8vPbRiCeVjDBz76O7hyML+ElcRI6wdku0w4gU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -81,7 +81,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>8suZc8jIlqM0Nw2TZvwJFFsHzSI0TcF9874e1Ha74UA=</dsig:DigestValue>
+      <dsig:DigestValue>78OW5/q7+t3Hn9PS0KBwPB37Vpbrma7AxHiwcnplF3Q=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
@@ -90,7 +90,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>WtuZq9CKLQUKpEC6A4mPbWTYEUr6CLADGz6H8fp3W+w=</dsig:DigestValue>
+      <dsig:DigestValue>pD3hGLRaxUXYG0MNsJ/ZPLQQQfEMblszkKBOzrMRVng=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SPCRUD.exe.config" size="820">
