@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace SPCRUD {
     public partial class Form1 : Form {
-        static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnection" ].ConnectionString;
+        static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnectionTemp" ].ConnectionString;
         string EmployeeId = "";
 
         #region Form1
@@ -136,31 +136,39 @@ namespace SPCRUD {
                         } else
                             MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
                     } catch ( Exception ex ) {
-                        MessageBox.Show( "Error: " + ex.Message );
+                        MessageBox.Show( "Error: dddddddddddd" + ex.Message );
                     }
                 }
             }
         }
 
         private void btnDelete_Click( object sender, EventArgs e ) {
-            int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
-            if ( selectedRowCount >= 0 ) {
-                using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-                using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-                    try {
-                        con.Open();
-                        sqlCmd.CommandType = CommandType.StoredProcedure;
-                        sqlCmd.Parameters.AddWithValue( "@ActionType", "DeleteData" );
-                        sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
-                        sqlCmd.ExecuteNonQuery();
-                        MessageBox.Show( "Record Deleted Successfully !!!" );
-                        RefreshData();
-                    } catch ( Exception ex ) {
-                        MessageBox.Show( "Error: " + ex.Message );
-                    }
-                }
-            } else {
-                MessageBox.Show( "Please Select A Record !!!" );
+            /*  int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
+             if ( selectedRowCount >= 0 ) {
+                 using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+                 using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+                     try {
+                         con.Open();
+                         sqlCmd.CommandType = CommandType.StoredProcedure;
+                         sqlCmd.Parameters.AddWithValue( "@ActionType", "DeleteData" );
+                         sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
+                         sqlCmd.ExecuteNonQuery();
+                         MessageBox.Show( "Record Deleted Successfully !!!" );
+                         RefreshData();
+                     } catch ( Exception ex ) {
+                         MessageBox.Show( "Error: " + ex.Message );
+                     }
+                 }
+             } else {
+                 MessageBox.Show( "Please Select A Record !!!" );
+             }*/
+            using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
+                con.Open();
+                string query = "TRUNCATE TABLE tblEmployee";
+                SqlCommand sqlCmd = new SqlCommand( query, con );
+                sqlCmd.ExecuteNonQuery();
+                con.Close();
+                RefreshData();
             }
         }
         //--------------- </ region Save/Update and Delete > ---------------
