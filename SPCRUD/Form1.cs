@@ -136,7 +136,7 @@ namespace SPCRUD {
                         } else
                             MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
                     } catch ( Exception ex ) {
-                        MessageBox.Show( "Error: dddddddddddd" + ex.Message );
+                        MessageBox.Show( "Error: dddddddddddd " + ex.Message );
                     }
                 }
             }
