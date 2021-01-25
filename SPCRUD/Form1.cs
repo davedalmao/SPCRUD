@@ -58,7 +58,6 @@ namespace SPCRUD {
 				} catch ( Exception ex ) {
 					MessageBox.Show( "Error: " + ex.Message );
 				}
-
 			}
 		}
 
@@ -78,19 +77,21 @@ namespace SPCRUD {
 			//This Icon is seen in control panel (uninstalling the app)
 			if ( ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun ) {
 				try {
+					//The icon located in: (Right click Project -> Properties -> Application (tab) -> Icon)
 					var iconSourcePath = Path.Combine( Application.StartupPath, "briefcase-4-fill.ico" );
 
-					if ( !File.Exists( iconSourcePath ) ) return;
+					if ( !File.Exists( iconSourcePath ) )
+						return;
 
 					var myUninstallKey = Registry.CurrentUser.OpenSubKey( @"Software\Microsoft\Windows\CurrentVersion\Uninstall" );
-					if ( myUninstallKey == null ) return;
+					if ( myUninstallKey == null )
+						return;
 
 					var mySubKeyNames = myUninstallKey.GetSubKeyNames();
 					foreach ( var subkeyName in mySubKeyNames ) {
 						var myKey = myUninstallKey.OpenSubKey( subkeyName, true );
 						var myValue = myKey.GetValue( "DisplayName" );
-						if ( myValue != null && myValue.ToString() == "SP CRUD" ) // same as in 'Product name:' field
-						{
+						if ( myValue != null && myValue.ToString() == "SP CRUD" ) { // same as in 'Product name:' field (Located in: Right click Project -> Properties -> Publish (tab) -> Options -> Description)
 							myKey.SetValue( "DisplayIcon", iconSourcePath );
 							break;
 						}
@@ -135,42 +136,43 @@ namespace SPCRUD {
 						} else
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
 					} catch ( SqlException ex ) {
-						if ( ex.Number == 2627 ) { // Violation of unique constraint
+						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
+						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
-						}
 					}
 				}
 			}
 		}
 
 		private void btnDelete_Click( object sender, EventArgs e ) {
-			/*  int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
-             if ( selectedRowCount >= 0 ) {
-                 using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-                 using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-                     try {
-                         con.Open();
-                         sqlCmd.CommandType = CommandType.StoredProcedure;
-                         sqlCmd.Parameters.AddWithValue( "@ActionType", "DeleteData" );
-                         sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
-                         sqlCmd.ExecuteNonQuery();
-                         MessageBox.Show( "Record Deleted Successfully !!!" );
-                         RefreshData();
-                     } catch ( Exception ex ) {
-                         MessageBox.Show( "Error: " + ex.Message );
-                     }
-                 }
-             } else {
-                 MessageBox.Show( "Please Select A Record !!!" );
-             }*/
-			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
+			int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
+			if ( selectedRowCount >= 0 ) {
+				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+					try {
+						con.Open();
+						sqlCmd.CommandType = CommandType.StoredProcedure;
+						sqlCmd.Parameters.AddWithValue( "@ActionType", "DeleteData" );
+						sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
+						sqlCmd.ExecuteNonQuery();
+						MessageBox.Show( "Record Deleted Successfully !!!" );
+						RefreshData();
+					} catch ( Exception ex ) {
+						MessageBox.Show( "Error: " + ex.Message );
+					}
+				}
+			} else {
+				MessageBox.Show( "Please Select A Record !!!" );
+			}
+			/*  DELETE ALL RECORDS
+				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
 				con.Open();
 				string query = "TRUNCATE TABLE tblEmployee";
 				SqlCommand sqlCmd = new SqlCommand( query, con );
 				sqlCmd.ExecuteNonQuery();
 				con.Close();
 				RefreshData();
-			}
+			}*/
 		}
 		//--------------- </ region Save/Update and Delete > ---------------
 		#endregion
@@ -193,7 +195,7 @@ namespace SPCRUD {
 		}
 
 		private void dgvEmp_CellFormatting( object sender, DataGridViewCellFormattingEventArgs e ) {
-			//display encrypted value of "Name" column (for non-admin) 
+			//display encrypted value of "Name" column (for non-admin)  with decryptbypassphrase
 			//dgv.Cells[ 1 ].Value.GetType() is typeof( System.Int16 )
 			/* if ( dgvEmp.Rows.Count == 0 && e.ColumnIndex == 1 && dgvEmp[ 0, 1 ].ValueType == typeof( string ) ) {
                  if ( e.Value != null ) {
