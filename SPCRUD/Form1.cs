@@ -139,6 +139,8 @@ namespace SPCRUD {
 						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
+					} catch ( Exception ex ) {
+						MessageBox.Show( "Error: " + ex.Message );
 					}
 				}
 			}
