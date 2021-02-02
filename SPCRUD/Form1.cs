@@ -42,7 +42,7 @@ namespace SPCRUD {
 					con.Open();
 					DataTable dt = new DataTable();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.AddWithValue( "@ActionType", "ReadData" );
+					sqlCmd.Parameters.AddWithValue( "@action_type", "ReadData" );
 					sqlCmd.Connection = con;
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
 					sqlSda.Fill( dt );
@@ -117,17 +117,26 @@ namespace SPCRUD {
 			} else if ( comboBoxGen1.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
+
+				/*  @employee_id INT = NULL,  
+    @employee_name NVARCHAR (250) = NULL,  
+    @city NVARCHAR(20) = NULL,  
+    @department NVARCHAR(20) = NULL,  
+    @gender NVARCHAR(6) = NULL,  
+    --@Initialemployee_name NVARCHAR(25) = NULL,  
+    @action_type NVARCHAR(25)
+				 */
 				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
 				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
 					try {
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
-						sqlCmd.Parameters.AddWithValue( "@Name", textBoxEmp1.Text );
-						sqlCmd.Parameters.AddWithValue( "@City", textBoxCity1.Text );
-						sqlCmd.Parameters.AddWithValue( "@Department", textBoxDept1.Text );
-						sqlCmd.Parameters.AddWithValue( "@Gender", comboBoxGen1.Text );
-						sqlCmd.Parameters.AddWithValue( "@ActionType", "CreateOrUpdateData" );
+						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );
+						sqlCmd.Parameters.AddWithValue( "@employee_name", textBoxEmp1.Text );
+						sqlCmd.Parameters.AddWithValue( "@city", textBoxCity1.Text );
+						sqlCmd.Parameters.AddWithValue( "@department", textBoxDept1.Text );
+						sqlCmd.Parameters.AddWithValue( "@gender", comboBoxGen1.Text );
+						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
 						if ( numRes > 0 ) {
@@ -154,8 +163,8 @@ namespace SPCRUD {
 					try {
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@ActionType", "DeleteData" );
-						sqlCmd.Parameters.AddWithValue( "@EmployeeId", EmployeeId );
+						sqlCmd.Parameters.AddWithValue( "@action_type", "DeleteData" );
+						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );
 						sqlCmd.ExecuteNonQuery();
 						MessageBox.Show( "Record Deleted Successfully !!!" );
 						RefreshData();
@@ -186,11 +195,12 @@ namespace SPCRUD {
 		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
 			if ( e.RowIndex != -1 ) {
 				DataGridViewRow row = dgvEmp.Rows[ e.RowIndex ];
-				EmployeeId = row.Cells[ 0 ].Value.ToString(); //The Employee ID is determined here
-				textBoxEmp1.Text = row.Cells[ 1 ].Value.ToString();
-				textBoxCity1.Text = row.Cells[ 2 ].Value.ToString();
-				textBoxDept1.Text = row.Cells[ 3 ].Value.ToString();
-				comboBoxGen1.Text = row.Cells[ 4 ].Value.ToString();
+				//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
+				EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
+				textBoxEmp1.Text = row.Cells[ 1 ].Value?.ToString();
+				textBoxCity1.Text = row.Cells[ 2 ].Value?.ToString();
+				textBoxDept1.Text = row.Cells[ 3 ].Value?.ToString();
+				comboBoxGen1.Text = row.Cells[ 4 ].Value?.ToString();
 				btnSave.Text = "Update";
 				btnDelete.Enabled = true;
 			}
