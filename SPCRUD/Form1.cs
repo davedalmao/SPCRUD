@@ -47,13 +47,14 @@ namespace SPCRUD {
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
 					sqlSda.Fill( dt );
 
-					dgvEmp.AutoGenerateColumns = false;
-					// The property names are the datagridview headers
-					dgvEmp.Columns[ 0 ].DataPropertyName = "EmployeeId"; // This is Employee Id at the datagridview
-					dgvEmp.Columns[ 1 ].DataPropertyName = "Name";
-					dgvEmp.Columns[ 2 ].DataPropertyName = "City";
-					dgvEmp.Columns[ 3 ].DataPropertyName = "Department";
-					dgvEmp.Columns[ 4 ].DataPropertyName = "Gender";
+					dgvEmp.AutoGenerateColumns = false;//if true displays all the records in the database
+
+					// The property names are the table fields
+					dgvEmp.Columns[ 0 ].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
+					dgvEmp.Columns[ 1 ].DataPropertyName = "employee_name";
+					dgvEmp.Columns[ 2 ].DataPropertyName = "city";
+					dgvEmp.Columns[ 3 ].DataPropertyName = "department";
+					dgvEmp.Columns[ 4 ].DataPropertyName = "gender";
 					dgvEmp.DataSource = dt;
 				} catch ( Exception ex ) {
 					MessageBox.Show( "Error: " + ex.Message );
