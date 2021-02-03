@@ -49,7 +49,7 @@ namespace SPCRUD {
 
 					dgvEmp.AutoGenerateColumns = false;//if true displays all the records in the database
 
-					// The property names are the table fields
+					// The property names are the column names in dbo.Employee
 					dgvEmp.Columns[ 0 ].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
 					dgvEmp.Columns[ 1 ].DataPropertyName = "employee_name";
 					dgvEmp.Columns[ 2 ].DataPropertyName = "city";
