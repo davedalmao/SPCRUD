@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SPCRUD {
-
+	//Icon Size: 24 px
+	//Icon Color: #ACBCD4
 	public partial class Form1 : Form {
 		static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnectionTemp" ].ConnectionString;
 		string EmployeeId = "";

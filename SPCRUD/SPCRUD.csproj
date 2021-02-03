@@ -131,6 +131,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>Database.mdf</DependentUpon>
     </Content>
+    <None Include="Resources\calendar-event-fill.png" />
+    <None Include="Resources\secure-payment-fill.png" />
+    <None Include="Resources\health-book-fill.png" />
+    <None Include="Resources\hospital-fill.png" />
     <None Include="Resources\parent-fill.png" />
     <None Include="Resources\parent-line.png" />
     <None Include="Resources\honour-fill.png" />

@@ -63,6 +63,16 @@ namespace SPCRUD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap calendar_event_fill {
+            get {
+                object obj = ResourceManager.GetObject("calendar-event-fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap community_fill {
             get {
                 object obj = ResourceManager.GetObject("community-fill", resourceCulture);
@@ -93,9 +103,29 @@ namespace SPCRUD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap health_book_fill {
+            get {
+                object obj = ResourceManager.GetObject("health-book-fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap honour_fill {
             get {
                 object obj = ResourceManager.GetObject("honour-fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap hospital_fill {
+            get {
+                object obj = ResourceManager.GetObject("hospital-fill", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -166,6 +196,16 @@ namespace SPCRUD.Properties {
         internal static System.Drawing.Bitmap refresh_line__1_ {
             get {
                 object obj = ResourceManager.GetObject("refresh-line (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap secure_payment_fill {
+            get {
+                object obj = ResourceManager.GetObject("secure-payment-fill", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
