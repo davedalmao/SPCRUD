@@ -30,6 +30,15 @@ namespace SPCRUD {
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.dgvEmp = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+			this.EmpId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.EmployeeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Department = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Gender = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.textBoxEmp1 = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
 			this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -40,16 +49,7 @@ namespace SPCRUD {
 			this.comboBoxGen1 = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
 			this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-			this.textBoxInsuranceStartDate = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
-			this.EmpId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.EmployeeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Department = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Gender = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dtpInsuranceStartDate = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
 			this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.textBoxInsuranceMonthlyFee = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
 			this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -145,6 +145,63 @@ namespace SPCRUD {
 			this.dgvEmp.TabIndex = 16;
 			this.dgvEmp.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmp_CellClick);
 			this.dgvEmp.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEmp_CellFormatting);
+			// 
+			// EmpId
+			// 
+			this.EmpId.HeaderText = "Employee Id";
+			this.EmpId.Name = "EmpId";
+			this.EmpId.ReadOnly = true;
+			// 
+			// EmployeeName
+			// 
+			this.EmployeeName.HeaderText = "Name";
+			this.EmployeeName.Name = "EmployeeName";
+			this.EmployeeName.ReadOnly = true;
+			// 
+			// City
+			// 
+			this.City.HeaderText = "City";
+			this.City.Name = "City";
+			this.City.ReadOnly = true;
+			// 
+			// Department
+			// 
+			this.Department.HeaderText = "Department";
+			this.Department.Name = "Department";
+			this.Department.ReadOnly = true;
+			// 
+			// Gender
+			// 
+			this.Gender.HeaderText = "Gender";
+			this.Gender.Name = "Gender";
+			this.Gender.ReadOnly = true;
+			// 
+			// Column1
+			// 
+			this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.Column1.HeaderText = "Health Insurance Provider";
+			this.Column1.Name = "Column1";
+			this.Column1.ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this.Column2.HeaderText = "Insurance Plan Name";
+			this.Column2.Name = "Column2";
+			this.Column2.ReadOnly = true;
+			this.Column2.Width = 135;
+			// 
+			// Column3
+			// 
+			this.Column3.HeaderText = "Monthly Fee";
+			this.Column3.Name = "Column3";
+			this.Column3.ReadOnly = true;
+			// 
+			// Column4
+			// 
+			this.Column4.HeaderText = "Insurance Start Date";
+			this.Column4.Name = "Column4";
+			this.Column4.ReadOnly = true;
+			this.Column4.Width = 136;
 			// 
 			// textBoxEmp1
 			// 
@@ -260,73 +317,16 @@ namespace SPCRUD {
 			this.kryptonLabel7.TabIndex = 30;
 			this.kryptonLabel7.Values.Text = "";
 			// 
-			// textBoxInsuranceStartDate
+			// dtpInsuranceStartDate
 			// 
-			this.textBoxInsuranceStartDate.Location = new System.Drawing.Point(813, 162);
-			this.textBoxInsuranceStartDate.Name = "textBoxInsuranceStartDate";
-			this.textBoxInsuranceStartDate.Size = new System.Drawing.Size(346, 30);
-			this.textBoxInsuranceStartDate.StateActive.Content.Padding = new System.Windows.Forms.Padding(4);
-			this.textBoxInsuranceStartDate.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.textBoxInsuranceStartDate.StateCommon.Content.Padding = new System.Windows.Forms.Padding(4);
-			this.textBoxInsuranceStartDate.StateNormal.Content.Padding = new System.Windows.Forms.Padding(4);
-			this.textBoxInsuranceStartDate.TabIndex = 31;
-			// 
-			// EmpId
-			// 
-			this.EmpId.HeaderText = "Employee Id";
-			this.EmpId.Name = "EmpId";
-			this.EmpId.ReadOnly = true;
-			// 
-			// EmployeeName
-			// 
-			this.EmployeeName.HeaderText = "Name";
-			this.EmployeeName.Name = "EmployeeName";
-			this.EmployeeName.ReadOnly = true;
-			// 
-			// City
-			// 
-			this.City.HeaderText = "City";
-			this.City.Name = "City";
-			this.City.ReadOnly = true;
-			// 
-			// Department
-			// 
-			this.Department.HeaderText = "Department";
-			this.Department.Name = "Department";
-			this.Department.ReadOnly = true;
-			// 
-			// Gender
-			// 
-			this.Gender.HeaderText = "Gender";
-			this.Gender.Name = "Gender";
-			this.Gender.ReadOnly = true;
-			// 
-			// Column1
-			// 
-			this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.Column1.HeaderText = "Health Insurance Provider";
-			this.Column1.Name = "Column1";
-			this.Column1.ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this.Column2.HeaderText = "Insurance Plan Name";
-			this.Column2.Name = "Column2";
-			this.Column2.ReadOnly = true;
-			this.Column2.Width = 135;
-			// 
-			// Column3
-			// 
-			this.Column3.HeaderText = "Monthly Fee";
-			this.Column3.Name = "Column3";
-			this.Column3.ReadOnly = true;
-			// 
-			// Column4
-			// 
-			this.Column4.HeaderText = "Insurance Start Date";
-			this.Column4.Name = "Column4";
-			this.Column4.ReadOnly = true;
-			this.Column4.Width = 136;
+			this.dtpInsuranceStartDate.Location = new System.Drawing.Point(813, 162);
+			this.dtpInsuranceStartDate.Name = "dtpInsuranceStartDate";
+			this.dtpInsuranceStartDate.Size = new System.Drawing.Size(346, 30);
+			this.dtpInsuranceStartDate.StateActive.Content.Padding = new System.Windows.Forms.Padding(4);
+			this.dtpInsuranceStartDate.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.dtpInsuranceStartDate.StateCommon.Content.Padding = new System.Windows.Forms.Padding(4);
+			this.dtpInsuranceStartDate.StateNormal.Content.Padding = new System.Windows.Forms.Padding(4);
+			this.dtpInsuranceStartDate.TabIndex = 31;
 			// 
 			// kryptonLabel8
 			// 
@@ -410,7 +410,7 @@ namespace SPCRUD {
 			this.Controls.Add(this.textBoxInsurancePlanName);
 			this.Controls.Add(this.kryptonLabel10);
 			this.Controls.Add(this.textBoxHealthInsuranceProvider);
-			this.Controls.Add(this.textBoxInsuranceStartDate);
+			this.Controls.Add(this.dtpInsuranceStartDate);
 			this.Controls.Add(this.kryptonLabel7);
 			this.Controls.Add(this.kryptonLabel5);
 			this.Controls.Add(this.comboBoxGen1);
@@ -451,7 +451,7 @@ namespace SPCRUD {
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox comboBoxGen1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
-		private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker textBoxInsuranceStartDate;
+		private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker dtpInsuranceStartDate;
 		private System.Windows.Forms.DataGridViewTextBoxColumn EmpId;
 		private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
 		private System.Windows.Forms.DataGridViewTextBoxColumn City;

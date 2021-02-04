@@ -56,6 +56,13 @@ namespace SPCRUD {
 					dgvEmp.Columns[ 2 ].DataPropertyName = "city";
 					dgvEmp.Columns[ 3 ].DataPropertyName = "department";
 					dgvEmp.Columns[ 4 ].DataPropertyName = "gender";
+
+					dgvEmp.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
+					dgvEmp.Columns[ 6 ].DataPropertyName = "plan_name";
+					dgvEmp.Columns[ 7 ].DataPropertyName = "monthly_fee";
+					dgvEmp.Columns[ 8 ].DataPropertyName = "insurance_start_date";
+					dgvEmp.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
+
 					dgvEmp.DataSource = dt;
 				} catch ( Exception ex ) {
 					MessageBox.Show( "Error: " + ex.Message );
@@ -110,6 +117,7 @@ namespace SPCRUD {
 		//--------------- < region Save/Update and Delete > ---------------
 		private void btnSave_Click( object sender, EventArgs e ) {
 			//Save or Update btn
+			//If health insurance fields are not filled up -> Add Employee date to database -> MessageBox.Show( "Add Health Insurance Information Later" );
 			if ( string.IsNullOrWhiteSpace( textBoxEmp1.Text ) ) {
 				MessageBox.Show( "Enter Employee Name !!!" );
 			} else if ( string.IsNullOrWhiteSpace( textBoxCity1.Text ) ) {
@@ -119,15 +127,6 @@ namespace SPCRUD {
 			} else if ( comboBoxGen1.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
-
-				/*  @employee_id INT = NULL,  
-    @employee_name NVARCHAR (250) = NULL,  
-    @city NVARCHAR(20) = NULL,  
-    @department NVARCHAR(20) = NULL,  
-    @gender NVARCHAR(6) = NULL,  
-    --@Initialemployee_name NVARCHAR(25) = NULL,  
-    @action_type NVARCHAR(25)
-				 */
 				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
 				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
 					try {
@@ -142,9 +141,7 @@ namespace SPCRUD {
 						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
 						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
 						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) );
-						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", Convert.ToDateTime( DateTime.Now.ToLongTimeString() ) );
-						//sqlCmd.Parameters.AddWithValue( "@AK_EmployeeHealthInsuranace_employee_id", comboBoxGen1.Text );
-
+						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date;
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
@@ -210,6 +207,11 @@ namespace SPCRUD {
 				textBoxCity1.Text = row.Cells[ 2 ].Value?.ToString();
 				textBoxDept1.Text = row.Cells[ 3 ].Value?.ToString();
 				comboBoxGen1.Text = row.Cells[ 4 ].Value?.ToString();
+
+				textBoxEmp1.Text = row.Cells[ 5 ].Value?.ToString();
+				textBoxCity1.Text = row.Cells[ 6 ].Value?.ToString();
+				textBoxDept1.Text = row.Cells[ 7 ].Value?.ToString();
+				comboBoxGen1.Text = row.Cells[ 8 ].Value?.ToString();
 				btnSave.Text = "Update";
 				btnDelete.Enabled = true;
 			}
