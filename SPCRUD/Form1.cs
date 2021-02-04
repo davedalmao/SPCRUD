@@ -71,13 +71,21 @@ namespace SPCRUD {
 		}
 
 		private void RefreshData() {
+			/*textBoxHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
+				textBoxInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
+				textBoxInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
+			dtp*/
 			btnSave.Text = "Save";
+			EmployeeId = "";
 			textBoxEmp1.Text = "";
 			textBoxCity1.Text = "";
 			textBoxDept1.Text = "";
 			comboBoxGen1.SelectedIndex = -1;
 			comboBoxGen1.Text = "";
-			EmployeeId = "";
+			textBoxHealthInsuranceProvider.Text = "";
+			textBoxInsurancePlanName.Text = "";
+			textBoxInsuranceMonthlyFee.Text = "";
+			dtpInsuranceStartDate.Value = DateTime.Now;
 			btnDelete.Enabled = false;
 			FetchEmpDetails();
 		}
@@ -117,7 +125,7 @@ namespace SPCRUD {
 		//--------------- < region Save/Update and Delete > ---------------
 		private void btnSave_Click( object sender, EventArgs e ) {
 			//Save or Update btn
-			//If health insurance fields are not filled up -> Add Employee date to database -> MessageBox.Show( "Add Health Insurance Information Later" );
+			//if(string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text )||string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text )||string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text )|| dtpInsuranceStartDate.SelectedDate == null) -> allOfTheHealthInsuranceFields.Text ="" or null -> Add Employee date to database -> MessageBox.Show( "Add Health Insurance Information Later" );
 			if ( string.IsNullOrWhiteSpace( textBoxEmp1.Text ) ) {
 				MessageBox.Show( "Enter Employee Name !!!" );
 			} else if ( string.IsNullOrWhiteSpace( textBoxCity1.Text ) ) {
@@ -141,7 +149,7 @@ namespace SPCRUD {
 						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
 						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
 						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) );
-						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date;
+						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
@@ -200,6 +208,7 @@ namespace SPCRUD {
 
 		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
 			if ( e.RowIndex != -1 ) {
+				//check if one row index is null
 				DataGridViewRow row = dgvEmp.Rows[ e.RowIndex ];
 				//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
 				EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
@@ -207,11 +216,18 @@ namespace SPCRUD {
 				textBoxCity1.Text = row.Cells[ 2 ].Value?.ToString();
 				textBoxDept1.Text = row.Cells[ 3 ].Value?.ToString();
 				comboBoxGen1.Text = row.Cells[ 4 ].Value?.ToString();
+				textBoxHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
+				textBoxInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
+				textBoxInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
 
-				textBoxEmp1.Text = row.Cells[ 5 ].Value?.ToString();
-				textBoxCity1.Text = row.Cells[ 6 ].Value?.ToString();
-				textBoxDept1.Text = row.Cells[ 7 ].Value?.ToString();
-				comboBoxGen1.Text = row.Cells[ 8 ].Value?.ToString();
+				var cellValue = dgvEmp.Rows[ e.RowIndex ].Cells[ 8 ].Value;
+				if ( cellValue == null || cellValue == DBNull.Value
+				 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
+					dtpInsuranceStartDate.Value = DateTime.Now;
+				} else {
+					dtpInsuranceStartDate.Value = DateTime.Parse( row.Cells[ 8 ].Value?.ToString() );
+				}
+
 				btnSave.Text = "Update";
 				btnDelete.Enabled = true;
 			}
