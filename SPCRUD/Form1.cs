@@ -138,6 +138,13 @@ namespace SPCRUD {
 						sqlCmd.Parameters.AddWithValue( "@city", textBoxCity1.Text );
 						sqlCmd.Parameters.AddWithValue( "@department", textBoxDept1.Text );
 						sqlCmd.Parameters.AddWithValue( "@gender", comboBoxGen1.Text );
+
+						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
+						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
+						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) );
+						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", Convert.ToDateTime( DateTime.Now.ToLongTimeString() ) );
+						//sqlCmd.Parameters.AddWithValue( "@AK_EmployeeHealthInsuranace_employee_id", comboBoxGen1.Text );
+
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
