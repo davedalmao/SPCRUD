@@ -1,31 +1,31 @@
 ﻿
 namespace SPCRUD {
-    partial class Form1 {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class Form1 {
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose( bool disposing ) {
-            if ( disposing && ( components != null ) ) {
-                components.Dispose();
-            }
-            base.Dispose( disposing );
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose( bool disposing ) {
+			if ( disposing && ( components != null ) ) {
+				components.Dispose();
+			}
+			base.Dispose( disposing );
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent() {
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent() {
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -57,6 +57,8 @@ namespace SPCRUD {
 			this.kryptonLabel10 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.textBoxHealthInsuranceProvider = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
 			this.kryptonLabel11 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+			this.btnDisplayAllEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+			this.btnSortEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			((System.ComponentModel.ISupportInitialize)(this.dgvEmp)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.comboBoxGen1)).BeginInit();
 			this.SuspendLayout();
@@ -77,7 +79,7 @@ namespace SPCRUD {
 			// 
 			// btnRefresh
 			// 
-			this.btnRefresh.Location = new System.Drawing.Point(934, 224);
+			this.btnRefresh.Location = new System.Drawing.Point(935, 224);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnRefresh.Size = new System.Drawing.Size(105, 45);
@@ -108,8 +110,8 @@ namespace SPCRUD {
 			// 
 			this.dgvEmp.AllowUserToAddRows = false;
 			this.dgvEmp.AllowUserToDeleteRows = false;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
 			this.dgvEmp.ColumnHeadersHeight = 40;
 			this.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			this.dgvEmp.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -128,15 +130,15 @@ namespace SPCRUD {
 			this.dgvEmp.GridStyles.StyleColumn = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
 			this.dgvEmp.GridStyles.StyleDataCells = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
 			this.dgvEmp.GridStyles.StyleRow = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
-			this.dgvEmp.Location = new System.Drawing.Point(28, 281);
+			this.dgvEmp.Location = new System.Drawing.Point(28, 283);
 			this.dgvEmp.MultiSelect = false;
 			this.dgvEmp.Name = "dgvEmp";
 			this.dgvEmp.ReadOnly = true;
 			this.dgvEmp.RowHeadersVisible = false;
 			this.dgvEmp.RowHeadersWidth = 50;
 			this.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle6;
 			this.dgvEmp.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			this.dgvEmp.RowTemplate.Height = 25;
 			this.dgvEmp.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -296,7 +298,7 @@ namespace SPCRUD {
 			// kryptonLabel5
 			// 
 			this.kryptonLabel5.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.BoldControl;
-			this.kryptonLabel5.Location = new System.Drawing.Point(26, 243);
+			this.kryptonLabel5.Location = new System.Drawing.Point(26, 245);
 			this.kryptonLabel5.Name = "kryptonLabel5";
 			this.kryptonLabel5.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.ProfessionalSystem;
 			this.kryptonLabel5.Size = new System.Drawing.Size(271, 30);
@@ -343,10 +345,11 @@ namespace SPCRUD {
 			this.textBoxInsuranceMonthlyFee.Cursor = System.Windows.Forms.Cursors.IBeam;
 			this.textBoxInsuranceMonthlyFee.Location = new System.Drawing.Point(813, 116);
 			this.textBoxInsuranceMonthlyFee.Name = "textBoxInsuranceMonthlyFee";
-			this.textBoxInsuranceMonthlyFee.Size = new System.Drawing.Size(346, 29);
+			this.textBoxInsuranceMonthlyFee.Size = new System.Drawing.Size(346, 30);
 			this.textBoxInsuranceMonthlyFee.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textBoxInsuranceMonthlyFee.StateCommon.Content.Padding = new System.Windows.Forms.Padding(4);
 			this.textBoxInsuranceMonthlyFee.TabIndex = 36;
+			this.textBoxInsuranceMonthlyFee.Text = "0";
 			// 
 			// kryptonLabel9
 			// 
@@ -398,11 +401,41 @@ namespace SPCRUD {
 			this.kryptonLabel11.Values.Image = global::SPCRUD.Properties.Resources.calendar_event_fill;
 			this.kryptonLabel11.Values.Text = "Insurance Start Date:";
 			// 
+			// btnDisplayAllEmployees
+			// 
+			this.btnDisplayAllEmployees.Location = new System.Drawing.Point(942, 534);
+			this.btnDisplayAllEmployees.Name = "btnDisplayAllEmployees";
+			this.btnDisplayAllEmployees.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.btnDisplayAllEmployees.Size = new System.Drawing.Size(217, 45);
+			this.btnDisplayAllEmployees.StateCommon.Back.Draw = ComponentFactory.Krypton.Toolkit.InheritBool.True;
+			this.btnDisplayAllEmployees.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
+			this.btnDisplayAllEmployees.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnDisplayAllEmployees.TabIndex = 39;
+			this.btnDisplayAllEmployees.Values.Image = global::SPCRUD.Properties.Resources.menu_add_line;
+			this.btnDisplayAllEmployees.Values.Text = "Display All Employees";
+			this.btnDisplayAllEmployees.Click += new System.EventHandler(this.btnDisplayAllEmployees_Click);
+			// 
+			// btnSortEmployees
+			// 
+			this.btnSortEmployees.Location = new System.Drawing.Point(625, 534);
+			this.btnSortEmployees.Name = "btnSortEmployees";
+			this.btnSortEmployees.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.btnSortEmployees.Size = new System.Drawing.Size(311, 45);
+			this.btnSortEmployees.StateCommon.Back.Draw = ComponentFactory.Krypton.Toolkit.InheritBool.True;
+			this.btnSortEmployees.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
+			this.btnSortEmployees.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnSortEmployees.TabIndex = 42;
+			this.btnSortEmployees.Values.Image = global::SPCRUD.Properties.Resources.menu_add_line;
+			this.btnSortEmployees.Values.Text = "Employees Without Healh Insurance";
+			this.btnSortEmployees.Click += new System.EventHandler(this.btnSortEmployees_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1190, 554);
+			this.ClientSize = new System.Drawing.Size(1190, 603);
+			this.Controls.Add(this.btnSortEmployees);
+			this.Controls.Add(this.btnDisplayAllEmployees);
 			this.Controls.Add(this.kryptonLabel11);
 			this.Controls.Add(this.kryptonLabel8);
 			this.Controls.Add(this.textBoxInsuranceMonthlyFee);
@@ -434,23 +467,23 @@ namespace SPCRUD {
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
-        #endregion
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnSave;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnRefresh;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnDelete;
-        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView dgvEmp;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxEmp1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxCity1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxDept1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox comboBoxGen1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
+		#endregion
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnSave;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnRefresh;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDelete;
+		private ComponentFactory.Krypton.Toolkit.KryptonDataGridView dgvEmp;
+		private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxEmp1;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
+		private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxCity1;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
+		private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxDept1;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
+		private ComponentFactory.Krypton.Toolkit.KryptonComboBox comboBoxGen1;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
+		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
 		private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker dtpInsuranceStartDate;
 		private System.Windows.Forms.DataGridViewTextBoxColumn EmpId;
 		private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
@@ -468,6 +501,8 @@ namespace SPCRUD {
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel10;
 		private ComponentFactory.Krypton.Toolkit.KryptonTextBox textBoxHealthInsuranceProvider;
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel11;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDisplayAllEmployees;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnSortEmployees;
 	}
 }
 

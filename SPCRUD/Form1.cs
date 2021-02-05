@@ -16,6 +16,8 @@ using System.Windows.Forms;
 namespace SPCRUD {
 	//Icon Size: 24 px
 	//Icon Color: #ACBCD4
+	//btn size: 105, 45
+	//form size: 1206, 593
 	public partial class Form1 : Form {
 		static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnectionTemp" ].ConnectionString;
 		string EmployeeId = "";
@@ -28,14 +30,14 @@ namespace SPCRUD {
 		}
 
 		private void Form1_Load( object sender, EventArgs e ) {
-			FetchEmpDetails();
+			FetchEmpDetails( "DisplayAllEmployees" );
 		}
 		//--------------- </ region Form1 > ---------------
 		#endregion
 
 		#region Functions
 		//--------------- < region Funtions > ---------------
-		private void FetchEmpDetails() {
+		private void FetchEmpDetails( string readType ) {
 			//Load/Read Data from database
 			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
 			using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
@@ -43,7 +45,7 @@ namespace SPCRUD {
 					con.Open();
 					DataTable dt = new DataTable();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.AddWithValue( "@action_type", "ReadData" );
+					sqlCmd.Parameters.AddWithValue( "@action_type", readType );
 					sqlCmd.Connection = con;
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
 					sqlSda.Fill( dt );
@@ -71,10 +73,7 @@ namespace SPCRUD {
 		}
 
 		private void RefreshData() {
-			/*textBoxHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
-				textBoxInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
-				textBoxInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
-			dtp*/
+			// separate refresh for health table
 			btnSave.Text = "Save";
 			EmployeeId = "";
 			textBoxEmp1.Text = "";
@@ -87,7 +86,7 @@ namespace SPCRUD {
 			textBoxInsuranceMonthlyFee.Text = "";
 			dtpInsuranceStartDate.Value = DateTime.Now;
 			btnDelete.Enabled = false;
-			FetchEmpDetails();
+			FetchEmpDetails( "DisplayAllEmployees" );
 		}
 
 		private void SetAddRemoveProgramsIcon() {
@@ -148,7 +147,7 @@ namespace SPCRUD {
 
 						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
 						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
-						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
+						sqlCmd.Parameters.AddWithValue( "@monthly_fee", string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ? 0 : float.Parse( textBoxInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
 						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
@@ -245,6 +244,20 @@ namespace SPCRUD {
                  } else
                      e.FormattingApplied = false;
              }*/
+		}
+
+		private void btnDisplayAllEmployees_Click( object sender, EventArgs e ) {
+			FetchEmpDetails( "DisplayAllEmployees" );
+		}
+
+		private void btnSortEmployees_Click( object sender, EventArgs e ) {
+			if ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
+				FetchEmpDetails( "WithoutHealthInsuranceRecords" );
+			} else {
+				FetchEmpDetails( "WithHealthInsuranceRecords" );
+			}
+
+			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
 		}
 	}
 }
