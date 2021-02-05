@@ -148,20 +148,21 @@ namespace SPCRUD {
 
 						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
 						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
-						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) );
+						sqlCmd.Parameters.AddWithValue( "@monthly_fee", float.Parse( textBoxInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
 						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
+						//ExecuteNonQuery returns 0 if the query's where clause doesnt match any row in the table
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
 						if ( numRes > 0 ) {
 							MessageBox.Show( $"Record {ActionType} Successfully !!!" );
 							RefreshData();
 						} else
-							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
+							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist q!!!" );
 					} catch ( SqlException ex ) {
 						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
-							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist !!!" );
+							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist sqsq!!!" );
 					} catch ( Exception ex ) {
 						MessageBox.Show( "Error: " + ex.Message );
 					}
