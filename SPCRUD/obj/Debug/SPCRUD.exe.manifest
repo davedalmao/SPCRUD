@@ -81,7 +81,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>CxweCoPrP8LiGAVhIDg6M65qkidsvJbOOCS72W5U7MQ=</dsig:DigestValue>
+      <dsig:DigestValue>6WdmhFC8JL3Zzr5l6RV8Up4aydaPKrzDhxF+kone5s0=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
@@ -90,7 +90,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>a8xuLnxD9MW3g6ZyGHqHfe3XucRRl9sVEi6luouRhyQ=</dsig:DigestValue>
+      <dsig:DigestValue>pmQwsmxcgybPS4TMcyceDNV1R4OJDoeUgs2OSFo3VkU=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SPCRUD.exe.config" size="820">
