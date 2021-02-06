@@ -24,8 +24,8 @@ namespace SPCRUD {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -59,13 +59,14 @@ namespace SPCRUD {
 			this.kryptonLabel11 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.btnDisplayAllEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnSortEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+			this.btnDeleteAllRecords = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			((System.ComponentModel.ISupportInitialize)(this.dgvEmp)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.comboBoxGen1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnSave
 			// 
-			this.btnSave.Location = new System.Drawing.Point(813, 224);
+			this.btnSave.Location = new System.Drawing.Point(813, 223);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnSave.Size = new System.Drawing.Size(105, 45);
@@ -79,7 +80,7 @@ namespace SPCRUD {
 			// 
 			// btnRefresh
 			// 
-			this.btnRefresh.Location = new System.Drawing.Point(935, 224);
+			this.btnRefresh.Location = new System.Drawing.Point(935, 223);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnRefresh.Size = new System.Drawing.Size(105, 45);
@@ -94,7 +95,7 @@ namespace SPCRUD {
 			// btnDelete
 			// 
 			this.btnDelete.Enabled = false;
-			this.btnDelete.Location = new System.Drawing.Point(1054, 224);
+			this.btnDelete.Location = new System.Drawing.Point(1054, 223);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnDelete.Size = new System.Drawing.Size(105, 45);
@@ -110,8 +111,8 @@ namespace SPCRUD {
 			// 
 			this.dgvEmp.AllowUserToAddRows = false;
 			this.dgvEmp.AllowUserToDeleteRows = false;
-			dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
 			this.dgvEmp.ColumnHeadersHeight = 40;
 			this.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			this.dgvEmp.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -130,15 +131,15 @@ namespace SPCRUD {
 			this.dgvEmp.GridStyles.StyleColumn = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
 			this.dgvEmp.GridStyles.StyleDataCells = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
 			this.dgvEmp.GridStyles.StyleRow = ComponentFactory.Krypton.Toolkit.GridStyle.Sheet;
-			this.dgvEmp.Location = new System.Drawing.Point(28, 283);
+			this.dgvEmp.Location = new System.Drawing.Point(28, 282);
 			this.dgvEmp.MultiSelect = false;
 			this.dgvEmp.Name = "dgvEmp";
 			this.dgvEmp.ReadOnly = true;
 			this.dgvEmp.RowHeadersVisible = false;
 			this.dgvEmp.RowHeadersWidth = 50;
 			this.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-			dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.dgvEmp.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			this.dgvEmp.RowTemplate.Height = 25;
 			this.dgvEmp.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -208,7 +209,7 @@ namespace SPCRUD {
 			// textBoxEmp1
 			// 
 			this.textBoxEmp1.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxEmp1.Location = new System.Drawing.Point(197, 28);
+			this.textBoxEmp1.Location = new System.Drawing.Point(197, 27);
 			this.textBoxEmp1.Name = "textBoxEmp1";
 			this.textBoxEmp1.Size = new System.Drawing.Size(346, 29);
 			this.textBoxEmp1.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -217,7 +218,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel1
 			// 
-			this.kryptonLabel1.Location = new System.Drawing.Point(28, 31);
+			this.kryptonLabel1.Location = new System.Drawing.Point(28, 30);
 			this.kryptonLabel1.Name = "kryptonLabel1";
 			this.kryptonLabel1.Size = new System.Drawing.Size(167, 26);
 			this.kryptonLabel1.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -227,7 +228,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel2
 			// 
-			this.kryptonLabel2.Location = new System.Drawing.Point(28, 75);
+			this.kryptonLabel2.Location = new System.Drawing.Point(28, 74);
 			this.kryptonLabel2.Name = "kryptonLabel2";
 			this.kryptonLabel2.Size = new System.Drawing.Size(134, 26);
 			this.kryptonLabel2.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -238,7 +239,7 @@ namespace SPCRUD {
 			// textBoxCity1
 			// 
 			this.textBoxCity1.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxCity1.Location = new System.Drawing.Point(197, 72);
+			this.textBoxCity1.Location = new System.Drawing.Point(197, 71);
 			this.textBoxCity1.Name = "textBoxCity1";
 			this.textBoxCity1.Size = new System.Drawing.Size(346, 29);
 			this.textBoxCity1.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -247,7 +248,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel3
 			// 
-			this.kryptonLabel3.Location = new System.Drawing.Point(28, 119);
+			this.kryptonLabel3.Location = new System.Drawing.Point(28, 118);
 			this.kryptonLabel3.Name = "kryptonLabel3";
 			this.kryptonLabel3.Size = new System.Drawing.Size(132, 26);
 			this.kryptonLabel3.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -258,7 +259,7 @@ namespace SPCRUD {
 			// textBoxDept1
 			// 
 			this.textBoxDept1.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxDept1.Location = new System.Drawing.Point(197, 116);
+			this.textBoxDept1.Location = new System.Drawing.Point(197, 115);
 			this.textBoxDept1.Name = "textBoxDept1";
 			this.textBoxDept1.Size = new System.Drawing.Size(346, 29);
 			this.textBoxDept1.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -267,7 +268,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel4
 			// 
-			this.kryptonLabel4.Location = new System.Drawing.Point(30, 169);
+			this.kryptonLabel4.Location = new System.Drawing.Point(30, 168);
 			this.kryptonLabel4.Name = "kryptonLabel4";
 			this.kryptonLabel4.Size = new System.Drawing.Size(101, 26);
 			this.kryptonLabel4.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -282,7 +283,7 @@ namespace SPCRUD {
             "Male",
             "Female"});
 			this.comboBoxGen1.ItemStyle = ComponentFactory.Krypton.Toolkit.ButtonStyle.Command;
-			this.comboBoxGen1.Location = new System.Drawing.Point(197, 166);
+			this.comboBoxGen1.Location = new System.Drawing.Point(197, 165);
 			this.comboBoxGen1.Name = "comboBoxGen1";
 			this.comboBoxGen1.Size = new System.Drawing.Size(346, 29);
 			this.comboBoxGen1.StateActive.ComboBox.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -298,7 +299,7 @@ namespace SPCRUD {
 			// kryptonLabel5
 			// 
 			this.kryptonLabel5.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.BoldControl;
-			this.kryptonLabel5.Location = new System.Drawing.Point(26, 245);
+			this.kryptonLabel5.Location = new System.Drawing.Point(26, 244);
 			this.kryptonLabel5.Name = "kryptonLabel5";
 			this.kryptonLabel5.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.ProfessionalSystem;
 			this.kryptonLabel5.Size = new System.Drawing.Size(271, 30);
@@ -310,7 +311,7 @@ namespace SPCRUD {
 			// kryptonLabel7
 			// 
 			this.kryptonLabel7.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.BoldControl;
-			this.kryptonLabel7.Location = new System.Drawing.Point(49, 196);
+			this.kryptonLabel7.Location = new System.Drawing.Point(49, 195);
 			this.kryptonLabel7.Name = "kryptonLabel7";
 			this.kryptonLabel7.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.ProfessionalSystem;
 			this.kryptonLabel7.Size = new System.Drawing.Size(6, 4);
@@ -321,7 +322,7 @@ namespace SPCRUD {
 			// 
 			// dtpInsuranceStartDate
 			// 
-			this.dtpInsuranceStartDate.Location = new System.Drawing.Point(813, 162);
+			this.dtpInsuranceStartDate.Location = new System.Drawing.Point(813, 161);
 			this.dtpInsuranceStartDate.Name = "dtpInsuranceStartDate";
 			this.dtpInsuranceStartDate.Size = new System.Drawing.Size(346, 30);
 			this.dtpInsuranceStartDate.StateActive.Content.Padding = new System.Windows.Forms.Padding(4);
@@ -332,7 +333,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel8
 			// 
-			this.kryptonLabel8.Location = new System.Drawing.Point(577, 119);
+			this.kryptonLabel8.Location = new System.Drawing.Point(577, 118);
 			this.kryptonLabel8.Name = "kryptonLabel8";
 			this.kryptonLabel8.Size = new System.Drawing.Size(132, 26);
 			this.kryptonLabel8.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -343,7 +344,7 @@ namespace SPCRUD {
 			// textBoxInsuranceMonthlyFee
 			// 
 			this.textBoxInsuranceMonthlyFee.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxInsuranceMonthlyFee.Location = new System.Drawing.Point(813, 116);
+			this.textBoxInsuranceMonthlyFee.Location = new System.Drawing.Point(813, 115);
 			this.textBoxInsuranceMonthlyFee.Name = "textBoxInsuranceMonthlyFee";
 			this.textBoxInsuranceMonthlyFee.Size = new System.Drawing.Size(346, 30);
 			this.textBoxInsuranceMonthlyFee.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -353,7 +354,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel9
 			// 
-			this.kryptonLabel9.Location = new System.Drawing.Point(577, 75);
+			this.kryptonLabel9.Location = new System.Drawing.Point(577, 74);
 			this.kryptonLabel9.Name = "kryptonLabel9";
 			this.kryptonLabel9.Size = new System.Drawing.Size(200, 26);
 			this.kryptonLabel9.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -364,7 +365,7 @@ namespace SPCRUD {
 			// textBoxInsurancePlanName
 			// 
 			this.textBoxInsurancePlanName.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxInsurancePlanName.Location = new System.Drawing.Point(813, 72);
+			this.textBoxInsurancePlanName.Location = new System.Drawing.Point(813, 71);
 			this.textBoxInsurancePlanName.Name = "textBoxInsurancePlanName";
 			this.textBoxInsurancePlanName.Size = new System.Drawing.Size(346, 29);
 			this.textBoxInsurancePlanName.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -373,7 +374,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel10
 			// 
-			this.kryptonLabel10.Location = new System.Drawing.Point(577, 31);
+			this.kryptonLabel10.Location = new System.Drawing.Point(577, 30);
 			this.kryptonLabel10.Name = "kryptonLabel10";
 			this.kryptonLabel10.Size = new System.Drawing.Size(236, 26);
 			this.kryptonLabel10.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -384,7 +385,7 @@ namespace SPCRUD {
 			// textBoxHealthInsuranceProvider
 			// 
 			this.textBoxHealthInsuranceProvider.Cursor = System.Windows.Forms.Cursors.IBeam;
-			this.textBoxHealthInsuranceProvider.Location = new System.Drawing.Point(813, 28);
+			this.textBoxHealthInsuranceProvider.Location = new System.Drawing.Point(813, 27);
 			this.textBoxHealthInsuranceProvider.Name = "textBoxHealthInsuranceProvider";
 			this.textBoxHealthInsuranceProvider.Size = new System.Drawing.Size(346, 29);
 			this.textBoxHealthInsuranceProvider.StateCommon.Content.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -393,7 +394,7 @@ namespace SPCRUD {
 			// 
 			// kryptonLabel11
 			// 
-			this.kryptonLabel11.Location = new System.Drawing.Point(577, 166);
+			this.kryptonLabel11.Location = new System.Drawing.Point(577, 165);
 			this.kryptonLabel11.Name = "kryptonLabel11";
 			this.kryptonLabel11.Size = new System.Drawing.Size(192, 26);
 			this.kryptonLabel11.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -403,7 +404,7 @@ namespace SPCRUD {
 			// 
 			// btnDisplayAllEmployees
 			// 
-			this.btnDisplayAllEmployees.Location = new System.Drawing.Point(942, 534);
+			this.btnDisplayAllEmployees.Location = new System.Drawing.Point(714, 537);
 			this.btnDisplayAllEmployees.Name = "btnDisplayAllEmployees";
 			this.btnDisplayAllEmployees.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnDisplayAllEmployees.Size = new System.Drawing.Size(217, 45);
@@ -411,13 +412,13 @@ namespace SPCRUD {
 			this.btnDisplayAllEmployees.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
 			this.btnDisplayAllEmployees.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnDisplayAllEmployees.TabIndex = 39;
-			this.btnDisplayAllEmployees.Values.Image = global::SPCRUD.Properties.Resources.menu_add_line;
+			this.btnDisplayAllEmployees.Values.Image = global::SPCRUD.Properties.Resources.team_fill;
 			this.btnDisplayAllEmployees.Values.Text = "Display All Employees";
 			this.btnDisplayAllEmployees.Click += new System.EventHandler(this.btnDisplayAllEmployees_Click);
 			// 
 			// btnSortEmployees
 			// 
-			this.btnSortEmployees.Location = new System.Drawing.Point(625, 534);
+			this.btnSortEmployees.Location = new System.Drawing.Point(392, 537);
 			this.btnSortEmployees.Name = "btnSortEmployees";
 			this.btnSortEmployees.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
 			this.btnSortEmployees.Size = new System.Drawing.Size(311, 45);
@@ -425,15 +426,30 @@ namespace SPCRUD {
 			this.btnSortEmployees.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
 			this.btnSortEmployees.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnSortEmployees.TabIndex = 42;
-			this.btnSortEmployees.Values.Image = global::SPCRUD.Properties.Resources.menu_add_line;
-			this.btnSortEmployees.Values.Text = "Employees Without Healh Insurance";
+			this.btnSortEmployees.Values.Image = global::SPCRUD.Properties.Resources.emotion_happy_fill;
+			this.btnSortEmployees.Values.Text = "Employees With Healh Insurance";
 			this.btnSortEmployees.Click += new System.EventHandler(this.btnSortEmployees_Click);
+			// 
+			// btnDeleteAllRecords
+			// 
+			this.btnDeleteAllRecords.Location = new System.Drawing.Point(942, 537);
+			this.btnDeleteAllRecords.Name = "btnDeleteAllRecords";
+			this.btnDeleteAllRecords.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.btnDeleteAllRecords.Size = new System.Drawing.Size(217, 45);
+			this.btnDeleteAllRecords.StateCommon.Back.Draw = ComponentFactory.Krypton.Toolkit.InheritBool.True;
+			this.btnDeleteAllRecords.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
+			this.btnDeleteAllRecords.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnDeleteAllRecords.TabIndex = 43;
+			this.btnDeleteAllRecords.Values.Image = global::SPCRUD.Properties.Resources.delete_bin_2_line;
+			this.btnDeleteAllRecords.Values.Text = "Delete All Employees";
+			this.btnDeleteAllRecords.Click += new System.EventHandler(this.btnDeleteAllRecords_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1190, 603);
+			this.Controls.Add(this.btnDeleteAllRecords);
 			this.Controls.Add(this.btnSortEmployees);
 			this.Controls.Add(this.btnDisplayAllEmployees);
 			this.Controls.Add(this.kryptonLabel11);
@@ -503,6 +519,7 @@ namespace SPCRUD {
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel11;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDisplayAllEmployees;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnSortEmployees;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDeleteAllRecords;
 	}
 }
 

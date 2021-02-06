@@ -189,15 +189,7 @@ namespace SPCRUD {
 			} else {
 				MessageBox.Show( "Please Select A Record !!!" );
 			}
-			/*  DELETE ALL RECORDS
-				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
-				con.Open();
-				string query = "TRUNCATE TABLE tblEmployee";
-				SqlCommand sqlCmd = new SqlCommand( query, con );
-				sqlCmd.ExecuteNonQuery();
-				con.Close();
-				RefreshData();
-			}*/
+
 		}
 		//--------------- </ region Save/Update and Delete > ---------------
 		#endregion
@@ -253,11 +245,48 @@ namespace SPCRUD {
 		private void btnSortEmployees_Click( object sender, EventArgs e ) {
 			if ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
 				FetchEmpDetails( "WithoutHealthInsuranceRecords" );
+				btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
 			} else {
 				FetchEmpDetails( "WithHealthInsuranceRecords" );
+				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
 			}
 
 			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
+
+			//emotion-unhappy-fill.png
+		}
+
+		private void btnDeleteAllRecords_Click( object sender, EventArgs e ) {
+			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
+			if ( dialog == DialogResult.Yes ) {
+				/*using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
+					
+					con.Open();
+					SqlCommand sqlCmdh = new SqlCommand( "TRUNCATE TABLE EmployeeHealthInsuranace", con );
+					sqlCmdh.ExecuteNonQuery();
+					con.Close();
+
+					con.Open();
+					SqlCommand sqlCmde = new SqlCommand( "TRUNCATE TABLE Employee", con );
+					sqlCmde.ExecuteNonQuery();
+					con.Close();
+
+					RefreshData();
+				}*/
+				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+					try {
+						con.Open();
+						sqlCmd.CommandType = CommandType.StoredProcedure;
+						sqlCmd.Parameters.AddWithValue( "@action_type", "DeleteAllData" );
+						sqlCmd.ExecuteNonQuery();
+						MessageBox.Show( "All Employee Records DELETED Successfully!" );
+						RefreshData();
+					} catch ( Exception ex ) {
+						MessageBox.Show( "Error: " + ex.Message );
+					}
+				}
+			}
 		}
 	}
 }

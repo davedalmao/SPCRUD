@@ -83,6 +83,16 @@ namespace SPCRUD.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap delete_bin_2_line {
+            get {
+                object obj = ResourceManager.GetObject("delete-bin-2-line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap delete_bin_5_line {
             get {
                 object obj = ResourceManager.GetObject("delete-bin-5-line", resourceCulture);
@@ -96,6 +106,26 @@ namespace SPCRUD.Properties {
         internal static System.Drawing.Bitmap delete_bin_5_line__1_ {
             get {
                 object obj = ResourceManager.GetObject("delete-bin-5-line (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap emotion_happy_fill {
+            get {
+                object obj = ResourceManager.GetObject("emotion-happy-fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap emotion_unhappy_fill {
+            get {
+                object obj = ResourceManager.GetObject("emotion-unhappy-fill", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -206,6 +236,16 @@ namespace SPCRUD.Properties {
         internal static System.Drawing.Bitmap secure_payment_fill {
             get {
                 object obj = ResourceManager.GetObject("secure-payment-fill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap team_fill {
+            get {
+                object obj = ResourceManager.GetObject("team-fill", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

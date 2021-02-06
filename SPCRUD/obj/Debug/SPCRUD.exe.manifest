@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SPCRUD.exe" size="42408">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SPCRUD.exe" size="46504">
       <assemblyIdentity name="SPCRUD" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>PsHESaFaBT7PhbX6j2QBiX6UBrFlN1uBTVaHGJ5A2jU=</dsig:DigestValue>
+        <dsig:DigestValue>xaSaLW1rjVjkMDzBz7Tm3QGI1vBhGY6NVhjL9bvVauY=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -81,7 +81,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>eN6oK1Ftw4C2JKfOFe9P+howUoXk58Lzyr38W91iGeI=</dsig:DigestValue>
+      <dsig:DigestValue>AD2wZnz1Ojhr+Pp+JYBv7j50RmwsiRZStYpFvqFcyfo=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
@@ -90,7 +90,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>UYiZi28FALcDih7cSSFAAp7oV+Zt8w06heP4O2vhOso=</dsig:DigestValue>
+      <dsig:DigestValue>pEVuCXfzD4RiBFmZcU9VsL3O1RVXxe/0RjZTZ8FNt6c=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SPCRUD.exe.config" size="820">
