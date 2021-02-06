@@ -179,6 +179,8 @@ namespace SPCRUD {
 						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist sqsq!!!" );
+						else
+							MessageBox.Show( "An error occured while processing data." + ex.Message );
 					} catch ( Exception ex ) {
 						MessageBox.Show( "Error: " + ex.Message );
 					}
@@ -259,8 +261,6 @@ namespace SPCRUD {
 			}
 
 			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
-
-			//emotion-unhappy-fill.png
 		}
 
 		private void btnDeleteAllRecords_Click( object sender, EventArgs e ) {
