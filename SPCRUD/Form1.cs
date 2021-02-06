@@ -72,6 +72,23 @@ namespace SPCRUD {
 			}
 		}
 
+		private void DeleteEmployee( string deleteType, string employeeID ) {
+			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+			using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+				try {
+					con.Open();
+					sqlCmd.CommandType = CommandType.StoredProcedure;
+					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
+					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );
+					sqlCmd.ExecuteNonQuery();
+					MessageBox.Show( ( employeeID != null ) ? "Record Deleted Successfully!" : "All Employee Records DELETED Successfully!" );
+					RefreshData();
+				} catch ( Exception ex ) {
+					MessageBox.Show( "Error: " + ex.Message );
+				}
+			}
+		}
+
 		private void RefreshData() {
 			// separate refresh for health table
 			btnSave.Text = "Save";
@@ -172,19 +189,9 @@ namespace SPCRUD {
 		private void btnDelete_Click( object sender, EventArgs e ) {
 			int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
 			if ( selectedRowCount >= 0 ) {
-				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-					try {
-						con.Open();
-						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@action_type", "DeleteData" );
-						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );
-						sqlCmd.ExecuteNonQuery();
-						MessageBox.Show( "Record Deleted Successfully !!!" );
-						RefreshData();
-					} catch ( Exception ex ) {
-						MessageBox.Show( "Error: " + ex.Message );
-					}
+				DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { textBoxEmp1.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
+				if ( dialog == DialogResult.Yes ) {
+					DeleteEmployee( "DeleteData", EmployeeId );
 				}
 			} else {
 				MessageBox.Show( "Please Select A Record !!!" );
@@ -259,33 +266,7 @@ namespace SPCRUD {
 		private void btnDeleteAllRecords_Click( object sender, EventArgs e ) {
 			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
 			if ( dialog == DialogResult.Yes ) {
-				/*using ( SqlConnection con = new SqlConnection( connectionStringConfig ) ) {
-					
-					con.Open();
-					SqlCommand sqlCmdh = new SqlCommand( "TRUNCATE TABLE EmployeeHealthInsuranace", con );
-					sqlCmdh.ExecuteNonQuery();
-					con.Close();
-
-					con.Open();
-					SqlCommand sqlCmde = new SqlCommand( "TRUNCATE TABLE Employee", con );
-					sqlCmde.ExecuteNonQuery();
-					con.Close();
-
-					RefreshData();
-				}*/
-				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-					try {
-						con.Open();
-						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@action_type", "DeleteAllData" );
-						sqlCmd.ExecuteNonQuery();
-						MessageBox.Show( "All Employee Records DELETED Successfully!" );
-						RefreshData();
-					} catch ( Exception ex ) {
-						MessageBox.Show( "Error: " + ex.Message );
-					}
-				}
+				DeleteEmployee( "DeleteAllData", null );
 			}
 		}
 	}
