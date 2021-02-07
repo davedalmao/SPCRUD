@@ -31,6 +31,9 @@ namespace SPCRUD {
 
 		private void Form1_Load( object sender, EventArgs e ) {
 			FetchEmpDetails( "DisplayAllEmployees" );
+			//dtpInsuranceStartDate.Text = " ";
+			//dateTimePicker1.CustomFormat = " ";
+			//dateTimePicker1.Format = DateTimePickerFormat.Custom;
 		}
 		//--------------- </ region Form1 > ---------------
 		#endregion
@@ -180,7 +183,7 @@ namespace SPCRUD {
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist sqsq!!!" );
 						else
-							MessageBox.Show( "An error occured while processing data." + ex.Message );
+							MessageBox.Show( "An error occured while processing data. \n Error: " + ex.Message );
 					} catch ( Exception ex ) {
 						MessageBox.Show( "Error: " + ex.Message );
 					}
