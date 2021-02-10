@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Deployment.Application;
 using System.Drawing;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace SPCRUD {
 	//Icon Size: 24 px
@@ -32,8 +34,15 @@ namespace SPCRUD {
 		private void Form1_Load( object sender, EventArgs e ) {
 			FetchEmpDetails( "DisplayAllEmployees" );
 			//dtpInsuranceStartDate.Text = " ";
-			//dateTimePicker1.CustomFormat = " ";
-			//dateTimePicker1.Format = DateTimePickerFormat.Custom;
+			dtpInsuranceStartDate1.CustomFormat = " ";
+			dtpInsuranceStartDate1.Format = DateTimePickerFormat.Custom;
+			//dtpInsuranceStartDate1.Value = DateTime.MinValue;
+			//dtpInsuranceStartDate.Value = DateTime.MaxValue;
+
+			//Why does min date and max date not properly returned when called by code???
+			//why is the max date 12/31/9999 when its property max date is 12/31/9998?
+			//why is the min datet 1/1/0001  when its property min date is 1/1/1753?
+
 		}
 		//--------------- </ region Form1 > ---------------
 		#endregion
@@ -91,9 +100,15 @@ namespace SPCRUD {
 				}
 			}
 		}
+		private void RefreshHealthInsuranceFields() {
+			textBoxHealthInsuranceProvider.Text = "";
+			textBoxInsurancePlanName.Text = "";
+			textBoxInsuranceMonthlyFee.Text = "0";
+			dtpInsuranceStartDate.Value = DateTime.Now;
+		}
 
 		private void RefreshData() {
-			// separate refresh for health table
+			RefreshHealthInsuranceFields();
 			btnSave.Text = "Save";
 			EmployeeId = "";
 			textBoxEmp1.Text = "";
@@ -101,10 +116,6 @@ namespace SPCRUD {
 			textBoxDept1.Text = "";
 			comboBoxGen1.SelectedIndex = -1;
 			comboBoxGen1.Text = "";
-			textBoxHealthInsuranceProvider.Text = "";
-			textBoxInsurancePlanName.Text = "";
-			textBoxInsuranceMonthlyFee.Text = "";
-			dtpInsuranceStartDate.Value = DateTime.Now;
 			btnDelete.Enabled = false;
 			FetchEmpDetails( "DisplayAllEmployees" );
 		}
@@ -140,6 +151,9 @@ namespace SPCRUD {
 		//--------------- </ region Funtions > ---------------
 		#endregion
 
+
+
+
 		#region Save/Update and Delete
 		//--------------- < region Save/Update and Delete > ---------------
 		private void btnSave_Click( object sender, EventArgs e ) {
@@ -154,6 +168,14 @@ namespace SPCRUD {
 			} else if ( comboBoxGen1.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
+				if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
+					 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
+					 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
+					 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
+					RefreshHealthInsuranceFields();
+					dtpInsuranceStartDate.Value = ( DateTime ) SqlDateTime.Null;
+				}
+
 				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
 				using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
 					try {
@@ -168,13 +190,30 @@ namespace SPCRUD {
 						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
 						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
 						sqlCmd.Parameters.AddWithValue( "@monthly_fee", string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ? 0 : float.Parse( textBoxInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
-						sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
+
+						// Save insurance start date:
+						if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
+							 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
+							 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
+							 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
+							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
+						} else {
+							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
+						}
+
 						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
 						//ExecuteNonQuery returns 0 if the query's where clause doesnt match any row in the table
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
 						if ( numRes > 0 ) {
-							MessageBox.Show( $"Record {ActionType} Successfully !!!" );
+							if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
+								 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
+								 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
+								 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
+								MessageBox.Show( $"{ textBoxEmp1.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on." );
+							} else {
+								MessageBox.Show( $"{ textBoxEmp1.Text }'s record is { ActionType } successfully !!!" );
+							}
 							RefreshData();
 						} else
 							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist q!!!" );
@@ -271,6 +310,10 @@ namespace SPCRUD {
 			if ( dialog == DialogResult.Yes ) {
 				DeleteEmployee( "DeleteAllData", null );
 			}
+		}
+
+		private void dtpInsuranceStartDate1_ValueChanged( object sender, EventArgs e ) {
+			dtpInsuranceStartDate1.CustomFormat = "dddd, MMMM dd, yyyy";
 		}
 	}
 }
