@@ -70,7 +70,7 @@ namespace SPCRUD {
 
 					dgvEmpDetails.DataSource = dt;
 				} catch ( Exception ex ) {
-					MessageBox.Show( "Error: " + ex.Message );
+					MessageBox.Show( $"Cannot DISPLAY data in the datagridview! \nError: { ex.Message }" );
 				}
 			}
 		}
@@ -87,7 +87,7 @@ namespace SPCRUD {
 					MessageBox.Show( ( employeeID != null ) ? "Record Deleted Successfully!" : "All Employee Records DELETED Successfully!" );
 					RefreshData();
 				} catch ( Exception ex ) {
-					MessageBox.Show( "Error: " + ex.Message );
+					MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
 				}
 			}
 		}
@@ -141,9 +141,6 @@ namespace SPCRUD {
 		}
 		//--------------- </ region Funtions > ---------------
 		#endregion
-
-
-
 
 		#region Save/Update and Delete
 		//--------------- < region Save/Update and Delete > ---------------
@@ -212,9 +209,9 @@ namespace SPCRUD {
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{txtEmpName.Text} Already Exist sqsq!!!" );
 						else
-							MessageBox.Show( "An error occured while processing data. \n Error: " + ex.Message );
+							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
 					} catch ( Exception ex ) {
-						MessageBox.Show( "Error: " + ex.Message );
+						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.Message }" );
 					}
 				}
 			}
@@ -222,13 +219,18 @@ namespace SPCRUD {
 
 		private void btnDelete_Click( object sender, EventArgs e ) {
 			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
-			if ( selectedRowCount >= 0 ) {
-				DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
-				if ( dialog == DialogResult.Yes ) {
-					DeleteEmployee( "DeleteData", EmployeeId );
+			try {
+
+				if ( selectedRowCount >= 0 ) {
+					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
+					if ( dialog == DialogResult.Yes ) {
+						DeleteEmployee( "DeleteData", EmployeeId );
+					}
+				} else {
+					MessageBox.Show( "Please Select A Record !!!" );
 				}
-			} else {
-				MessageBox.Show( "Please Select A Record !!!" );
+			} catch ( Exception ex ) {
+				MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
 			}
 
 		}
@@ -237,7 +239,6 @@ namespace SPCRUD {
 
 		private void btnRefresh_Click( object sender, EventArgs e ) {
 			RefreshData();
-			kryptonLabel4.Text = 12356.ToString( "N" );
 		}
 
 		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
@@ -267,7 +268,7 @@ namespace SPCRUD {
 					btnDelete.Enabled = true;
 				}
 			} catch ( Exception ex ) {
-				MessageBox.Show( "Error: " + ex.Message );
+				MessageBox.Show( $"Something is wrong with the selected record! \nError: { ex.Message }" );
 			}
 		}
 
