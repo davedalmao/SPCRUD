@@ -17,8 +17,6 @@ using System.Windows.Forms;
 namespace SPCRUD {
 	//Icon Size: 24 px
 	//Icon Color: #ACBCD4
-	//btn size: 105, 45
-	//form size: 1206, 593
 	public partial class Form1 : Form {
 		static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnectionTemp" ].ConnectionString;
 		string EmployeeId = "";
@@ -38,6 +36,23 @@ namespace SPCRUD {
 
 		#region Functions
 		//--------------- < region Funtions > ---------------
+		private void DeleteEmployee( string deleteType, string employeeID ) {
+			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+			using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+				try {
+					con.Open();
+					sqlCmd.CommandType = CommandType.StoredProcedure;
+					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
+					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );
+					sqlCmd.ExecuteNonQuery();
+					MessageBox.Show( ( employeeID != null ) ? "Record Deleted Successfully!" : "All Employee Records DELETED Successfully!" );
+					RefreshData();
+				} catch ( Exception ex ) {
+					MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
+				}
+			}
+		}
+
 		private void FetchEmpDetails( string readType ) {
 			//Load/Read Data from database
 			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
@@ -75,29 +90,6 @@ namespace SPCRUD {
 			}
 		}
 
-		private void DeleteEmployee( string deleteType, string employeeID ) {
-			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-			using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-				try {
-					con.Open();
-					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
-					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );
-					sqlCmd.ExecuteNonQuery();
-					MessageBox.Show( ( employeeID != null ) ? "Record Deleted Successfully!" : "All Employee Records DELETED Successfully!" );
-					RefreshData();
-				} catch ( Exception ex ) {
-					MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
-				}
-			}
-		}
-		private void RefreshHealthInsuranceFields() {
-			txtEmpHealthInsuranceProvider.Text = "";
-			txtEmpInsurancePlanName.Text = "";
-			txtEmpInsuranceMonthlyFee.Text = "0";
-			dtpInsuranceStartDate.Value = DateTime.Now;
-		}
-
 		private void RefreshData() {
 			RefreshHealthInsuranceFields();
 			btnSave.Text = "Save";
@@ -109,6 +101,13 @@ namespace SPCRUD {
 			cboEmpGender.Text = "";
 			btnDelete.Enabled = false;
 			FetchEmpDetails( "DisplayAllEmployees" );
+		}
+
+		private void RefreshHealthInsuranceFields() {
+			txtEmpHealthInsuranceProvider.Text = "";
+			txtEmpInsurancePlanName.Text = "";
+			txtEmpInsuranceMonthlyFee.Text = "0";
+			dtpInsuranceStartDate.Value = DateTime.Now;
 		}
 
 		private void SetAddRemoveProgramsIcon() {
@@ -142,8 +141,39 @@ namespace SPCRUD {
 		//--------------- </ region Funtions > ---------------
 		#endregion
 
-		#region Save/Update and Delete
-		//--------------- < region Save/Update and Delete > ---------------
+		#region Button Click
+		//--------------- < region Buttons > ---------------
+		private void btnDelete_Click( object sender, EventArgs e ) {
+			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
+			try {
+
+				if ( selectedRowCount >= 0 ) {
+					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
+					if ( dialog == DialogResult.Yes ) {
+						DeleteEmployee( "DeleteData", EmployeeId );
+					}
+				} else {
+					MessageBox.Show( "Please Select A Record !!!" );
+				}
+			} catch ( Exception ex ) {
+				MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
+			}
+		}
+
+		private void btnDeleteAllRecords_Click( object sender, EventArgs e ) {
+			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
+			if ( dialog == DialogResult.Yes ) {
+				DeleteEmployee( "DeleteAllData", null );
+			}
+		}
+		private void btnDisplayAllEmployees_Click( object sender, EventArgs e ) {
+			FetchEmpDetails( "DisplayAllEmployees" );
+		}
+
+		private void btnRefresh_Click( object sender, EventArgs e ) {
+			RefreshData();
+		}
+
 		private void btnSave_Click( object sender, EventArgs e ) {
 			//Save or Update btn
 			if ( string.IsNullOrWhiteSpace( txtEmpName.Text ) ) {
@@ -217,31 +247,23 @@ namespace SPCRUD {
 			}
 		}
 
-		private void btnDelete_Click( object sender, EventArgs e ) {
-			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
-			try {
-
-				if ( selectedRowCount >= 0 ) {
-					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
-					if ( dialog == DialogResult.Yes ) {
-						DeleteEmployee( "DeleteData", EmployeeId );
-					}
-				} else {
-					MessageBox.Show( "Please Select A Record !!!" );
-				}
-			} catch ( Exception ex ) {
-				MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
+		private void btnSortEmployees_Click( object sender, EventArgs e ) {
+			if ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
+				FetchEmpDetails( "WithoutHealthInsuranceRecords" );
+				btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
+			} else {
+				FetchEmpDetails( "WithHealthInsuranceRecords" );
+				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
 			}
 
+			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
 		}
-		//--------------- </ region Save/Update and Delete > ---------------
+		//--------------- < /region Buttons > ---------------
 		#endregion
 
-		private void btnRefresh_Click( object sender, EventArgs e ) {
-			RefreshData();
-		}
-
-		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
+		#region DataGridView
+		//--------------- < region DataGridView > ---------------
+		private void dgvEmpDetails_CellClick( object sender, DataGridViewCellEventArgs e ) {
 			try {
 				if ( e.RowIndex != -1 ) {
 					//check if one row index is null
@@ -271,41 +293,7 @@ namespace SPCRUD {
 				MessageBox.Show( $"Something is wrong with the selected record! \nError: { ex.Message }" );
 			}
 		}
-
-		private void dgvEmp_CellFormatting( object sender, DataGridViewCellFormattingEventArgs e ) {
-			//display encrypted value of "Name" column (for non-admin)  with decryptbypassphrase
-			//dgv.Cells[ 1 ].Value.GetType() is typeof( System.Int16 )
-			/* if ( dgvEmp.Rows.Count == 0 && e.ColumnIndex == 1 && dgvEmp[ 0, 1 ].ValueType == typeof( string ) ) {
-                 if ( e.Value != null ) {
-                     byte[] array = ( byte[] ) e.Value;
-                     e.Value = BitConverter.ToString( array );
-                     e.FormattingApplied = true;
-                 } else
-                     e.FormattingApplied = false;
-             }*/
-		}
-
-		private void btnDisplayAllEmployees_Click( object sender, EventArgs e ) {
-			FetchEmpDetails( "DisplayAllEmployees" );
-		}
-
-		private void btnSortEmployees_Click( object sender, EventArgs e ) {
-			if ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
-				FetchEmpDetails( "WithoutHealthInsuranceRecords" );
-				btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
-			} else {
-				FetchEmpDetails( "WithHealthInsuranceRecords" );
-				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
-			}
-
-			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
-		}
-
-		private void btnDeleteAllRecords_Click( object sender, EventArgs e ) {
-			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
-			if ( dialog == DialogResult.Yes ) {
-				DeleteEmployee( "DeleteAllData", null );
-			}
-		}
+		//--------------- < /region DataGridView > ---------------
+		#endregion
 	}
 }
