@@ -51,22 +51,22 @@ namespace SPCRUD {
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
 					sqlSda.Fill( dt );
 
-					dgvEmp.AutoGenerateColumns = false;//if true displays all the records in the database
+					dgvEmpDetails.AutoGenerateColumns = false;//if true displays all the records in the database
 
 					// The property names are the column names in dbo.Employee
-					dgvEmp.Columns[ 0 ].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
-					dgvEmp.Columns[ 1 ].DataPropertyName = "employee_name";
-					dgvEmp.Columns[ 2 ].DataPropertyName = "city";
-					dgvEmp.Columns[ 3 ].DataPropertyName = "department";
-					dgvEmp.Columns[ 4 ].DataPropertyName = "gender";
+					dgvEmpDetails.Columns[ 0 ].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
+					dgvEmpDetails.Columns[ 1 ].DataPropertyName = "employee_name";
+					dgvEmpDetails.Columns[ 2 ].DataPropertyName = "city";
+					dgvEmpDetails.Columns[ 3 ].DataPropertyName = "department";
+					dgvEmpDetails.Columns[ 4 ].DataPropertyName = "gender";
 
-					dgvEmp.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
-					dgvEmp.Columns[ 6 ].DataPropertyName = "plan_name";
-					dgvEmp.Columns[ 7 ].DataPropertyName = "monthly_fee";
-					dgvEmp.Columns[ 8 ].DataPropertyName = "insurance_start_date";
-					dgvEmp.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
+					dgvEmpDetails.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
+					dgvEmpDetails.Columns[ 6 ].DataPropertyName = "plan_name";
+					dgvEmpDetails.Columns[ 7 ].DataPropertyName = "monthly_fee";
+					dgvEmpDetails.Columns[ 8 ].DataPropertyName = "insurance_start_date";
+					dgvEmpDetails.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
 
-					dgvEmp.DataSource = dt;
+					dgvEmpDetails.DataSource = dt;
 				} catch ( Exception ex ) {
 					MessageBox.Show( "Error: " + ex.Message );
 				}
@@ -90,9 +90,9 @@ namespace SPCRUD {
 			}
 		}
 		private void RefreshHealthInsuranceFields() {
-			textBoxHealthInsuranceProvider.Text = "";
-			textBoxInsurancePlanName.Text = "";
-			textBoxInsuranceMonthlyFee.Text = "0";
+			txtEmpHealthInsuranceProvider.Text = "";
+			txtEmpInsurancePlanName.Text = "";
+			txtEmpInsuranceMonthlyFee.Text = "0";
 			dtpInsuranceStartDate.Value = DateTime.Now;
 		}
 
@@ -100,11 +100,11 @@ namespace SPCRUD {
 			RefreshHealthInsuranceFields();
 			btnSave.Text = "Save";
 			EmployeeId = "";
-			textBoxEmp1.Text = "";
-			textBoxCity1.Text = "";
-			textBoxDept1.Text = "";
-			comboBoxGen1.SelectedIndex = -1;
-			comboBoxGen1.Text = "";
+			txtEmpName.Text = "";
+			txtEmpCity.Text = "";
+			txtEmpDept.Text = "";
+			cboEmpGender.SelectedIndex = -1;
+			cboEmpGender.Text = "";
 			btnDelete.Enabled = false;
 			FetchEmpDetails( "DisplayAllEmployees" );
 		}
@@ -147,20 +147,20 @@ namespace SPCRUD {
 		//--------------- < region Save/Update and Delete > ---------------
 		private void btnSave_Click( object sender, EventArgs e ) {
 			//Save or Update btn
-			//if(string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text )||string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text )||string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text )|| dtpInsuranceStartDate.SelectedDate == null) -> allOfTheHealthInsuranceFields.Text ="" or null -> Add Employee date to database -> MessageBox.Show( "Add Health Insurance Information Later" );
-			if ( string.IsNullOrWhiteSpace( textBoxEmp1.Text ) ) {
+			if ( string.IsNullOrWhiteSpace( txtEmpName.Text ) ) {
 				MessageBox.Show( "Enter Employee Name !!!" );
-			} else if ( string.IsNullOrWhiteSpace( textBoxCity1.Text ) ) {
+			} else if ( string.IsNullOrWhiteSpace( txtEmpCity.Text ) ) {
 				MessageBox.Show( "Enter Current City !!!" );
-			} else if ( string.IsNullOrWhiteSpace( textBoxDept1.Text ) ) {
+			} else if ( string.IsNullOrWhiteSpace( txtEmpDept.Text ) ) {
 				MessageBox.Show( "Enter Department !!!" );
-			} else if ( comboBoxGen1.SelectedIndex <= -1 ) {
+			} else if ( cboEmpGender.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
-				if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
-					 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
-					 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
-					 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
+				// If at least one of the health insurance fields is not blank, save only the employee record without the health insurance record
+				if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
+					 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
+					 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
+					 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
 					RefreshHealthInsuranceFields();
 				}
 
@@ -170,20 +170,20 @@ namespace SPCRUD {
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
 						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );
-						sqlCmd.Parameters.AddWithValue( "@employee_name", textBoxEmp1.Text );
-						sqlCmd.Parameters.AddWithValue( "@city", textBoxCity1.Text );
-						sqlCmd.Parameters.AddWithValue( "@department", textBoxDept1.Text );
-						sqlCmd.Parameters.AddWithValue( "@gender", comboBoxGen1.Text );
+						sqlCmd.Parameters.AddWithValue( "@employee_name", txtEmpName.Text );
+						sqlCmd.Parameters.AddWithValue( "@city", txtEmpCity.Text );
+						sqlCmd.Parameters.AddWithValue( "@department", txtEmpDept.Text );
+						sqlCmd.Parameters.AddWithValue( "@gender", cboEmpGender.Text );
 
-						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", textBoxHealthInsuranceProvider.Text );
-						sqlCmd.Parameters.AddWithValue( "@plan_name", textBoxInsurancePlanName.Text );
-						sqlCmd.Parameters.AddWithValue( "@monthly_fee", string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ? 0 : float.Parse( textBoxInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
+						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", txtEmpHealthInsuranceProvider.Text );
+						sqlCmd.Parameters.AddWithValue( "@plan_name", txtEmpInsurancePlanName.Text );
+						sqlCmd.Parameters.AddWithValue( "@monthly_fee", string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ? 0 : float.Parse( txtEmpInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
 
 						// Save insurance start date:
-						if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
-							 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
-							 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
-							 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
+						if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
+							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
+							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
+							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
 							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
 						} else {
 							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
@@ -194,21 +194,21 @@ namespace SPCRUD {
 						//ExecuteNonQuery returns 0 if the query's where clause doesnt match any row in the table
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
 						if ( numRes > 0 ) {
-							if ( string.IsNullOrWhiteSpace( textBoxHealthInsuranceProvider.Text ) ||
-								 string.IsNullOrWhiteSpace( textBoxInsurancePlanName.Text ) ||
-								 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
-								 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
-								MessageBox.Show( $"{ textBoxEmp1.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on." );
+							if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
+								 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
+								 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
+								 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
+								MessageBox.Show( $"{ txtEmpName.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on." );
 							} else {
-								MessageBox.Show( $"{ textBoxEmp1.Text }'s record is { ActionType } successfully !!!" );
+								MessageBox.Show( $"{ txtEmpName.Text }'s record is { ActionType } successfully !!!" );
 							}
 							RefreshData();
 						} else
-							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist q!!!" );
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist q!!!" );
 					} catch ( SqlException ex ) {
 						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
-							MessageBox.Show( $"{textBoxEmp1.Text} Already Exist sqsq!!!" );
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist sqsq!!!" );
 						else
 							MessageBox.Show( "An error occured while processing data. \n Error: " + ex.Message );
 					} catch ( Exception ex ) {
@@ -219,9 +219,9 @@ namespace SPCRUD {
 		}
 
 		private void btnDelete_Click( object sender, EventArgs e ) {
-			int selectedRowCount = dgvEmp.Rows.GetRowCount( DataGridViewElementStates.Selected );
+			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
 			if ( selectedRowCount >= 0 ) {
-				DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { textBoxEmp1.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
+				DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
 				if ( dialog == DialogResult.Yes ) {
 					DeleteEmployee( "DeleteData", EmployeeId );
 				}
@@ -240,18 +240,18 @@ namespace SPCRUD {
 		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
 			if ( e.RowIndex != -1 ) {
 				//check if one row index is null
-				DataGridViewRow row = dgvEmp.Rows[ e.RowIndex ];
+				DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
 				//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
 				EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
-				textBoxEmp1.Text = row.Cells[ 1 ].Value?.ToString();
-				textBoxCity1.Text = row.Cells[ 2 ].Value?.ToString();
-				textBoxDept1.Text = row.Cells[ 3 ].Value?.ToString();
-				comboBoxGen1.Text = row.Cells[ 4 ].Value?.ToString();
-				textBoxHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
-				textBoxInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
-				textBoxInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
+				txtEmpName.Text = row.Cells[ 1 ].Value?.ToString();
+				txtEmpCity.Text = row.Cells[ 2 ].Value?.ToString();
+				txtEmpDept.Text = row.Cells[ 3 ].Value?.ToString();
+				cboEmpGender.Text = row.Cells[ 4 ].Value?.ToString();
+				txtEmpHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
+				txtEmpInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
+				txtEmpInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
 
-				var cellValue = dgvEmp.Rows[ e.RowIndex ].Cells[ 8 ].Value;
+				var cellValue = dgvEmpDetails.Rows[ e.RowIndex ].Cells[ 8 ].Value;
 				if ( cellValue == null || cellValue == DBNull.Value
 				 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
 					dtpInsuranceStartDate.Value = DateTime.Now;
