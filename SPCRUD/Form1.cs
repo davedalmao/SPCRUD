@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
 using System.Deployment.Application;
 using System.Drawing;
 using System.IO;
@@ -33,16 +32,6 @@ namespace SPCRUD {
 
 		private void Form1_Load( object sender, EventArgs e ) {
 			FetchEmpDetails( "DisplayAllEmployees" );
-			//dtpInsuranceStartDate.Text = " ";
-			dtpInsuranceStartDate1.CustomFormat = " ";
-			dtpInsuranceStartDate1.Format = DateTimePickerFormat.Custom;
-			//dtpInsuranceStartDate1.Value = DateTime.MinValue;
-			//dtpInsuranceStartDate.Value = DateTime.MaxValue;
-
-			//Why does min date and max date not properly returned when called by code???
-			//why is the max date 12/31/9999 when its property max date is 12/31/9998?
-			//why is the min datet 1/1/0001  when its property min date is 1/1/1753?
-
 		}
 		//--------------- </ region Form1 > ---------------
 		#endregion
@@ -173,7 +162,6 @@ namespace SPCRUD {
 					 string.IsNullOrWhiteSpace( textBoxInsuranceMonthlyFee.Text ) ||
 					 float.Parse( textBoxInsuranceMonthlyFee.Text ) < 1 ) {
 					RefreshHealthInsuranceFields();
-					dtpInsuranceStartDate.Value = ( DateTime ) SqlDateTime.Null;
 				}
 
 				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
@@ -310,10 +298,6 @@ namespace SPCRUD {
 			if ( dialog == DialogResult.Yes ) {
 				DeleteEmployee( "DeleteAllData", null );
 			}
-		}
-
-		private void dtpInsuranceStartDate1_ValueChanged( object sender, EventArgs e ) {
-			dtpInsuranceStartDate1.CustomFormat = "dddd, MMMM dd, yyyy";
 		}
 	}
 }

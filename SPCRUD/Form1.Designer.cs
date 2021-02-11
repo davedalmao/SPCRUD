@@ -24,8 +24,8 @@ namespace SPCRUD {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -60,7 +60,6 @@ namespace SPCRUD {
 			this.btnDisplayAllEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnSortEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDeleteAllRecords = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-			this.dtpInsuranceStartDate1 = new System.Windows.Forms.DateTimePicker();
 			((System.ComponentModel.ISupportInitialize)(this.dgvEmp)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.comboBoxGen1)).BeginInit();
 			this.SuspendLayout();
@@ -112,8 +111,8 @@ namespace SPCRUD {
 			// 
 			this.dgvEmp.AllowUserToAddRows = false;
 			this.dgvEmp.AllowUserToDeleteRows = false;
-			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
 			this.dgvEmp.ColumnHeadersHeight = 40;
 			this.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			this.dgvEmp.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -139,8 +138,8 @@ namespace SPCRUD {
 			this.dgvEmp.RowHeadersVisible = false;
 			this.dgvEmp.RowHeadersWidth = 50;
 			this.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-			dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmp.RowsDefaultCellStyle = dataGridViewCellStyle2;
 			this.dgvEmp.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			this.dgvEmp.RowTemplate.Height = 25;
 			this.dgvEmp.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -445,25 +444,11 @@ namespace SPCRUD {
 			this.btnDeleteAllRecords.Values.Text = "Delete All Employees";
 			this.btnDeleteAllRecords.Click += new System.EventHandler(this.btnDeleteAllRecords_Click);
 			// 
-			// dtpInsuranceStartDate1
-			// 
-			this.dtpInsuranceStartDate1.CalendarTitleBackColor = System.Drawing.SystemColors.ControlText;
-			this.dtpInsuranceStartDate1.CalendarTitleForeColor = System.Drawing.SystemColors.ActiveCaption;
-			this.dtpInsuranceStartDate1.CustomFormat = " ";
-			this.dtpInsuranceStartDate1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.dtpInsuranceStartDate1.Location = new System.Drawing.Point(197, 213);
-			this.dtpInsuranceStartDate1.MinimumSize = new System.Drawing.Size(292, 29);
-			this.dtpInsuranceStartDate1.Name = "dtpInsuranceStartDate1";
-			this.dtpInsuranceStartDate1.Size = new System.Drawing.Size(346, 29);
-			this.dtpInsuranceStartDate1.TabIndex = 44;
-			this.dtpInsuranceStartDate1.ValueChanged += new System.EventHandler(this.dtpInsuranceStartDate1_ValueChanged);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1190, 603);
-			this.Controls.Add(this.dtpInsuranceStartDate1);
 			this.Controls.Add(this.btnDeleteAllRecords);
 			this.Controls.Add(this.btnSortEmployees);
 			this.Controls.Add(this.btnDisplayAllEmployees);
@@ -535,7 +520,6 @@ namespace SPCRUD {
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDisplayAllEmployees;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnSortEmployees;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDeleteAllRecords;
-		private System.Windows.Forms.DateTimePicker dtpInsuranceStartDate1;
 	}
 }
 
