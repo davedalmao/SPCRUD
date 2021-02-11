@@ -44,8 +44,11 @@ namespace SPCRUD {
 					sqlCmd.CommandType = CommandType.StoredProcedure;
 					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
 					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );
-					sqlCmd.ExecuteNonQuery();
-					MessageBox.Show( ( employeeID != null ) ? "Record Deleted Successfully!" : "All Employee Records DELETED Successfully!" );
+					int numRes = sqlCmd.ExecuteNonQuery();
+					if ( numRes > 0 )
+						MessageBox.Show( ( employeeID != null ) ? $"{ txtEmpName.Text }'s Record DELETED Successfully!" : "All Employee Records DELETED Successfully!" );
+					else
+						MessageBox.Show( $"Cannot DELETE records! " );
 					RefreshData();
 				} catch ( Exception ex ) {
 					MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
@@ -166,6 +169,7 @@ namespace SPCRUD {
 				DeleteEmployee( "DeleteAllData", null );
 			}
 		}
+
 		private void btnDisplayAllEmployees_Click( object sender, EventArgs e ) {
 			FetchEmpDetails( "DisplayAllEmployees" );
 		}
@@ -233,11 +237,11 @@ namespace SPCRUD {
 							}
 							RefreshData();
 						} else
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist q!!!" );
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist!!!" );
 					} catch ( SqlException ex ) {
 						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
 						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist sqsq!!!" );
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist!!!" );
 						else
 							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
 					} catch ( Exception ex ) {
