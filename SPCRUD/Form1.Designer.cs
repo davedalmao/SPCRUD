@@ -24,8 +24,8 @@ namespace SPCRUD {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -111,8 +111,8 @@ namespace SPCRUD {
 			// 
 			this.dgvEmpDetails.AllowUserToAddRows = false;
 			this.dgvEmpDetails.AllowUserToDeleteRows = false;
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
 			this.dgvEmpDetails.ColumnHeadersHeight = 40;
 			this.dgvEmpDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
 			this.dgvEmpDetails.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -138,8 +138,8 @@ namespace SPCRUD {
 			this.dgvEmpDetails.RowHeadersVisible = false;
 			this.dgvEmpDetails.RowHeadersWidth = 50;
 			this.dgvEmpDetails.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle12;
 			this.dgvEmpDetails.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
 			this.dgvEmpDetails.RowTemplate.Height = 25;
 			this.dgvEmpDetails.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;

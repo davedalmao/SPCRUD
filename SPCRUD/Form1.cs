@@ -63,6 +63,8 @@ namespace SPCRUD {
 					dgvEmpDetails.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
 					dgvEmpDetails.Columns[ 6 ].DataPropertyName = "plan_name";
 					dgvEmpDetails.Columns[ 7 ].DataPropertyName = "monthly_fee";
+					dgvEmpDetails.Columns[ 7 ].DefaultCellStyle.Format = "#,##0.00";
+
 					dgvEmpDetails.Columns[ 8 ].DataPropertyName = "insurance_start_date";
 					dgvEmpDetails.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
 
@@ -235,32 +237,37 @@ namespace SPCRUD {
 
 		private void btnRefresh_Click( object sender, EventArgs e ) {
 			RefreshData();
+			kryptonLabel4.Text = 12356.ToString( "N" );
 		}
 
 		private void dgvEmp_CellClick( object sender, DataGridViewCellEventArgs e ) {
-			if ( e.RowIndex != -1 ) {
-				//check if one row index is null
-				DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
-				//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
-				EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
-				txtEmpName.Text = row.Cells[ 1 ].Value?.ToString();
-				txtEmpCity.Text = row.Cells[ 2 ].Value?.ToString();
-				txtEmpDept.Text = row.Cells[ 3 ].Value?.ToString();
-				cboEmpGender.Text = row.Cells[ 4 ].Value?.ToString();
-				txtEmpHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
-				txtEmpInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
-				txtEmpInsuranceMonthlyFee.Text = row.Cells[ 7 ].Value?.ToString();
+			try {
+				if ( e.RowIndex != -1 ) {
+					//check if one row index is null
+					DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
+					//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
+					EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
+					txtEmpName.Text = row.Cells[ 1 ].Value?.ToString();
+					txtEmpCity.Text = row.Cells[ 2 ].Value?.ToString();
+					txtEmpDept.Text = row.Cells[ 3 ].Value?.ToString();
+					cboEmpGender.Text = row.Cells[ 4 ].Value?.ToString();
+					txtEmpHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
+					txtEmpInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
+					txtEmpInsuranceMonthlyFee.Text = Convert.ToDecimal( row.Cells[ 7 ].Value ).ToString( "#,##0.00" );
 
-				var cellValue = dgvEmpDetails.Rows[ e.RowIndex ].Cells[ 8 ].Value;
-				if ( cellValue == null || cellValue == DBNull.Value
-				 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
-					dtpInsuranceStartDate.Value = DateTime.Now;
-				} else {
-					dtpInsuranceStartDate.Value = DateTime.Parse( row.Cells[ 8 ].Value?.ToString() );
+					var cellValue = dgvEmpDetails.Rows[ e.RowIndex ].Cells[ 8 ].Value;
+					if ( cellValue == null || cellValue == DBNull.Value
+					 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
+						dtpInsuranceStartDate.Value = DateTime.Now;
+					} else {
+						dtpInsuranceStartDate.Value = DateTime.Parse( row.Cells[ 8 ].Value?.ToString() );
+					}
+
+					btnSave.Text = "Update";
+					btnDelete.Enabled = true;
 				}
-
-				btnSave.Text = "Update";
-				btnDelete.Enabled = true;
+			} catch ( Exception ex ) {
+				MessageBox.Show( "Error: " + ex.Message );
 			}
 		}
 
