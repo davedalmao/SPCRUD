@@ -205,7 +205,7 @@ namespace SPCRUD {
 						sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = "CreateOrUpdateData";
 
 						//Employee Record
-						sqlCmd.Parameters.Add( "@employee_id", SqlDbType.Int ).Value = Convert.ToInt32( EmployeeId );
+						sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
 						sqlCmd.Parameters.Add( "@employee_name", SqlDbType.NVarChar, 250 ).Value = txtEmpName.Text;
 						sqlCmd.Parameters.Add( "@city", SqlDbType.NVarChar, 50 ).Value = txtEmpCity.Text;
 						sqlCmd.Parameters.Add( "@department", SqlDbType.NVarChar, 50 ).Value = txtEmpDept.Text;
@@ -224,9 +224,9 @@ namespace SPCRUD {
 							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
 							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
 							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-							sqlCmd.Parameters.Add( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
+							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
 						} else {
-							sqlCmd.Parameters.Add( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
+							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date;
 						}
 
 						int numRes = sqlCmd.ExecuteNonQuery();
@@ -242,14 +242,14 @@ namespace SPCRUD {
 							}
 							RefreshData();
 						} else
-							MessageBox.Show( "Database Error: Check stored procedure !!!", "spCRUD_Operations Where Clause" );
-					} catch ( SqlException ex ) {
-						if ( ex.Number == 2627 )// Violation of unique constraint (Name should be unique)
 							MessageBox.Show( $"{txtEmpName.Text} Already Exist !!!" );
-						else
+					} catch ( SqlException ex ) {
+						if ( ex.Number == 2627 ) {// Violation of unique constraint (Name should be unique)
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist !!!" );
+						} else
 							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
 					} catch ( Exception ex ) {
-						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.Message }" );
+						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.InnerException }" );
 					}
 				}
 			}
