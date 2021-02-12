@@ -43,7 +43,7 @@ namespace SPCRUD {
 					con.Open();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
 					sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = deleteType;
-					sqlCmd.Parameters.Add( "@employee_id", SqlDbType.Int ).Value = Convert.ToInt32( employeeId );
+					sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
 
 					int numRes = sqlCmd.ExecuteNonQuery();
 					if ( numRes > 0 )
@@ -113,7 +113,7 @@ namespace SPCRUD {
 		private void ResethHealthInsuranceFields() {
 			txtEmpHealthInsuranceProvider.Text = "";
 			txtEmpInsurancePlanName.Text = "";
-			txtEmpInsuranceMonthlyFee.Text = "0";
+			txtEmpInsuranceMonthlyFee.Text = "0.00";
 			dtpInsuranceStartDate.Value = DateTime.Now;
 		}
 
@@ -249,7 +249,7 @@ namespace SPCRUD {
 						} else
 							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
 					} catch ( Exception ex ) {
-						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.InnerException }" );
+						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.Message }" );
 					}
 				}
 			}
@@ -275,7 +275,7 @@ namespace SPCRUD {
 				if ( e.RowIndex != -1 ) {
 					DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
 					//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
-					EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
+					EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here (That's why we declared EmployeeId as string so it can be displayed in the dataGridView)
 					txtEmpName.Text = row.Cells[ 1 ].Value?.ToString();
 					txtEmpCity.Text = row.Cells[ 2 ].Value?.ToString();
 					txtEmpDept.Text = row.Cells[ 3 ].Value?.ToString();
