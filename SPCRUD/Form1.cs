@@ -42,8 +42,9 @@ namespace SPCRUD {
 				try {
 					con.Open();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
+					//cmd.Parameters.Add("@Parameter", SqlDbType.DateTime).Value = MyDateTimeVariable;
 					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
-					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );
+					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );//convert to int
 					int numRes = sqlCmd.ExecuteNonQuery();
 					if ( numRes > 0 )
 						MessageBox.Show( ( employeeID != null ) ? $"{ txtEmpName.Text }'s Record DELETED Successfully!" : "All Employee Records DELETED Successfully!" );
@@ -202,7 +203,7 @@ namespace SPCRUD {
 					try {
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );
+						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );//convert to int
 						sqlCmd.Parameters.AddWithValue( "@employee_name", txtEmpName.Text );
 						sqlCmd.Parameters.AddWithValue( "@city", txtEmpCity.Text );
 						sqlCmd.Parameters.AddWithValue( "@department", txtEmpDept.Text );
