@@ -36,18 +36,18 @@ namespace SPCRUD {
 
 		#region Functions
 		//--------------- < region Funtions > ---------------
-		private void DeleteEmployee( string deleteType, string employeeID ) {
+		private void DeleteEmployee( string deleteType, string employeeId ) {
 			using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
 			using ( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
 				try {
 					con.Open();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
-					//cmd.Parameters.Add("@Parameter", SqlDbType.DateTime).Value = MyDateTimeVariable;
-					sqlCmd.Parameters.AddWithValue( "@action_type", deleteType );
-					sqlCmd.Parameters.AddWithValue( "@employee_id", employeeID );//convert to int
+					sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = deleteType;
+					sqlCmd.Parameters.Add( "@employee_id", SqlDbType.Int ).Value = Convert.ToInt32( employeeId );
+
 					int numRes = sqlCmd.ExecuteNonQuery();
 					if ( numRes > 0 )
-						MessageBox.Show( ( employeeID != null ) ? $"{ txtEmpName.Text }'s Record DELETED Successfully!" : "All Employee Records DELETED Successfully!" );
+						MessageBox.Show( ( employeeId != null ) ? $"{ txtEmpName.Text }'s Record DELETED Successfully!" : "All Employee Records DELETED Successfully!" );
 					else
 						MessageBox.Show( $"Cannot DELETE records! " );
 					RefreshData();
@@ -65,7 +65,8 @@ namespace SPCRUD {
 					con.Open();
 					DataTable dt = new DataTable();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.AddWithValue( "@action_type", readType );
+					sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar ).Value = readType;
+
 					sqlCmd.Connection = con;
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
 					sqlSda.Fill( dt );
@@ -79,12 +80,14 @@ namespace SPCRUD {
 					dgvEmpDetails.Columns[ 3 ].DataPropertyName = "department";
 					dgvEmpDetails.Columns[ 4 ].DataPropertyName = "gender";
 
+					// The property names are the column names in dbo.Employee_Health_Insurance
 					dgvEmpDetails.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
 					dgvEmpDetails.Columns[ 6 ].DataPropertyName = "plan_name";
 					dgvEmpDetails.Columns[ 7 ].DataPropertyName = "monthly_fee";
-					dgvEmpDetails.Columns[ 7 ].DefaultCellStyle.Format = "#,##0.00";
-
 					dgvEmpDetails.Columns[ 8 ].DataPropertyName = "insurance_start_date";
+
+					// Custom cell format
+					dgvEmpDetails.Columns[ 7 ].DefaultCellStyle.Format = "#,##0.00";
 					dgvEmpDetails.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
 
 					dgvEmpDetails.DataSource = dt;
@@ -95,7 +98,7 @@ namespace SPCRUD {
 		}
 
 		private void RefreshData() {
-			RefreshHealthInsuranceFields();
+			ResethHealthInsuranceFields();
 			btnSave.Text = "Save";
 			EmployeeId = "";
 			txtEmpName.Text = "";
@@ -107,7 +110,7 @@ namespace SPCRUD {
 			FetchEmpDetails( "DisplayAllEmployees" );
 		}
 
-		private void RefreshHealthInsuranceFields() {
+		private void ResethHealthInsuranceFields() {
 			txtEmpHealthInsuranceProvider.Text = "";
 			txtEmpInsurancePlanName.Text = "";
 			txtEmpInsuranceMonthlyFee.Text = "0";
@@ -120,13 +123,10 @@ namespace SPCRUD {
 				try {
 					//The icon located in: (Right click Project -> Properties -> Application (tab) -> Icon)
 					var iconSourcePath = Path.Combine( Application.StartupPath, "briefcase-4-fill.ico" );
-
-					if ( !File.Exists( iconSourcePath ) )
-						return;
+					if ( !File.Exists( iconSourcePath ) ) { return; }
 
 					var myUninstallKey = Registry.CurrentUser.OpenSubKey( @"Software\Microsoft\Windows\CurrentVersion\Uninstall" );
-					if ( myUninstallKey == null )
-						return;
+					if ( myUninstallKey == null ) { return; }
 
 					var mySubKeyNames = myUninstallKey.GetSubKeyNames();
 					foreach ( var subkeyName in mySubKeyNames ) {
@@ -138,7 +138,7 @@ namespace SPCRUD {
 						}
 					}
 				} catch ( Exception ex ) {
-					MessageBox.Show( "Error: " + ex.Message );
+					MessageBox.Show( "Add Remove Programs Icon Error! \nError: " + ex.Message );
 				}
 			}
 		}
@@ -150,7 +150,6 @@ namespace SPCRUD {
 		private void btnDelete_Click( object sender, EventArgs e ) {
 			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
 			try {
-
 				if ( selectedRowCount >= 0 ) {
 					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
 					if ( dialog == DialogResult.Yes ) {
@@ -190,12 +189,12 @@ namespace SPCRUD {
 			} else if ( cboEmpGender.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
-				// If at least one of the health insurance fields is not blank, save only the employee record without the health insurance record
+				// If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
 				if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
 					 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
 					 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
 					 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-					RefreshHealthInsuranceFields();
+					ResethHealthInsuranceFields();
 				}
 
 				using ( SqlConnection con = new SqlConnection( connectionStringConfig ) )
@@ -203,29 +202,34 @@ namespace SPCRUD {
 					try {
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.AddWithValue( "@employee_id", EmployeeId );//convert to int
-						sqlCmd.Parameters.AddWithValue( "@employee_name", txtEmpName.Text );
-						sqlCmd.Parameters.AddWithValue( "@city", txtEmpCity.Text );
-						sqlCmd.Parameters.AddWithValue( "@department", txtEmpDept.Text );
-						sqlCmd.Parameters.AddWithValue( "@gender", cboEmpGender.Text );
+						sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = "CreateOrUpdateData";
 
-						sqlCmd.Parameters.AddWithValue( "@health_insurance_provider", txtEmpHealthInsuranceProvider.Text );
-						sqlCmd.Parameters.AddWithValue( "@plan_name", txtEmpInsurancePlanName.Text );
-						sqlCmd.Parameters.AddWithValue( "@monthly_fee", string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ? 0 : float.Parse( txtEmpInsuranceMonthlyFee.Text ) ); //add 0 as default value in database
+						//Employee Record
+						sqlCmd.Parameters.Add( "@employee_id", SqlDbType.Int ).Value = Convert.ToInt32( EmployeeId );
+						sqlCmd.Parameters.Add( "@employee_name", SqlDbType.NVarChar, 250 ).Value = txtEmpName.Text;
+						sqlCmd.Parameters.Add( "@city", SqlDbType.NVarChar, 50 ).Value = txtEmpCity.Text;
+						sqlCmd.Parameters.Add( "@department", SqlDbType.NVarChar, 50 ).Value = txtEmpDept.Text;
+						sqlCmd.Parameters.Add( "@gender", SqlDbType.NVarChar, 6 ).Value = cboEmpGender.Text;
 
+						//Employee Health Insurance Record
+						sqlCmd.Parameters.Add( "@health_insurance_provider", SqlDbType.NVarChar, 100 ).Value = txtEmpHealthInsuranceProvider.Text;
+						sqlCmd.Parameters.Add( "@plan_name", SqlDbType.NVarChar, 100 ).Value = txtEmpInsurancePlanName.Text;
+						sqlCmd.Parameters.Add( new SqlParameter( "@monthly_fee", SqlDbType.Decimal ) {
+							Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
+							Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
+							Value = string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ? 0 : decimal.Parse( txtEmpInsuranceMonthlyFee.Text ) //add 0 as default value in database
+						} );
 						// Save insurance start date:
 						if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
 							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
 							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
 							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
+							sqlCmd.Parameters.Add( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
 						} else {
-							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
+							sqlCmd.Parameters.Add( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date.ToString( "yyyyMMdd" );
 						}
 
-						sqlCmd.Parameters.AddWithValue( "@action_type", "CreateOrUpdateData" );
 						int numRes = sqlCmd.ExecuteNonQuery();
-						//ExecuteNonQuery returns 0 if the query's where clause doesnt match any row in the table
 						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
 						if ( numRes > 0 ) {
 							if ( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
@@ -238,11 +242,10 @@ namespace SPCRUD {
 							}
 							RefreshData();
 						} else
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist!!!" );
+							MessageBox.Show( "Database Error: Check stored procedure !!!", "spCRUD_Operations Where Clause" );
 					} catch ( SqlException ex ) {
-						//To always have a guaranteed "Unique Value" in sql: Use UNIQUE CONSTRAINT or Primary Key
-						if ( ex.Number == 2627 )  // Violation of unique constraint (Name should be unique)
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist!!!" );
+						if ( ex.Number == 2627 )// Violation of unique constraint (Name should be unique)
+							MessageBox.Show( $"{txtEmpName.Text} Already Exist !!!" );
 						else
 							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
 					} catch ( Exception ex ) {
@@ -260,7 +263,6 @@ namespace SPCRUD {
 				FetchEmpDetails( "WithHealthInsuranceRecords" );
 				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
 			}
-
 			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
 		}
 		//--------------- < /region Buttons > ---------------
@@ -271,7 +273,6 @@ namespace SPCRUD {
 		private void dgvEmpDetails_CellClick( object sender, DataGridViewCellEventArgs e ) {
 			try {
 				if ( e.RowIndex != -1 ) {
-					//check if one row index is null
 					DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
 					//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
 					EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here
@@ -283,6 +284,7 @@ namespace SPCRUD {
 					txtEmpInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
 					txtEmpInsuranceMonthlyFee.Text = Convert.ToDecimal( row.Cells[ 7 ].Value ).ToString( "#,##0.00" );
 
+					//Displaying the date in dateTimePicker
 					var cellValue = dgvEmpDetails.Rows[ e.RowIndex ].Cells[ 8 ].Value;
 					if ( cellValue == null || cellValue == DBNull.Value
 					 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
