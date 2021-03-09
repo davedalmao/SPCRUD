@@ -14,339 +14,401 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
-namespace SPCRUD {
-	//Icon Size: 24 px
-	//Icon Color: #ACBCD4
-	public partial class Form1 : Form {
-		static string connectionStringConfig = ConfigurationManager.ConnectionStrings[ "SystemDatabaseConnectionTemp" ].ConnectionString;
-		string EmployeeId = "";
+namespace SPCRUD
+{
+    //Icon Size: 24 px
+    //Icon Color: #ACBCD4
+    public partial class Form1 : Form
+    {
+        static string connectionStringConfig = ConfigurationManager.ConnectionStrings["SystemDatabaseConnectionTemp"].ConnectionString;
+        string EmployeeId = "";
 
-		#region Form1
-		//--------------- < region Form1 > ---------------
-		public Form1 () {
-			InitializeComponent();
-			SetAddRemoveProgramsIcon();
-		}
+        #region Form1
+        //--------------- < region Form1 > ---------------
+        public Form1()
+        {
+            InitializeComponent();
+            SetAddRemoveProgramsIcon();
+        }
 
-		private void Form1_Load ( object sender, EventArgs e ) {
-			DisplayEmployeeRecords( "DisplayAllEmployees" );
-		}
-		//--------------- </ region Form1 > ---------------
-		#endregion
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            DisplayEmployeeRecords("DisplayAllEmployees");
+        }
+        //--------------- </ region Form1 > ---------------
+        #endregion
 
-		#region Functions
-		//--------------- < region Funtions > ---------------
-		private void DeleteEmployee ( string deleteType, string employeeId ) {
-			using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-			using( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
-				try {
-					con.Open();
-					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = deleteType;
-					sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
+        #region Functions
+        //--------------- < region Funtions > ---------------
+        private void DisplayEmployeeRecords(string displayType)
+        {//Load/Read Data from database
+            using (SqlConnection con = new SqlConnection(connectionStringConfig))
+            using (SqlCommand sqlCmd = new SqlCommand("spDisplayEmployeeRecords", con))
+            {
+                try
+                {
+                    con.Open();
+                    DataTable dt = new DataTable();
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sqlCmd.Parameters.Add("@display_type", SqlDbType.NVarChar).Value = displayType;
 
-					int numRes = sqlCmd.ExecuteNonQuery();
-					if( numRes > 0 )
-						MessageBox.Show( ( employeeId != null ) ? $"{ txtEmpName.Text }'s Record DELETED Successfully!" : "All Employee Records DELETED Successfully!" );
-					else
-						MessageBox.Show( $"Cannot DELETE records! " );
-					RefreshData();
-				} catch( Exception ex ) {
-					MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
-				}
-			}
-		}
+                    sqlCmd.Connection = con;
+                    SqlDataAdapter sqlSda = new SqlDataAdapter(sqlCmd);
+                    sqlSda.Fill(dt);
 
-		private void DisplayEmployeeRecords ( string displayType ) {//Load/Read Data from database
-			using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-			using( SqlCommand sqlCmd = new SqlCommand( "spDisplayEmployeeRecords", con ) ) {
-				try {
-					con.Open();
-					DataTable dt = new DataTable();
-					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.Add( "@display_type", SqlDbType.NVarChar ).Value = displayType;
+                    dgvEmpDetails.AutoGenerateColumns = false;//if true displays all the records in the database
 
-					sqlCmd.Connection = con;
-					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
-					sqlSda.Fill( dt );
+                    // The property names are the column names in dbo.Employee
+                    dgvEmpDetails.Columns[0].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
+                    dgvEmpDetails.Columns[1].DataPropertyName = "employee_name";
+                    dgvEmpDetails.Columns[2].DataPropertyName = "city";
+                    dgvEmpDetails.Columns[3].DataPropertyName = "department";
+                    dgvEmpDetails.Columns[4].DataPropertyName = "gender";
 
-					dgvEmpDetails.AutoGenerateColumns = false;//if true displays all the records in the database
+                    // The property names are the column names in dbo.Employee_Health_Insurance
+                    dgvEmpDetails.Columns[5].DataPropertyName = "health_insurance_provider";
+                    dgvEmpDetails.Columns[6].DataPropertyName = "plan_name";
+                    dgvEmpDetails.Columns[7].DataPropertyName = "monthly_fee";
+                    dgvEmpDetails.Columns[8].DataPropertyName = "insurance_start_date";
 
-					// The property names are the column names in dbo.Employee
-					dgvEmpDetails.Columns[ 0 ].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
-					dgvEmpDetails.Columns[ 1 ].DataPropertyName = "employee_name";
-					dgvEmpDetails.Columns[ 2 ].DataPropertyName = "city";
-					dgvEmpDetails.Columns[ 3 ].DataPropertyName = "department";
-					dgvEmpDetails.Columns[ 4 ].DataPropertyName = "gender";
+                    // Custom cell format
+                    dgvEmpDetails.Columns[7].DefaultCellStyle.Format = "#,##0.00";
+                    dgvEmpDetails.Columns[8].DefaultCellStyle.Format = "MMMM dd, yyyy";
 
-					// The property names are the column names in dbo.Employee_Health_Insurance
-					dgvEmpDetails.Columns[ 5 ].DataPropertyName = "health_insurance_provider";
-					dgvEmpDetails.Columns[ 6 ].DataPropertyName = "plan_name";
-					dgvEmpDetails.Columns[ 7 ].DataPropertyName = "monthly_fee";
-					dgvEmpDetails.Columns[ 8 ].DataPropertyName = "insurance_start_date";
+                    dgvEmpDetails.DataSource = dt;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Cannot DISPLAY data in the datagridview! \nError: { ex.Message }");
+                }
+            }
+        }
 
-					// Custom cell format
-					dgvEmpDetails.Columns[ 7 ].DefaultCellStyle.Format = "#,##0.00";
-					dgvEmpDetails.Columns[ 8 ].DefaultCellStyle.Format = "MMMM dd, yyyy";
+        private void RefreshData()
+        {
+            ResethHealthInsuranceFields();
+            btnSave.Text = "Save";
+            EmployeeId = "";
+            txtEmpName.Text = "";
+            txtEmpCity.Text = "";
+            txtEmpDept.Text = "";
+            cboEmpGender.SelectedIndex = -1;
+            cboEmpGender.Text = "";
+            btnDelete.Enabled = false;
+            DisplayEmployeeRecords("DisplayAllEmployees");
+        }
 
-					dgvEmpDetails.DataSource = dt;
-				} catch( Exception ex ) {
-					MessageBox.Show( $"Cannot DISPLAY data in the datagridview! \nError: { ex.Message }" );
-				}
-			}
-		}
+        private void ResethHealthInsuranceFields()
+        {
+            txtEmpHealthInsuranceProvider.Text = "";
+            txtEmpInsurancePlanName.Text = "";
+            txtEmpInsuranceMonthlyFee.Text = "0.00";
+            dtpInsuranceStartDate.Value = DateTime.Now;
+        }
 
-		private void RefreshData () {
-			ResethHealthInsuranceFields();
-			btnSave.Text = "Save";
-			EmployeeId = "";
-			txtEmpName.Text = "";
-			txtEmpCity.Text = "";
-			txtEmpDept.Text = "";
-			cboEmpGender.SelectedIndex = -1;
-			cboEmpGender.Text = "";
-			btnDelete.Enabled = false;
-			DisplayEmployeeRecords( "DisplayAllEmployees" );
-		}
+        private void SetAddRemoveProgramsIcon()
+        {
+            //This Icon is seen in control panel (uninstalling the app)
+            if (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun)
+            {
+                try
+                {
+                    //The icon located in: (Right click Project -> Properties -> Application (tab) -> Icon)
+                    var iconSourcePath = Path.Combine(Application.StartupPath, "briefcase-4-fill.ico");
+                    if (!File.Exists(iconSourcePath)) { return; }
 
-		private void ResethHealthInsuranceFields () {
-			txtEmpHealthInsuranceProvider.Text = "";
-			txtEmpInsurancePlanName.Text = "";
-			txtEmpInsuranceMonthlyFee.Text = "0.00";
-			dtpInsuranceStartDate.Value = DateTime.Now;
-		}
+                    var myUninstallKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall");
+                    if (myUninstallKey == null) { return; }
 
-		private void SetAddRemoveProgramsIcon () {
-			//This Icon is seen in control panel (uninstalling the app)
-			if( ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun ) {
-				try {
-					//The icon located in: (Right click Project -> Properties -> Application (tab) -> Icon)
-					var iconSourcePath = Path.Combine( Application.StartupPath, "briefcase-4-fill.ico" );
-					if( !File.Exists( iconSourcePath ) ) { return; }
+                    var mySubKeyNames = myUninstallKey.GetSubKeyNames();
+                    foreach (var subkeyName in mySubKeyNames)
+                    {
+                        var myKey = myUninstallKey.OpenSubKey(subkeyName, true);
+                        var myValue = myKey.GetValue("DisplayName");
+                        if (myValue != null && myValue.ToString() == "SP CRUD")
+                        { // same as in 'Product name:' field (Located in: Right click Project -> Properties -> Publish (tab) -> Options -> Description)
+                            myKey.SetValue("DisplayIcon", iconSourcePath);
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Add Remove Programs Icon Error! \nError: " + ex.Message);
+                }
+            }
+        }
+        //--------------- </ region Funtions > ---------------
+        #endregion
 
-					var myUninstallKey = Registry.CurrentUser.OpenSubKey( @"Software\Microsoft\Windows\CurrentVersion\Uninstall" );
-					if( myUninstallKey == null ) { return; }
+        #region Button Click
+        //--------------- < region Buttons > ---------------
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            try
+            {
+                if (selectedRowCount >= 0)
+                {
+                    DialogResult dialog = MessageBox.Show($"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo);
+                    if (dialog == DialogResult.Yes)
+                    {
+                        //DeleteEmployee( "DeleteData", EmployeeId );
+                        using (SqlConnection con = new SqlConnection(connectionStringConfig))
+                        using (SqlCommand sqlCmd = new SqlCommand("spDeleteData", con))
+                        {
+                            try
+                            {
+                                con.Open();
+                                sqlCmd.CommandType = CommandType.StoredProcedure;
+                                sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
 
-					var mySubKeyNames = myUninstallKey.GetSubKeyNames();
-					foreach( var subkeyName in mySubKeyNames ) {
-						var myKey = myUninstallKey.OpenSubKey( subkeyName, true );
-						var myValue = myKey.GetValue( "DisplayName" );
-						if( myValue != null && myValue.ToString() == "SP CRUD" ) { // same as in 'Product name:' field (Located in: Right click Project -> Properties -> Publish (tab) -> Options -> Description)
-							myKey.SetValue( "DisplayIcon", iconSourcePath );
-							break;
-						}
-					}
-				} catch( Exception ex ) {
-					MessageBox.Show( "Add Remove Programs Icon Error! \nError: " + ex.Message );
-				}
-			}
-		}
-		//--------------- </ region Funtions > ---------------
-		#endregion
+                                int numRes = sqlCmd.ExecuteNonQuery();
+                                if (numRes > 0)
+                                {
+                                    MessageBox.Show($"{ txtEmpName.Text }'s Record DELETED Successfully!");
+                                    RefreshData();
+                                }
+                                else
+                                    MessageBox.Show($"Cannot DELETE records! ");
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please Select A Record !!!");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
+            }
+        }
 
-		#region Button Click
-		//--------------- < region Buttons > ---------------
-		private void btnDelete_Click ( object sender, EventArgs e ) {
-			int selectedRowCount = dgvEmpDetails.Rows.GetRowCount( DataGridViewElementStates.Selected );
-			try {
-				if( selectedRowCount >= 0 ) {
-					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
-					if( dialog == DialogResult.Yes ) {
-						//DeleteEmployee( "DeleteData", EmployeeId );
-						using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-						using( SqlCommand sqlCmd = new SqlCommand( "spDeleteData", con ) ) {
-							try {
-								con.Open();
-								sqlCmd.CommandType = CommandType.StoredProcedure;
-								sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
+        private void btnDeleteAllRecords_Click(object sender, EventArgs e)
+        {
+            DialogResult dialog = MessageBox.Show("Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo);
+            if (dialog == DialogResult.Yes)
+            {
+                //DeleteEmployee( "DeleteAllData", null );
+                using (SqlConnection con = new SqlConnection(connectionStringConfig))
+                using (SqlCommand sqlCmd = new SqlCommand("spDeleteAllEmployeeRecords", con))
+                {
+                    try
+                    {
+                        con.Open();
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
+                        int numRes = sqlCmd.ExecuteNonQuery();
+                        if (numRes > 0)
+                            MessageBox.Show("All Employee Records DELETED Successfully!");
+                        else
+                            MessageBox.Show($"Cannot DELETE records! ");
+                        RefreshData();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
+                    }
+                }
+            }
+        }
 
-								int numRes = sqlCmd.ExecuteNonQuery();
-								if( numRes > 0 ) {
-									MessageBox.Show( $"{ txtEmpName.Text }'s Record DELETED Successfully!" );
-									RefreshData();
-								} else
-									MessageBox.Show( $"Cannot DELETE records! " );
-							} catch( Exception ex ) {
-								MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
-							}
-						}
-					}
-				} else {
-					MessageBox.Show( "Please Select A Record !!!" );
-				}
-			} catch( Exception ex ) {
-				MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
-			}
-		}
+        private void btnDisplayAllEmployees_Click(object sender, EventArgs e)
+        {
+            DisplayEmployeeRecords("DisplayAllEmployees");
+        }
 
-		private void btnDeleteAllRecords_Click ( object sender, EventArgs e ) {
-			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
-			if( dialog == DialogResult.Yes ) {
-				//DeleteEmployee( "DeleteAllData", null );
-				using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-				using( SqlCommand sqlCmd = new SqlCommand( "spDeleteAllEmployeeRecords", con ) ) {
-					try {
-						con.Open();
-						sqlCmd.CommandType = CommandType.StoredProcedure;
-						int numRes = sqlCmd.ExecuteNonQuery();
-						if( numRes > 0 )
-							MessageBox.Show( "All Employee Records DELETED Successfully!" );
-						else
-							MessageBox.Show( $"Cannot DELETE records! " );
-						RefreshData();
-					} catch( Exception ex ) {
-						MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
-					}
-				}
-			}
-		}
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
 
-		private void btnDisplayAllEmployees_Click ( object sender, EventArgs e ) {
-			DisplayEmployeeRecords( "DisplayAllEmployees" );
-		}
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            //Save or Update btn
+            if (string.IsNullOrWhiteSpace(txtEmpName.Text))
+            {
+                MessageBox.Show("Enter Employee Name !!!");
+            }
+            else if (string.IsNullOrWhiteSpace(txtEmpCity.Text))
+            {
+                MessageBox.Show("Enter Current City !!!");
+            }
+            else if (string.IsNullOrWhiteSpace(txtEmpDept.Text))
+            {
+                MessageBox.Show("Enter Department !!!");
+            }
+            else if (cboEmpGender.SelectedIndex <= -1)
+            {
+                MessageBox.Show("Select Gender !!!");
+            }
+            else
+            {
+                using (SqlConnection con = new SqlConnection(connectionStringConfig))
+                using (SqlCommand sqlCmd = new SqlCommand("spCreateOrUpdateData", con))
+                {
+                    try
+                    {
+                        // If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
+                        if (string.IsNullOrWhiteSpace(txtEmpHealthInsuranceProvider.Text) ||
+                             string.IsNullOrWhiteSpace(txtEmpInsurancePlanName.Text) ||
+                             string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) ||
+                             float.Parse(txtEmpInsuranceMonthlyFee.Text) < 1)
+                        {
+                            ResethHealthInsuranceFields();
+                        }
 
-		private void btnRefresh_Click ( object sender, EventArgs e ) {
-			RefreshData();
-		}
+                        con.Open();
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
 
-		private void btnSave_Click ( object sender, EventArgs e ) {
-			//Save or Update btn
-			if( string.IsNullOrWhiteSpace( txtEmpName.Text ) ) {
-				MessageBox.Show( "Enter Employee Name !!!" );
-			} else if( string.IsNullOrWhiteSpace( txtEmpCity.Text ) ) {
-				MessageBox.Show( "Enter Current City !!!" );
-			} else if( string.IsNullOrWhiteSpace( txtEmpDept.Text ) ) {
-				MessageBox.Show( "Enter Department !!!" );
-			} else if( cboEmpGender.SelectedIndex <= -1 ) {
-				MessageBox.Show( "Select Gender !!!" );
-			} else {
-				using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-				using( SqlCommand sqlCmd = new SqlCommand( "spCreateOrUpdateData", con ) ) {
-					try {
-						// If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
-						if( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
-							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
-							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
-							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-							ResethHealthInsuranceFields();
-						}
+                        //Employee Record
+                        sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
+                        sqlCmd.Parameters.Add("@employee_name", SqlDbType.NVarChar, 250).Value = txtEmpName.Text;
+                        sqlCmd.Parameters.Add("@city", SqlDbType.NVarChar, 50).Value = txtEmpCity.Text;
+                        sqlCmd.Parameters.Add("@department", SqlDbType.NVarChar, 50).Value = txtEmpDept.Text;
+                        sqlCmd.Parameters.Add("@gender", SqlDbType.NVarChar, 6).Value = cboEmpGender.Text;
 
-						con.Open();
-						sqlCmd.CommandType = CommandType.StoredProcedure;
+                        //Employee Health Insurance Record
+                        sqlCmd.Parameters.Add("@health_insurance_provider", SqlDbType.NVarChar, 100).Value = txtEmpHealthInsuranceProvider.Text;
+                        sqlCmd.Parameters.Add("@plan_name", SqlDbType.NVarChar, 100).Value = txtEmpInsurancePlanName.Text;
+                        sqlCmd.Parameters.Add(new SqlParameter("@monthly_fee", SqlDbType.Decimal)
+                        {
+                            Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
+                            Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
+                            Value = string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) ? 0 : decimal.Parse(txtEmpInsuranceMonthlyFee.Text) //add 0 as default value in database
+                        });
+                        // Save insurance start date:
+                        if (string.IsNullOrWhiteSpace(txtEmpHealthInsuranceProvider.Text) ||
+                             string.IsNullOrWhiteSpace(txtEmpInsurancePlanName.Text) ||
+                             string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) ||
+                             float.Parse(txtEmpInsuranceMonthlyFee.Text) < 1)
+                        {
+                            sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = DBNull.Value;
+                        }
+                        else
+                        {
+                            sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
+                        }
 
-						//Employee Record
-						sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
-						sqlCmd.Parameters.Add( "@employee_name", SqlDbType.NVarChar, 250 ).Value = txtEmpName.Text;
-						sqlCmd.Parameters.Add( "@city", SqlDbType.NVarChar, 50 ).Value = txtEmpCity.Text;
-						sqlCmd.Parameters.Add( "@department", SqlDbType.NVarChar, 50 ).Value = txtEmpDept.Text;
-						sqlCmd.Parameters.Add( "@gender", SqlDbType.NVarChar, 6 ).Value = cboEmpGender.Text;
+                        int numRes = sqlCmd.ExecuteNonQuery();
+                        string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
+                        if (numRes > 0)
+                        {
+                            if (string.IsNullOrWhiteSpace(txtEmpHealthInsuranceProvider.Text) ||
+                                 string.IsNullOrWhiteSpace(txtEmpInsurancePlanName.Text) ||
+                                 string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) ||
+                                 float.Parse(txtEmpInsuranceMonthlyFee.Text) < 1)
+                            {
+                                MessageBox.Show($"{ txtEmpName.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on.");
+                            }
+                            else
+                            {
+                                MessageBox.Show($"{ txtEmpName.Text }'s record is { ActionType } successfully !!!");
+                            }
+                            RefreshData();
+                        }
+                        else
+                            MessageBox.Show($"{txtEmpName.Text} Already Exist !!!");
+                    }
+                    catch (SqlException ex)
+                    {
+                        if (ex.Number == 2627)
+                        {// Violation of unique constraint (Name should be unique)
+                            MessageBox.Show($"{txtEmpName.Text} Already Exist !!!");
+                        }
+                        else
+                            MessageBox.Show($"An SQL error occured while processing data. \nError: { ex.Message }");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
+                    }
+                }
+            }
+        }
 
-						//Employee Health Insurance Record
-						sqlCmd.Parameters.Add( "@health_insurance_provider", SqlDbType.NVarChar, 100 ).Value = txtEmpHealthInsuranceProvider.Text;
-						sqlCmd.Parameters.Add( "@plan_name", SqlDbType.NVarChar, 100 ).Value = txtEmpInsurancePlanName.Text;
-						sqlCmd.Parameters.Add( new SqlParameter( "@monthly_fee", SqlDbType.Decimal ) {
-							Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
-							Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
-							Value = string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ? 0 : decimal.Parse( txtEmpInsuranceMonthlyFee.Text ) //add 0 as default value in database
-						} );
-						// Save insurance start date:
-						if( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
-							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
-							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
-							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = DBNull.Value;
-						} else {
-							sqlCmd.Parameters.AddWithValue( "@insurance_start_date", SqlDbType.Date ).Value = dtpInsuranceStartDate.Value.Date;
-						}
+        private void btnSortEmployees_Click(object sender, EventArgs e)
+        {
+            if (btnSortEmployees.Text == "Employees Without Healh Insurance")
+            {
+                DisplayEmployeeRecords("DisplayEmployeesWithoutHealthInsuranceRecords");
+                btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
+            }
+            else
+            {
+                DisplayEmployeeRecords("DisplayEmployeesWithHealthInsuranceRecords");
+                btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
+            }
+            btnSortEmployees.Text = (btnSortEmployees.Text == "Employees Without Healh Insurance") ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
+        }
+        //--------------- < /region Buttons > ---------------
+        #endregion
 
-						int numRes = sqlCmd.ExecuteNonQuery();
-						string ActionType = ( btnSave.Text == "Save" ) ? "Saved" : "Updated";
-						if( numRes > 0 ) {
-							if( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
-								 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
-								 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
-								 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-								MessageBox.Show( $"{ txtEmpName.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on." );
-							} else {
-								MessageBox.Show( $"{ txtEmpName.Text }'s record is { ActionType } successfully !!!" );
-							}
-							RefreshData();
-						} else
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist !!!" );
-					} catch( SqlException ex ) {
-						if( ex.Number == 2627 ) {// Violation of unique constraint (Name should be unique)
-							MessageBox.Show( $"{txtEmpName.Text} Already Exist !!!" );
-						} else
-							MessageBox.Show( $"An SQL error occured while processing data. \nError: { ex.Message }" );
-					} catch( Exception ex ) {
-						MessageBox.Show( $"Cannot INSERT or UPDATE data! \nError: { ex.Message }" );
-					}
-				}
-			}
-		}
+        #region DataGridView
+        //--------------- < region DataGridView > ---------------
+        private void dgvEmpDetails_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.RowIndex != -1)
+                {
+                    DataGridViewRow row = dgvEmpDetails.Rows[e.RowIndex];
+                    //the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
+                    EmployeeId = row.Cells[0].Value?.ToString(); //The Employee ID is determined here (That's why we declared EmployeeId as string so it can be displayed in the dataGridView)
+                    txtEmpName.Text = row.Cells[1].Value?.ToString();
+                    txtEmpCity.Text = row.Cells[2].Value?.ToString();
+                    txtEmpDept.Text = row.Cells[3].Value?.ToString();
+                    cboEmpGender.Text = row.Cells[4].Value?.ToString();
+                    txtEmpHealthInsuranceProvider.Text = row.Cells[5].Value?.ToString();
+                    txtEmpInsurancePlanName.Text = row.Cells[6].Value?.ToString();
+                    txtEmpInsuranceMonthlyFee.Text = Convert.ToDecimal(row.Cells[7].Value).ToString("#,##0.00");
 
-		private void btnSortEmployees_Click ( object sender, EventArgs e ) {
-			if( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
-				DisplayEmployeeRecords( "DisplayEmployeesWithoutHealthInsuranceRecords" );
-				btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
-			} else {
-				DisplayEmployeeRecords( "DisplayEmployeesWithHealthInsuranceRecords" );
-				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
-			}
-			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
-		}
-		//--------------- < /region Buttons > ---------------
-		#endregion
+                    //Displaying the date in dateTimePicker
+                    var cellValue = dgvEmpDetails.Rows[e.RowIndex].Cells[8].Value;
+                    if (cellValue == null || cellValue == DBNull.Value
+                     || String.IsNullOrWhiteSpace(cellValue.ToString()))
+                    {
+                        dtpInsuranceStartDate.Value = DateTime.Now;
+                    }
+                    else
+                    {
+                        dtpInsuranceStartDate.Value = DateTime.Parse(row.Cells[8].Value?.ToString());
+                    }
 
-		#region DataGridView
-		//--------------- < region DataGridView > ---------------
-		private void dgvEmpDetails_CellClick ( object sender, DataGridViewCellEventArgs e ) {
-			try {
-				if( e.RowIndex != -1 ) {
-					DataGridViewRow row = dgvEmpDetails.Rows[ e.RowIndex ];
-					//the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
-					EmployeeId = row.Cells[ 0 ].Value?.ToString(); //The Employee ID is determined here (That's why we declared EmployeeId as string so it can be displayed in the dataGridView)
-					txtEmpName.Text = row.Cells[ 1 ].Value?.ToString();
-					txtEmpCity.Text = row.Cells[ 2 ].Value?.ToString();
-					txtEmpDept.Text = row.Cells[ 3 ].Value?.ToString();
-					cboEmpGender.Text = row.Cells[ 4 ].Value?.ToString();
-					txtEmpHealthInsuranceProvider.Text = row.Cells[ 5 ].Value?.ToString();
-					txtEmpInsurancePlanName.Text = row.Cells[ 6 ].Value?.ToString();
-					txtEmpInsuranceMonthlyFee.Text = Convert.ToDecimal( row.Cells[ 7 ].Value ).ToString( "#,##0.00" );
+                    btnSave.Text = "Update";
+                    btnDelete.Enabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Something is wrong with the selected record! \nError: { ex.Message }");
+            }
+        }
+        //--------------- < /region DataGridView > ---------------
+        #endregion
 
-					//Displaying the date in dateTimePicker
-					var cellValue = dgvEmpDetails.Rows[ e.RowIndex ].Cells[ 8 ].Value;
-					if( cellValue == null || cellValue == DBNull.Value
-					 || String.IsNullOrWhiteSpace( cellValue.ToString() ) ) {
-						dtpInsuranceStartDate.Value = DateTime.Now;
-					} else {
-						dtpInsuranceStartDate.Value = DateTime.Parse( row.Cells[ 8 ].Value?.ToString() );
-					}
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
+            string imageName = Path.GetFileName(ofd.FileName); //filepath with filename
+            string folderPath = @"Images\UserImages\";
+            var path = Path.Combine(folderPath, Path.GetFileName(imageName));
 
-					btnSave.Text = "Update";
-					btnDelete.Enabled = true;
-				}
-			} catch( Exception ex ) {
-				MessageBox.Show( $"Something is wrong with the selected record! \nError: { ex.Message }" );
-			}
-		}
-		//--------------- < /region DataGridView > ---------------
-		#endregion
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+        }
 
-		private void btnBrowse_Click ( object sender, EventArgs e ) {
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
-			string imageName = Path.GetFileName( ofd.FileName ); //filepath with filename
-			string folderPath = @"Images\UserImages\";
-			var path = Path.Combine( folderPath, Path.GetFileName( imageName ) );
+        private void dgvEmpDetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
-			if( !Directory.Exists( folderPath ) ) {
-				Directory.CreateDirectory( folderPath );
-			}
-		}
-
-		private void dgvEmpDetails_CellContentClick ( object sender, DataGridViewCellEventArgs e ) {
-
-		}
-	}
+        }
+    }
 }
