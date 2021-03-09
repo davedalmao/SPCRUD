@@ -29,7 +29,7 @@ namespace SPCRUD {
 		}
 
 		private void Form1_Load ( object sender, EventArgs e ) {
-			FetchEmpDetails( "DisplayAllEmployees" );
+			DisplayEmployeeRecords( "DisplayAllEmployees" );
 		}
 		//--------------- </ region Form1 > ---------------
 		#endregion
@@ -57,15 +57,14 @@ namespace SPCRUD {
 			}
 		}
 
-		private void FetchEmpDetails ( string readType ) {
-			//Load/Read Data from database
+		private void DisplayEmployeeRecords ( string displayType ) {//Load/Read Data from database
 			using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-			using( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+			using( SqlCommand sqlCmd = new SqlCommand( "spDisplayEmployeeRecords", con ) ) {
 				try {
 					con.Open();
 					DataTable dt = new DataTable();
 					sqlCmd.CommandType = CommandType.StoredProcedure;
-					sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar ).Value = readType;
+					sqlCmd.Parameters.Add( "@display_type", SqlDbType.NVarChar ).Value = displayType;
 
 					sqlCmd.Connection = con;
 					SqlDataAdapter sqlSda = new SqlDataAdapter( sqlCmd );
@@ -107,7 +106,7 @@ namespace SPCRUD {
 			cboEmpGender.SelectedIndex = -1;
 			cboEmpGender.Text = "";
 			btnDelete.Enabled = false;
-			FetchEmpDetails( "DisplayAllEmployees" );
+			DisplayEmployeeRecords( "DisplayAllEmployees" );
 		}
 
 		private void ResethHealthInsuranceFields () {
@@ -153,7 +152,24 @@ namespace SPCRUD {
 				if( selectedRowCount >= 0 ) {
 					DialogResult dialog = MessageBox.Show( $"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo );
 					if( dialog == DialogResult.Yes ) {
-						DeleteEmployee( "DeleteData", EmployeeId );
+						//DeleteEmployee( "DeleteData", EmployeeId );
+						using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+						using( SqlCommand sqlCmd = new SqlCommand( "spDeleteData", con ) ) {
+							try {
+								con.Open();
+								sqlCmd.CommandType = CommandType.StoredProcedure;
+								sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
+
+								int numRes = sqlCmd.ExecuteNonQuery();
+								if( numRes > 0 ) {
+									MessageBox.Show( $"{ txtEmpName.Text }'s Record DELETED Successfully!" );
+									RefreshData();
+								} else
+									MessageBox.Show( $"Cannot DELETE records! " );
+							} catch( Exception ex ) {
+								MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
+							}
+						}
 					}
 				} else {
 					MessageBox.Show( "Please Select A Record !!!" );
@@ -166,12 +182,27 @@ namespace SPCRUD {
 		private void btnDeleteAllRecords_Click ( object sender, EventArgs e ) {
 			DialogResult dialog = MessageBox.Show( "Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo );
 			if( dialog == DialogResult.Yes ) {
-				DeleteEmployee( "DeleteAllData", null );
+				//DeleteEmployee( "DeleteAllData", null );
+				using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
+				using( SqlCommand sqlCmd = new SqlCommand( "spDeleteAllEmployeeRecords", con ) ) {
+					try {
+						con.Open();
+						sqlCmd.CommandType = CommandType.StoredProcedure;
+						int numRes = sqlCmd.ExecuteNonQuery();
+						if( numRes > 0 )
+							MessageBox.Show( "All Employee Records DELETED Successfully!" );
+						else
+							MessageBox.Show( $"Cannot DELETE records! " );
+						RefreshData();
+					} catch( Exception ex ) {
+						MessageBox.Show( $"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }" );
+					}
+				}
 			}
 		}
 
 		private void btnDisplayAllEmployees_Click ( object sender, EventArgs e ) {
-			FetchEmpDetails( "DisplayAllEmployees" );
+			DisplayEmployeeRecords( "DisplayAllEmployees" );
 		}
 
 		private void btnRefresh_Click ( object sender, EventArgs e ) {
@@ -189,20 +220,19 @@ namespace SPCRUD {
 			} else if( cboEmpGender.SelectedIndex <= -1 ) {
 				MessageBox.Show( "Select Gender !!!" );
 			} else {
-				// If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
-				if( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
-					 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
-					 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
-					 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
-					ResethHealthInsuranceFields();
-				}
-
 				using( SqlConnection con = new SqlConnection( connectionStringConfig ) )
-				using( SqlCommand sqlCmd = new SqlCommand( "spCRUD_Operations", con ) ) {
+				using( SqlCommand sqlCmd = new SqlCommand( "spCreateOrUpdateData", con ) ) {
 					try {
+						// If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
+						if( string.IsNullOrWhiteSpace( txtEmpHealthInsuranceProvider.Text ) ||
+							 string.IsNullOrWhiteSpace( txtEmpInsurancePlanName.Text ) ||
+							 string.IsNullOrWhiteSpace( txtEmpInsuranceMonthlyFee.Text ) ||
+							 float.Parse( txtEmpInsuranceMonthlyFee.Text ) < 1 ) {
+							ResethHealthInsuranceFields();
+						}
+
 						con.Open();
 						sqlCmd.CommandType = CommandType.StoredProcedure;
-						sqlCmd.Parameters.Add( "@action_type", SqlDbType.NVarChar, 30 ).Value = "CreateOrUpdateData";
 
 						//Employee Record
 						sqlCmd.Parameters.Add( "@employee_id", SqlDbType.NVarChar ).Value = EmployeeId;
@@ -257,10 +287,10 @@ namespace SPCRUD {
 
 		private void btnSortEmployees_Click ( object sender, EventArgs e ) {
 			if( btnSortEmployees.Text == "Employees Without Healh Insurance" ) {
-				FetchEmpDetails( "WithoutHealthInsuranceRecords" );
+				DisplayEmployeeRecords( "DisplayEmployeesWithoutHealthInsuranceRecords" );
 				btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
 			} else {
-				FetchEmpDetails( "WithHealthInsuranceRecords" );
+				DisplayEmployeeRecords( "DisplayEmployeesWithHealthInsuranceRecords" );
 				btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
 			}
 			btnSortEmployees.Text = ( btnSortEmployees.Text == "Employees Without Healh Insurance" ) ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
