@@ -30,15 +30,6 @@ namespace SPCRUD {
 			this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.dgvEmpDetails = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-			this.EmpId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.EmployeeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Department = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Gender = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.txtEmpName = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
 			this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
 			this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -60,8 +51,20 @@ namespace SPCRUD {
 			this.btnDisplayAllEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnSortEmployees = new ComponentFactory.Krypton.Toolkit.KryptonButton();
 			this.btnDeleteAllRecords = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			this.btnBrowse = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+			this.EmpId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.EmployeeName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.City = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Department = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Gender = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.dgvEmpDetails)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.cboEmpGender)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnSave
@@ -147,63 +150,7 @@ namespace SPCRUD {
 			this.dgvEmpDetails.Size = new System.Drawing.Size(1131, 242);
 			this.dgvEmpDetails.TabIndex = 16;
 			this.dgvEmpDetails.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmpDetails_CellClick);
-			// 
-			// EmpId
-			// 
-			this.EmpId.HeaderText = "Employee Id";
-			this.EmpId.Name = "EmpId";
-			this.EmpId.ReadOnly = true;
-			// 
-			// EmployeeName
-			// 
-			this.EmployeeName.HeaderText = "Name";
-			this.EmployeeName.Name = "EmployeeName";
-			this.EmployeeName.ReadOnly = true;
-			// 
-			// City
-			// 
-			this.City.HeaderText = "City";
-			this.City.Name = "City";
-			this.City.ReadOnly = true;
-			// 
-			// Department
-			// 
-			this.Department.HeaderText = "Department";
-			this.Department.Name = "Department";
-			this.Department.ReadOnly = true;
-			// 
-			// Gender
-			// 
-			this.Gender.HeaderText = "Gender";
-			this.Gender.Name = "Gender";
-			this.Gender.ReadOnly = true;
-			// 
-			// Column1
-			// 
-			this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.Column1.HeaderText = "Health Insurance Provider";
-			this.Column1.Name = "Column1";
-			this.Column1.ReadOnly = true;
-			// 
-			// Column2
-			// 
-			this.Column2.HeaderText = "Insurance Plan Name";
-			this.Column2.Name = "Column2";
-			this.Column2.ReadOnly = true;
-			this.Column2.Width = 135;
-			// 
-			// Column3
-			// 
-			this.Column3.HeaderText = "Monthly Fee";
-			this.Column3.Name = "Column3";
-			this.Column3.ReadOnly = true;
-			// 
-			// Column4
-			// 
-			this.Column4.HeaderText = "Insurance Start Date";
-			this.Column4.Name = "Column4";
-			this.Column4.ReadOnly = true;
-			this.Column4.Width = 136;
+			this.dgvEmpDetails.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEmpDetails_CellContentClick);
 			// 
 			// txtEmpName
 			// 
@@ -443,11 +390,93 @@ namespace SPCRUD {
 			this.btnDeleteAllRecords.Values.Text = "Delete All Employees";
 			this.btnDeleteAllRecords.Click += new System.EventHandler(this.btnDeleteAllRecords_Click);
 			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Location = new System.Drawing.Point(697, 197);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(96, 71);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.TabIndex = 44;
+			this.pictureBox1.TabStop = false;
+			// 
+			// btnBrowse
+			// 
+			this.btnBrowse.Location = new System.Drawing.Point(575, 235);
+			this.btnBrowse.Name = "btnBrowse";
+			this.btnBrowse.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+			this.btnBrowse.Size = new System.Drawing.Size(105, 33);
+			this.btnBrowse.StateCommon.Back.Draw = ComponentFactory.Krypton.Toolkit.InheritBool.True;
+			this.btnBrowse.StateCommon.Back.ImageStyle = ComponentFactory.Krypton.Toolkit.PaletteImageStyle.TopRight;
+			this.btnBrowse.StateCommon.Content.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnBrowse.TabIndex = 45;
+			this.btnBrowse.Values.Image = global::SPCRUD.Properties.Resources.emotion_happy_fill;
+			this.btnBrowse.Values.Text = "Browse";
+			this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+			// 
+			// EmpId
+			// 
+			this.EmpId.HeaderText = "Employee Id";
+			this.EmpId.Name = "EmpId";
+			this.EmpId.ReadOnly = true;
+			// 
+			// EmployeeName
+			// 
+			this.EmployeeName.HeaderText = "Name";
+			this.EmployeeName.Name = "EmployeeName";
+			this.EmployeeName.ReadOnly = true;
+			// 
+			// City
+			// 
+			this.City.HeaderText = "City";
+			this.City.Name = "City";
+			this.City.ReadOnly = true;
+			// 
+			// Department
+			// 
+			this.Department.HeaderText = "Department";
+			this.Department.Name = "Department";
+			this.Department.ReadOnly = true;
+			// 
+			// Gender
+			// 
+			this.Gender.HeaderText = "Gender";
+			this.Gender.Name = "Gender";
+			this.Gender.ReadOnly = true;
+			// 
+			// Column1
+			// 
+			this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.Column1.HeaderText = "Health Insurance Provider";
+			this.Column1.Name = "Column1";
+			this.Column1.ReadOnly = true;
+			// 
+			// Column2
+			// 
+			this.Column2.HeaderText = "Insurance Plan Name";
+			this.Column2.Name = "Column2";
+			this.Column2.ReadOnly = true;
+			this.Column2.Width = 135;
+			// 
+			// Column3
+			// 
+			this.Column3.HeaderText = "Monthly Fee";
+			this.Column3.Name = "Column3";
+			this.Column3.ReadOnly = true;
+			// 
+			// Column4
+			// 
+			this.Column4.HeaderText = "Insurance Start Date";
+			this.Column4.Name = "Column4";
+			this.Column4.ReadOnly = true;
+			this.Column4.Width = 136;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1190, 603);
+			this.Controls.Add(this.btnBrowse);
+			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.btnDeleteAllRecords);
 			this.Controls.Add(this.btnSortEmployees);
 			this.Controls.Add(this.btnDisplayAllEmployees);
@@ -479,6 +508,7 @@ namespace SPCRUD {
 			this.Load += new System.EventHandler(this.Form1_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dgvEmpDetails)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.cboEmpGender)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -500,15 +530,6 @@ namespace SPCRUD {
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
 		private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker dtpInsuranceStartDate;
-		private System.Windows.Forms.DataGridViewTextBoxColumn EmpId;
-		private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn City;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Department;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Gender;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
 		private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtEmpInsuranceMonthlyFee;
 		private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
@@ -519,6 +540,17 @@ namespace SPCRUD {
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDisplayAllEmployees;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnSortEmployees;
 		private ComponentFactory.Krypton.Toolkit.KryptonButton btnDeleteAllRecords;
+		private System.Windows.Forms.PictureBox pictureBox1;
+		private ComponentFactory.Krypton.Toolkit.KryptonButton btnBrowse;
+		private System.Windows.Forms.DataGridViewTextBoxColumn EmpId;
+		private System.Windows.Forms.DataGridViewTextBoxColumn EmployeeName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn City;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Department;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Gender;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
 	}
 }
 
