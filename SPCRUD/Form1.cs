@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Deployment.Application;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,50 @@ namespace SPCRUD
 
         #region Functions
         //--------------- < region Funtions > ---------------
+        private ImageFormat CheckFileExtension(string extension)
+        {
+            switch (extension.ToLower())
+            {
+                case ".bmp":
+                    return ImageFormat.Bmp;
+                case ".emf":
+                    return ImageFormat.Emf;
+                case ".exif":
+                    return ImageFormat.Exif;
+                case ".jpg":
+                    return ImageFormat.Jpeg;
+                case ".memorybmp":
+                    return ImageFormat.MemoryBmp;
+                case ".png":
+                    return ImageFormat.Png;
+                case ".tiff":
+                    return ImageFormat.Tiff;
+                case ".wmf":
+                    return ImageFormat.Wmf;
+                default:
+                    return ImageFormat.Jpeg;
+            }
+        }
+
+        public static Image ConvertByteArrayToImage(byte[] byteArrayIn)
+        {
+            using (MemoryStream ms = new MemoryStream(byteArrayIn))
+            {
+                Image returnImage = Image.FromStream(ms);
+                return returnImage;
+            }
+        }
+
+        byte[] ConvertImageToByteArray(Image img)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ImageFormat relativeImageFormat = CheckFileExtension(lblFileExtension.Text);
+                img.Save(ms, relativeImageFormat);
+                return ms.ToArray();
+            }
+        }
+
         private void DisplayEmployeeRecords(string displayType)
         {//Load/Read Data from database
             using (SqlConnection con = new SqlConnection(connectionStringConfig))
@@ -104,6 +149,35 @@ namespace SPCRUD
             txtEmpInsurancePlanName.Text = "";
             txtEmpInsuranceMonthlyFee.Text = "0.00";
             dtpInsuranceStartDate.Value = DateTime.Now;
+        }
+
+        //Change Image to Correct Orientation When displaying to PictureBox
+        public static RotateFlipType Rotate(Image bmp)
+        {
+            const int OrientationId = 0x0112;
+            PropertyItem pi = bmp.PropertyItems.Select(x => x).FirstOrDefault(x => x.Id == OrientationId);
+            if (pi == null)
+                return RotateFlipType.RotateNoneFlipNone;
+
+            byte o = pi.Value[0];
+
+            //Orientations
+            if (o == 2) //TopRight
+                return RotateFlipType.RotateNoneFlipX;
+            if (o == 3) //BottomRight
+                return RotateFlipType.RotateNoneFlipXY;
+            if (o == 4) //BottomLeft
+                return RotateFlipType.RotateNoneFlipY;
+            if (o == 5) //LeftTop
+                return RotateFlipType.Rotate90FlipX;
+            if (o == 6) //RightTop
+                return RotateFlipType.Rotate90FlipNone;
+            if (o == 7) //RightBottom
+                return RotateFlipType.Rotate90FlipY;
+            if (o == 8) //LeftBottom
+                return RotateFlipType.Rotate90FlipXY;
+
+            return RotateFlipType.RotateNoneFlipNone; //TopLeft (what the image looks by default) [or] Unknown
         }
 
         private void SetAddRemoveProgramsIcon()
@@ -394,21 +468,35 @@ namespace SPCRUD
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
-            string imageName = Path.GetFileName(ofd.FileName); //filepath with filename
-            string folderPath = @"Images\UserImages\";
-            var path = Path.Combine(folderPath, Path.GetFileName(imageName));
-
-            if (!Directory.Exists(folderPath))
+            using (OpenFileDialog openFile = new OpenFileDialog())
             {
-                Directory.CreateDirectory(folderPath);
+                openFile.Title = "Select image for [user]";
+                openFile.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
+                openFile.Multiselect = false;
+
+                if (openFile.ShowDialog() == DialogResult.OK)
+                {
+                    try //image validation
+                    {
+                        Bitmap bmp = new Bitmap(openFile.FileName);//to validate the image
+                        if (bmp != null)//if image is valid
+                        {
+                            lblFileExtension.Text = Path.GetExtension(openFile.SafeFileName);//file extension
+                            pictureBox1.Load(openFile.FileName);//display selected image file
+                            pictureBox1.Image.RotateFlip(Rotate(bmp));//display image in proper orientation
+                            bmp.Dispose();
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        MessageBox.Show("The specified image file is invalid.");
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("The path to image is invalid.");
+                    }
+                }
             }
-        }
-
-        private void dgvEmpDetails_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }
