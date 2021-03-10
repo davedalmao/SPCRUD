@@ -77,9 +77,10 @@ namespace SPCRUD
 
         byte[] ConvertImageToByteArray(Image img)
         {
+            //add try catch here
             using (MemoryStream ms = new MemoryStream())
             {
-                ImageFormat relativeImageFormat = CheckFileExtension(lblFileExtension.Text);
+                ImageFormat relativeImageFormat = CheckFileExtension(lblFileExtension.Text);//here
                 img.Save(ms, relativeImageFormat);
                 return ms.ToArray();
             }
@@ -140,6 +141,8 @@ namespace SPCRUD
             cboEmpGender.SelectedIndex = -1;
             cboEmpGender.Text = "";
             btnDelete.Enabled = false;
+            pictureBox1.Image = null;
+            lblFileExtension.Text = "";
             DisplayEmployeeRecords("DisplayAllEmployees");
         }
 
@@ -369,6 +372,10 @@ namespace SPCRUD
                             sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
                         }
 
+                        //Employee Image 
+                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary, 8000).Value = ConvertImageToByteArray(pictureBox1.Image);//here
+                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.VarChar, 12).Value = lblFileExtension.Text;
+
                         int numRes = sqlCmd.ExecuteNonQuery();
                         string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
                         if (numRes > 0)
@@ -400,7 +407,7 @@ namespace SPCRUD
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
+                        MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.StackTrace }");
                     }
                 }
             }
@@ -454,13 +461,41 @@ namespace SPCRUD
                         dtpInsuranceStartDate.Value = DateTime.Parse(row.Cells[8].Value?.ToString());
                     }
 
+                    //Display user image
+                    using (SqlConnection con = new SqlConnection(connectionStringConfig))
+                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image, file_extension FROM dbo.Employee_Image WHERE user_image_id=@user_image_id ", con))
+                    {
+                        con.Open();//row.Cells[0].Value?.ToString()
+                        sqlCmd.Parameters.Add("@user_image_id", SqlDbType.NVarChar).Value = EmployeeId;
+
+                        using (SqlDataReader reader = sqlCmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                reader.Read();
+                                pictureBox1.Image = ConvertByteArrayToImage((byte[])(reader.GetValue(0)));
+                                lblFileExtension.Text = reader.GetValue(1).ToString();
+                            }
+                            else
+                            {
+                                MessageBox.Show("wtf");
+                            }
+                        }
+                    }
+
                     btnSave.Text = "Update";
                     btnDelete.Enabled = true;
                 }
             }
+            catch (InvalidCastException)
+            {
+                //MessageBox.Show($"This record has no image! \nError: { ex.Message }");
+                //if record has null image (it will throw InvalidCastException)
+                pictureBox1.Image = null;
+            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Something is wrong with the selected record! \nError: { ex.Message }");
+                MessageBox.Show($"Something is wrong with the selected record! \nError: { ex.GetType().FullName }");
             }
         }
         //--------------- < /region DataGridView > ---------------
@@ -496,6 +531,18 @@ namespace SPCRUD
                         MessageBox.Show("The path to image is invalid.");
                     }
                 }
+            }
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            //pictureBox border color
+            Color themeColor = Color.FromArgb(172, 188, 212);
+
+            //if image is not present in the picturebox -> paint its border
+            if (pictureBox1.Image == null)
+            {
+                ControlPaint.DrawBorder(e.Graphics, pictureBox1.ClientRectangle, themeColor, ButtonBorderStyle.Solid);
             }
         }
     }
