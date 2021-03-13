@@ -29,8 +29,8 @@ namespace SPCRUD
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -68,6 +68,7 @@ namespace SPCRUD
             this.btnBrowse = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.lblFileExtension = new System.Windows.Forms.Label();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lblImageLocation = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmpDetails)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboEmpGender)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -120,8 +121,8 @@ namespace SPCRUD
             // 
             this.dgvEmpDetails.AllowUserToAddRows = false;
             this.dgvEmpDetails.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvEmpDetails.ColumnHeadersHeight = 40;
             this.dgvEmpDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvEmpDetails.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -147,8 +148,8 @@ namespace SPCRUD
             this.dgvEmpDetails.RowHeadersVisible = false;
             this.dgvEmpDetails.RowHeadersWidth = 50;
             this.dgvEmpDetails.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvEmpDetails.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dgvEmpDetails.RowTemplate.Height = 25;
             this.dgvEmpDetails.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -485,11 +486,21 @@ namespace SPCRUD
             this.kryptonLabel2.Values.Image = global::SPCRUD.Properties.Resources.community_fill;
             this.kryptonLabel2.Values.Text = "Current City :";
             // 
+            // lblImageLocation
+            // 
+            this.lblImageLocation.AutoSize = true;
+            this.lblImageLocation.Location = new System.Drawing.Point(113, 185);
+            this.lblImageLocation.Name = "lblImageLocation";
+            this.lblImageLocation.Size = new System.Drawing.Size(76, 13);
+            this.lblImageLocation.TabIndex = 47;
+            this.lblImageLocation.Text = "imageLocation";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1190, 638);
+            this.Controls.Add(this.lblImageLocation);
             this.Controls.Add(this.lblFileExtension);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.pictureBox1);
@@ -568,6 +579,7 @@ namespace SPCRUD
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.Label lblFileExtension;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
+        private System.Windows.Forms.Label lblImageLocation;
     }
 }
 

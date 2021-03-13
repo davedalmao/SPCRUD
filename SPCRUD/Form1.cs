@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Windows.Media.Imaging;
 
 namespace SPCRUD
 {
@@ -23,6 +23,7 @@ namespace SPCRUD
     {
         static string connectionStringConfig = ConfigurationManager.ConnectionStrings["SystemDatabaseConnectionTemp"].ConnectionString;
         string EmployeeId = "";
+        // string imageLocation = "";
 
         #region Form1
         //--------------- < region Form1 > ---------------
@@ -41,50 +42,8 @@ namespace SPCRUD
 
         #region Functions
         //--------------- < region Funtions > ---------------
-        private ImageFormat CheckFileExtension(string extension)
-        {
-            switch (extension.ToLower())
-            {
-                case ".bmp":
-                    return ImageFormat.Bmp;
-                case ".emf":
-                    return ImageFormat.Emf;
-                case ".exif":
-                    return ImageFormat.Exif;
-                case ".jpg":
-                    return ImageFormat.Jpeg;
-                case ".memorybmp":
-                    return ImageFormat.MemoryBmp;
-                case ".png":
-                    return ImageFormat.Png;
-                case ".tiff":
-                    return ImageFormat.Tiff;
-                case ".wmf":
-                    return ImageFormat.Wmf;
-                default:
-                    return ImageFormat.Jpeg;
-            }
-        }
 
-        public static Image ConvertByteArrayToImage(byte[] byteArrayIn)
-        {
-            using (MemoryStream ms = new MemoryStream(byteArrayIn))
-            {
-                Image returnImage = Image.FromStream(ms);
-                return returnImage;
-            }
-        }
 
-        byte[] ConvertImageToByteArray(Image img)
-        {
-            //add try catch here
-            using (MemoryStream ms = new MemoryStream())
-            {
-                ImageFormat relativeImageFormat = CheckFileExtension(lblFileExtension.Text);//here
-                img.Save(ms, relativeImageFormat);
-                return ms.ToArray();
-            }
-        }
 
         private void DisplayEmployeeRecords(string displayType)
         {//Load/Read Data from database
@@ -144,6 +103,8 @@ namespace SPCRUD
             pictureBox1.Image = null;
             lblFileExtension.Text = "";
             DisplayEmployeeRecords("DisplayAllEmployees");
+
+            txtEmpName.Focus();
         }
 
         private void ResethHealthInsuranceFields()
@@ -372,9 +333,12 @@ namespace SPCRUD
                             sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
                         }
 
+
+
+
                         //Employee Image 
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary, 8000).Value = ConvertImageToByteArray(pictureBox1.Image);//here
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.VarChar, 12).Value = lblFileExtension.Text;
+                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary, 8000).Value = ImageConverter.ConvertImageToByteArray(pictureBox1.Image);//error here
+                        //sqlCmd.Parameters.Add("@file_extension", SqlDbType.VarChar, 12).Value = lblFileExtension.Text;
 
                         int numRes = sqlCmd.ExecuteNonQuery();
                         string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
@@ -398,8 +362,8 @@ namespace SPCRUD
                     }
                     catch (SqlException ex)
                     {
-                        if (ex.Number == 2627)
-                        {// Violation of unique constraint (Name should be unique)
+                        if (ex.Number == 2627)// Violation of unique constraint (Name should be unique)
+                        {
                             MessageBox.Show($"{txtEmpName.Text} Already Exist !!!");
                         }
                         else
@@ -407,7 +371,7 @@ namespace SPCRUD
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.StackTrace }");
+                        MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
                     }
                 }
             }
@@ -463,22 +427,22 @@ namespace SPCRUD
 
                     //Display user image
                     using (SqlConnection con = new SqlConnection(connectionStringConfig))
-                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image, file_extension FROM dbo.Employee_Image WHERE user_image_id=@user_image_id ", con))
+                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image FROM dbo.Employee_Image WHERE employee_id=@employee_id", con))
                     {
-                        con.Open();//row.Cells[0].Value?.ToString()
-                        sqlCmd.Parameters.Add("@user_image_id", SqlDbType.NVarChar).Value = EmployeeId;
+                        con.Open();
+                        sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
 
                         using (SqlDataReader reader = sqlCmd.ExecuteReader())
                         {
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                pictureBox1.Image = ConvertByteArrayToImage((byte[])(reader.GetValue(0)));
-                                lblFileExtension.Text = reader.GetValue(1).ToString();
+                                pictureBox1.Image = ImageConverter.ConvertByteArrayToImage((byte[])(reader.GetValue(0)));
+                                //lblFileExtension.Text = reader.GetValue(1).ToString();
                             }
                             else
                             {
-                                MessageBox.Show("wtf");
+                                pictureBox1.Image = null;
                             }
                         }
                     }
@@ -514,14 +478,38 @@ namespace SPCRUD
                     try //image validation
                     {
                         Bitmap bmp = new Bitmap(openFile.FileName);//to validate the image
+                        string imageFilePath = openFile.FileName;
+                        string imageFileName = openFile.SafeFileName;
+
+
                         if (bmp != null)//if image is valid
                         {
-                            lblFileExtension.Text = Path.GetExtension(openFile.SafeFileName);//file extension
-                            pictureBox1.Load(openFile.FileName);//display selected image file
+                            //imageLocation = imageFilePath;
+                            //lblFileExtension.Text = Path.GetExtension(imageFileName);//file extension
+                            //pictureBox1.Load(filePath);//display selected image file
+                            pictureBox1.Image = Image.FromFile(imageFilePath);
                             pictureBox1.Image.RotateFlip(Rotate(bmp));//display image in proper orientation
                             bmp.Dispose();
                         }
+
+                        //using (Bitmap bmp = new Bitmap(filePath))
+                        //{
+                        //    if (bmp != null)
+                        //    {
+                        //        img = new Bitmap(bmp);
+                        //        pictureBox1.Image = img;
+                        //        pictureBox1.Image.RotateFlip(Rotate(bmp));
+                        //        lblFileExtension.Text = Path.GetExtension(fileName);
+                        //    }
+                        //    else
+                        //    {
+                        //        MessageBox.Show("The path to image is invalid.");
+                        //    }
+                        //}
                     }
+
+
+
                     catch (ArgumentException)
                     {
                         MessageBox.Show("The specified image file is invalid.");
