@@ -101,9 +101,7 @@ namespace SPCRUD
             cboEmpGender.Text = "";
             btnDelete.Enabled = false;
             pictureBox1.Image = null;
-            lblFileExtension.Text = "";
             DisplayEmployeeRecords("DisplayAllEmployees");
-
             txtEmpName.Focus();
         }
 
@@ -333,12 +331,8 @@ namespace SPCRUD
                             sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
                         }
 
-
-
-
                         //Employee Image 
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary, 8000).Value = ImageConverter.ConvertImageToByteArray(pictureBox1.Image);//error here
-                        //sqlCmd.Parameters.Add("@file_extension", SqlDbType.VarChar, 12).Value = lblFileExtension.Text;
+                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageConverter.ImageToBytes(pictureBox1.Image);
 
                         int numRes = sqlCmd.ExecuteNonQuery();
                         string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
@@ -437,8 +431,7 @@ namespace SPCRUD
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                pictureBox1.Image = ImageConverter.ConvertByteArrayToImage((byte[])(reader.GetValue(0)));
-                                //lblFileExtension.Text = reader.GetValue(1).ToString();
+                                pictureBox1.Image = ImageConverter.BytesToImage((byte[])(reader.GetValue(0)));
                             }
                             else
                             {
@@ -489,6 +482,7 @@ namespace SPCRUD
                             //pictureBox1.Load(filePath);//display selected image file
                             pictureBox1.Image = Image.FromFile(imageFilePath);
                             pictureBox1.Image.RotateFlip(Rotate(bmp));//display image in proper orientation
+                            txtEmpName.Focus();
                             bmp.Dispose();
                         }
 
