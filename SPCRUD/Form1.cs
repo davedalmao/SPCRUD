@@ -22,6 +22,7 @@ namespace SPCRUD
     //Icon Color: #ACBCD4
     public partial class Form1 : Form
     {
+        //change to "SystemDatabaseConnection"(the final connectionString) when app is ready to be deployed
         static string connectionStringConfig = ConfigurationManager.ConnectionStrings["SystemDatabaseConnectionTemp"].ConnectionString;
         string EmployeeId = "";
         readonly Color themeColor = Color.FromArgb(172, 188, 212);
@@ -119,6 +120,38 @@ namespace SPCRUD
             }
         }
 
+        private void DisplayEmployeeImge()
+        {
+            //Display user image
+            string sqlQuery = "SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id";
+            using (SqlConnection con = new SqlConnection(connectionStringConfig))
+            using (SqlCommand sqlCmd = new SqlCommand(sqlQuery, con))
+            {
+                con.Open();
+                sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
+
+                using (SqlDataReader reader = sqlCmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        if (reader.GetValue(0) == null && reader.GetValue(0) == null) //if image is null add border color to tag
+                        {
+                            pictureBox1.Tag = themeColor;
+                        }
+                        else
+                        {
+                            pictureBox1.Tag = null;
+                            lblFileExtension.Text = reader.GetValue(1).ToString();
+                            pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
+                        }
+                        return;
+                    }
+                    pictureBox1.Image = null; //if (!reader.HasRows)
+                }
+            }
+        }
+
         private void DisplayEmployeeRecords(string displayType)
         {//Load/Read Data from database
             using (SqlConnection con = new SqlConnection(connectionStringConfig))
@@ -196,10 +229,7 @@ namespace SPCRUD
                 try
                 {
                     // If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
-                    if (CheckHealthInsuranceFields())
-                    {
-                        ResethHealthInsuranceFields();
-                    }
+                    if (CheckHealthInsuranceFields()) { ResethHealthInsuranceFields(); }
 
                     con.Open();
                     sqlCmd.CommandType = CommandType.StoredProcedure;
@@ -246,8 +276,6 @@ namespace SPCRUD
                         sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = lblFileExtension.Text;
                     }
 
-
-
                     int numRes = sqlCmd.ExecuteNonQuery();
                     string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
                     if (numRes > 0) //if query is successful
@@ -290,6 +318,44 @@ namespace SPCRUD
 
         #region Button Click
         //--------------- < region Buttons > ---------------
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFile = new OpenFileDialog())
+            {
+                openFile.Title = "Select image for [user]";
+                openFile.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
+                openFile.Multiselect = false;
+
+                if (openFile.ShowDialog() == DialogResult.OK)
+                {
+                    try //image validation
+                    {
+                        Bitmap bmp = new Bitmap(openFile.FileName); //to validate the image
+                        string imageFilePath = openFile.FileName;
+                        string imageFileName = openFile.SafeFileName;
+
+                        if (bmp != null) //if image is valid
+                        {
+                            pictureBox1.Image = Image.FromFile(imageFilePath); //display image selected from file explorer
+                            pictureBox1.Image.RotateFlip(ImageOperations.Rotate(bmp)); //display image in proper orientation
+                            lblFileExtension.Text = Path.GetExtension(openFile.SafeFileName); //file extension
+                            txtEmpName.Focus();
+                            bmp.Dispose();
+                            pictureBox1.Tag = null;
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        MessageBox.Show("The specified image file is invalid.");
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("The path to image is invalid.");
+                    }
+                }
+            }
+        }
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
@@ -385,7 +451,7 @@ namespace SPCRUD
                 {
                     DataGridViewRow row = dgvEmpDetails.Rows[e.RowIndex];
                     //the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
-                    EmployeeId = row.Cells[0].Value?.ToString(); //The Employee ID is determined here (That's why we declared EmployeeId as string so it can be displayed in the dataGridView)
+                    EmployeeId = row.Cells[0].Value?.ToString(); //The Employee ID is determined here (the variable EmployeeId will be assigned a new value that is in the dgv)
                     txtEmpName.Text = row.Cells[1].Value?.ToString();
                     txtEmpCity.Text = row.Cells[2].Value?.ToString();
                     txtEmpDept.Text = row.Cells[3].Value?.ToString();
@@ -406,38 +472,7 @@ namespace SPCRUD
                         dtpInsuranceStartDate.Value = DateTime.Parse(row.Cells[8].Value?.ToString());
                     }
 
-                    //Display user image
-                    using (SqlConnection con = new SqlConnection(connectionStringConfig))
-                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id", con))
-                    {
-                        con.Open();
-                        sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
-
-                        using (SqlDataReader reader = sqlCmd.ExecuteReader())
-                        {
-                            if (reader.HasRows)
-                            {
-                                reader.Read();
-
-                                //if image is null add border color to tag
-                                if (reader.GetValue(0) == null && reader.GetValue(0) == null)
-                                {
-                                    pictureBox1.Tag = themeColor;
-                                }
-                                else
-                                {
-                                    pictureBox1.Tag = null;
-                                    lblFileExtension.Text = reader.GetValue(1).ToString();
-                                    pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
-                                }
-                            }
-                            else
-                            {
-                                pictureBox1.Image = null;
-                            }
-                        }
-                    }
-
+                    DisplayEmployeeImge();
                     btnSave.Text = "Update";
                     btnDelete.Enabled = true;
                 }
@@ -456,44 +491,8 @@ namespace SPCRUD
         //--------------- < /region DataGridView > ---------------
         #endregion
 
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFile = new OpenFileDialog())
-            {
-                openFile.Title = "Select image for [user]";
-                openFile.Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg; *.jpeg; *.jpe; *.jfif; *.png|All files (*.*)|*.*";
-                openFile.Multiselect = false;
-
-                if (openFile.ShowDialog() == DialogResult.OK)
-                {
-                    try //image validation
-                    {
-                        Bitmap bmp = new Bitmap(openFile.FileName); //to validate the image
-                        string imageFilePath = openFile.FileName;
-                        string imageFileName = openFile.SafeFileName;
-
-                        if (bmp != null)//if image is valid
-                        {
-                            pictureBox1.Image = Image.FromFile(imageFilePath); //display image selected from file explorer
-                            pictureBox1.Image.RotateFlip(ImageOperations.Rotate(bmp)); //display image in proper orientation
-                            lblFileExtension.Text = Path.GetExtension(openFile.SafeFileName); //file extension
-                            txtEmpName.Focus();
-                            bmp.Dispose();
-                            pictureBox1.Tag = null;
-                        }
-                    }
-                    catch (ArgumentException)
-                    {
-                        MessageBox.Show("The specified image file is invalid.");
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        MessageBox.Show("The path to image is invalid.");
-                    }
-                }
-            }
-        }
-
+        #region PictureBox
+        //--------------- < region PictureBox > ---------------
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             //if image is not present in the picturebox -> paint its border
@@ -508,5 +507,7 @@ namespace SPCRUD
                 ControlPaint.DrawBorder(e.Graphics, pictureBox1.ClientRectangle, themeColor, ButtonBorderStyle.Solid);
             }
         }
+        //--------------- </ region PictureBox > ---------------
+        #endregion
     }
 }
