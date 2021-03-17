@@ -29,8 +29,8 @@ namespace SPCRUD
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnSave = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnRefresh = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnDelete = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -52,7 +52,6 @@ namespace SPCRUD
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.cboEmpGender = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.dtpInsuranceStartDate = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.txtEmpInsuranceMonthlyFee = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -119,8 +118,8 @@ namespace SPCRUD
             // 
             this.dgvEmpDetails.AllowUserToAddRows = false;
             this.dgvEmpDetails.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvEmpDetails.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvEmpDetails.ColumnHeadersHeight = 40;
             this.dgvEmpDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvEmpDetails.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -146,8 +145,8 @@ namespace SPCRUD
             this.dgvEmpDetails.RowHeadersVisible = false;
             this.dgvEmpDetails.RowHeadersWidth = 50;
             this.dgvEmpDetails.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.dgvEmpDetails.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvEmpDetails.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.dgvEmpDetails.RowTemplate.Height = 25;
             this.dgvEmpDetails.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -304,18 +303,6 @@ namespace SPCRUD
             this.kryptonLabel5.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.kryptonLabel5.TabIndex = 28;
             this.kryptonLabel5.Values.Text = "E m p l o y e e s";
-            // 
-            // kryptonLabel7
-            // 
-            this.kryptonLabel7.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.BoldControl;
-            this.kryptonLabel7.Location = new System.Drawing.Point(49, 192);
-            this.kryptonLabel7.Name = "kryptonLabel7";
-            this.kryptonLabel7.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.ProfessionalSystem;
-            this.kryptonLabel7.Size = new System.Drawing.Size(6, 4);
-            this.kryptonLabel7.StateCommon.ShortText.Color1 = System.Drawing.Color.DarkSlateGray;
-            this.kryptonLabel7.StateCommon.ShortText.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.kryptonLabel7.TabIndex = 30;
-            this.kryptonLabel7.Values.Text = "";
             // 
             // dtpInsuranceStartDate
             // 
@@ -493,7 +480,6 @@ namespace SPCRUD
             this.Controls.Add(this.kryptonLabel10);
             this.Controls.Add(this.txtEmpHealthInsuranceProvider);
             this.Controls.Add(this.dtpInsuranceStartDate);
-            this.Controls.Add(this.kryptonLabel7);
             this.Controls.Add(this.kryptonLabel5);
             this.Controls.Add(this.cboEmpGender);
             this.Controls.Add(this.kryptonLabel4);
@@ -532,7 +518,6 @@ namespace SPCRUD
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cboEmpGender;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
         private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker dtpInsuranceStartDate;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtEmpInsuranceMonthlyFee;

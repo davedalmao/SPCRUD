@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SPCRUD.exe" size="52136">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SPCRUD.exe" size="107432">
       <assemblyIdentity name="SPCRUD" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>iQJ9sNGdVtKpHNXUOGJQ2OfOlSlcOBQTo1GZn30/Q70=</dsig:DigestValue>
+        <dsig:DigestValue>FwrGH9GGIURK+U6Cgvxr/r3/ONV1+e/z6OnDS2bTqQQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -75,22 +75,22 @@
       <dsig:DigestValue>HLmq+uib8RXXynA8Un6LnTtCTRrlZfMJlbscI2OcUxU=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Database.mdf" size="8388608" writeableType="applicationData">
+  <file name="Database.mdf" size="75497472" writeableType="applicationData">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>j4upjJEKXE/T8jr3bJGkmyJmeTIYUJQyCIK7Dg5/kIU=</dsig:DigestValue>
+      <dsig:DigestValue>2q96ARNygKKbp9+jWH30S2Ht8SfpU+VHIscFgYc8lS4=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Database_log.ldf" size="8388608" writeableType="applicationData">
+  <file name="Database_log.ldf" size="75497472" writeableType="applicationData">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>40zeGZHxglarXmkdH6cmbpP8YereLCHvcMnnK6BvuOc=</dsig:DigestValue>
+      <dsig:DigestValue>EOI6DQiAWPcjEPYSroQ1BiXMv1kFfR05AkL7zahFxnY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="SPCRUD.exe.config" size="820">
