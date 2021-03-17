@@ -175,6 +175,7 @@ namespace SPCRUD
             cboEmpGender.Text = "";
             btnDelete.Enabled = false;
             pictureBox1.Image = null;
+            lblFileExtension.Text = "";
             DisplayEmployeeRecords("DisplayAllEmployees");
             txtEmpName.Focus();
         }
@@ -232,15 +233,20 @@ namespace SPCRUD
                         sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
                     }
 
-                    //Employee Image 
-                    if (pictureBox1.Tag != null) //if tag has a value (save null)
+                    //Employee Image and File Extension
+                    if (pictureBox1.Tag != null && string.IsNullOrWhiteSpace(lblFileExtension.Text)) //if tag has a value (save null)
                     {
                         sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = DBNull.Value;
+                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = DBNull.Value;
+
                     }
                     else
                     {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(pictureBox1.Image);
+                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(pictureBox1.Image, lblFileExtension.Text);
+                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = lblFileExtension.Text;
                     }
+
+
 
                     int numRes = sqlCmd.ExecuteNonQuery();
                     string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
@@ -269,9 +275,13 @@ namespace SPCRUD
                     }
                     MessageBox.Show($"An SQL error occured while processing data. \nError: { ex.Message }");
                 }
+                catch (FormatException ex)
+                {
+                    MessageBox.Show($"Some fields might have a wrong format supplied to them! \nCheck your inputs please. \nError: { ex.Message }");
+                }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.GetType() }");
+                    MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
                 }
             }
         }
@@ -344,7 +354,6 @@ namespace SPCRUD
             }
             else
             {
-
                 SaveEmployeeRecord();
             }
         }
@@ -399,7 +408,7 @@ namespace SPCRUD
 
                     //Display user image
                     using (SqlConnection con = new SqlConnection(connectionStringConfig))
-                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image FROM dbo.Employee_Image WHERE employee_id=@employee_id", con))
+                    using (SqlCommand sqlCmd = new SqlCommand("SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id", con))
                     {
                         con.Open();
                         sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
@@ -409,14 +418,17 @@ namespace SPCRUD
                             if (reader.HasRows)
                             {
                                 reader.Read();
-                                pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
-                                if (reader.GetValue(0) == null) //if image is null add border color to tag
+
+                                //if image is null add border color to tag
+                                if (reader.GetValue(0) == null && reader.GetValue(0) == null)
                                 {
                                     pictureBox1.Tag = themeColor;
                                 }
                                 else
                                 {
                                     pictureBox1.Tag = null;
+                                    lblFileExtension.Text = reader.GetValue(1).ToString();
+                                    pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
                                 }
                             }
                             else
@@ -462,8 +474,9 @@ namespace SPCRUD
 
                         if (bmp != null)//if image is valid
                         {
-                            pictureBox1.Image = Image.FromFile(imageFilePath);
+                            pictureBox1.Image = Image.FromFile(imageFilePath); //display image selected from file explorer
                             pictureBox1.Image.RotateFlip(ImageOperations.Rotate(bmp)); //display image in proper orientation
+                            lblFileExtension.Text = Path.GetExtension(openFile.SafeFileName); //file extension
                             txtEmpName.Focus();
                             bmp.Dispose();
                             pictureBox1.Tag = null;

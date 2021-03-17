@@ -66,6 +66,7 @@ namespace SPCRUD
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnBrowse = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lblFileExtension = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmpDetails)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboEmpGender)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -462,11 +463,20 @@ namespace SPCRUD
             this.kryptonLabel2.Values.Image = global::SPCRUD.Properties.Resources.community_fill;
             this.kryptonLabel2.Values.Text = "Current City :";
             // 
+            // lblFileExtension
+            // 
+            this.lblFileExtension.AutoSize = true;
+            this.lblFileExtension.Location = new System.Drawing.Point(150, 173);
+            this.lblFileExtension.Name = "lblFileExtension";
+            this.lblFileExtension.Size = new System.Drawing.Size(0, 13);
+            this.lblFileExtension.TabIndex = 46;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1190, 638);
+            this.Controls.Add(this.lblFileExtension);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnDeleteAllRecords);
@@ -541,6 +551,7 @@ namespace SPCRUD
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
+        private System.Windows.Forms.Label lblFileExtension;
     }
 }
 

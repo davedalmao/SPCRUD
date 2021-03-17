@@ -16,14 +16,15 @@ namespace SPCRUD.Classes.Utility
 {
     class ImageOperations
     {
-        public static byte[] ImageToBytes(Image userImage)//Get bytes of the image
+        public static byte[] ImageToBytes(Image userImage, string fileExtension)//Get bytes of the image
         {
             using (MemoryStream ms = new MemoryStream())
             using (Bitmap tempImage = new Bitmap(userImage))
             {
                 /*copy the object (userImage) into a new object (tempImage), 
                   then use that object(tempImage) to "Write" */
-                tempImage.Save(ms, userImage.RawFormat); //error here, maybe exif error 
+                ImageFormat relativeImageFormat = CheckFileExtension(fileExtension);
+                tempImage.Save(ms, relativeImageFormat);
                 return ms.ToArray();
             }
         }
@@ -74,7 +75,7 @@ namespace SPCRUD.Classes.Utility
             return Enumerable.SequenceEqual(bytes1, bytes2);
         }
 
-        private ImageFormat CheckFileExtension(string extension)
+        public static ImageFormat CheckFileExtension(string extension)
         {
             //We need to check file extension to aviod: System.ArgumentNullException on some images
             switch (extension.ToLower())
