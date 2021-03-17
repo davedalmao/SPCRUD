@@ -67,14 +67,6 @@ namespace SPCRUD.Classes.Utility
             return RotateFlipType.RotateNoneFlipNone;
         }
 
-        public static bool AreImagesEqual(Image img1, Image img2)
-        {
-            ImageConverter converter = new ImageConverter();
-            byte[] bytes1 = (byte[])converter.ConvertTo(img1, typeof(byte[]));
-            byte[] bytes2 = (byte[])converter.ConvertTo(img2, typeof(byte[]));
-            return Enumerable.SequenceEqual(bytes1, bytes2);
-        }
-
         public static ImageFormat CheckFileExtension(string extension)
         {
             //We need to check file extension to aviod: System.ArgumentNullException on some images
