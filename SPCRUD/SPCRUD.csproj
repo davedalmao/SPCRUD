@@ -89,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Utility\AddRemoveProgramsIcon.cs" />
+    <Compile Include="Classes\Utility\DataAccess\ConnectionString.cs" />
+    <Compile Include="Classes\Utility\DataAccess\EmployeeOperations.cs" />
+    <Compile Include="Classes\Utility\DataAccess\SaveEmployee.cs" />
     <Compile Include="Classes\Utility\ImageOperations.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

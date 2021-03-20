@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SPCRUD.Classes.Utility;
+using SPCRUD.Classes.Utility.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,7 +29,7 @@ namespace SPCRUD
         readonly Color themeColor = Color.FromArgb(172, 188, 212);
 
         #region Form1
-        //--------------- < region Form1 > ---------------
+        //------------------------------ < region Form1 > ------------------------------
         public Form1()
         {
             InitializeComponent();
@@ -39,14 +40,33 @@ namespace SPCRUD
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            DisplayEmployeeRecords("DisplayAllEmployees");
-
+            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
         }
-        //--------------- </ region Form1 > ---------------
+        //------------------------------ </ region Form1 > ------------------------------
         #endregion
 
-        #region Functions
-        //--------------- < region Funtions > ---------------
+        #region Methods
+        //------------------------------ < region Methods > ------------------------------
+        private void RefreshData()
+        {
+            ResethHealthInsuranceFields();
+            btnSave.Text = "Save";
+            EmployeeId = "";
+            txtEmpName.Text = "";
+            txtEmpCity.Text = "";
+            txtEmpDept.Text = "";
+            cboEmpGender.SelectedIndex = -1;
+            cboEmpGender.Text = "";
+            btnDelete.Enabled = false;
+            pictureBox1.Image = null;
+            lblFileExtension.Text = "";
+            txtEmpName.Focus();
+
+            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
+        }
+
         private bool CheckHealthInsuranceFields()
         {
             //if true ->  one of the health insurance fields is blank
@@ -58,6 +78,14 @@ namespace SPCRUD
                 return true;
             }
             return false;
+        }
+
+        private void ResethHealthInsuranceFields()
+        {
+            txtEmpHealthInsuranceProvider.Text = "";
+            txtEmpInsurancePlanName.Text = "";
+            txtEmpInsuranceMonthlyFee.Text = "0.00";
+            dtpInsuranceStartDate.Value = DateTime.Now;
         }
 
         private void DeleteAllRecords()
@@ -90,7 +118,7 @@ namespace SPCRUD
                     MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
                 }
             }
-        }
+        } //done
 
         private void DeleteEmployee()
         {
@@ -118,41 +146,41 @@ namespace SPCRUD
                 }
 
             }
-        }
+        } //done
 
-        private void DisplayEmployeeImge()
-        {
-            //Display user image
-            string sqlQuery = "SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id";
-            using (SqlConnection con = new SqlConnection(connectionStringConfig))
-            using (SqlCommand sqlCmd = new SqlCommand(sqlQuery, con))
-            {
-                con.Open();
-                sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
+        /* private void DisplayEmployeeImge()
+         {
+             //Display user image
+             string sqlQuery = "SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id";
+             using (SqlConnection con = new SqlConnection(connectionStringConfig))
+             using (SqlCommand sqlCmd = new SqlCommand(sqlQuery, con))
+             {
+                 con.Open();
+                 sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
 
-                using (SqlDataReader reader = sqlCmd.ExecuteReader())
-                {
-                    if (reader.HasRows)
-                    {
-                        reader.Read();
-                        if (reader.GetValue(0) == null && reader.GetValue(0) == null) //if image is null add border color to tag
-                        {
-                            pictureBox1.Tag = themeColor;
-                        }
-                        else
-                        {
-                            pictureBox1.Tag = null;
-                            lblFileExtension.Text = reader.GetValue(1).ToString();
-                            pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
-                        }
-                        return;
-                    }
-                    pictureBox1.Image = null; //if (!reader.HasRows)
-                }
-            }
-        }
+                 using (SqlDataReader reader = sqlCmd.ExecuteReader())
+                 {
+                     if (reader.HasRows)
+                     {
+                         reader.Read();
+                         if (reader.GetValue(0) == null && reader.GetValue(0) == null) //if image is null add border color to tag
+                         {
+                             pictureBox1.Tag = themeColor;
+                         }
+                         else
+                         {
+                             pictureBox1.Tag = null;
+                             lblFileExtension.Text = reader.GetValue(1).ToString();
+                             pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
+                         }
+                         return;
+                     }
+                     pictureBox1.Image = null; //if (!reader.HasRows)
+                 }
+             }
+         }*/ //done
 
-        private void DisplayEmployeeRecords(string displayType)
+        /*private void DisplayEmployeeRecords(string displayType)
         {//Load/Read Data from database
             using (SqlConnection con = new SqlConnection(connectionStringConfig))
             using (SqlCommand sqlCmd = new SqlCommand("spDisplayEmployeeRecords", con))
@@ -194,34 +222,9 @@ namespace SPCRUD
                     MessageBox.Show($"Cannot DISPLAY data in the datagridview! \nError: { ex.Message }");
                 }
             }
-        }
+        }*/ //done
 
-        private void RefreshData()
-        {
-            ResethHealthInsuranceFields();
-            btnSave.Text = "Save";
-            EmployeeId = "";
-            txtEmpName.Text = "";
-            txtEmpCity.Text = "";
-            txtEmpDept.Text = "";
-            cboEmpGender.SelectedIndex = -1;
-            cboEmpGender.Text = "";
-            btnDelete.Enabled = false;
-            pictureBox1.Image = null;
-            lblFileExtension.Text = "";
-            DisplayEmployeeRecords("DisplayAllEmployees");
-            txtEmpName.Focus();
-        }
-
-        private void ResethHealthInsuranceFields()
-        {
-            txtEmpHealthInsuranceProvider.Text = "";
-            txtEmpInsurancePlanName.Text = "";
-            txtEmpInsuranceMonthlyFee.Text = "0.00";
-            dtpInsuranceStartDate.Value = DateTime.Now;
-        }
-
-        private void SaveEmployeeRecord()
+        /*private void SaveEmployeeRecord()
         {
             using (SqlConnection con = new SqlConnection(connectionStringConfig))
             using (SqlCommand sqlCmd = new SqlCommand("spCreateOrUpdateData", con))
@@ -312,12 +315,12 @@ namespace SPCRUD
                     MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
                 }
             }
-        }
-        //--------------- </ region Funtions > ---------------
+        }*/
+        //------------------------------ </ region Methods > ------------------------------
         #endregion
 
         #region Button Click
-        //--------------- < region Buttons > ---------------
+        //------------------------------ < region Buttons > ------------------------------
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFile = new OpenFileDialog())
@@ -359,6 +362,7 @@ namespace SPCRUD
         private void btnDelete_Click(object sender, EventArgs e)
         {
             int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            string employeeName = txtEmpName.Text;
             try
             {
                 if (selectedRowCount >= 0)
@@ -366,7 +370,10 @@ namespace SPCRUD
                     DialogResult dialog = MessageBox.Show($"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo);
                     if (dialog == DialogResult.Yes)
                     {
-                        DeleteEmployee();
+                        //DeleteEmployee();
+                        EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+                        employeeOperation.DeleteEmployee(EmployeeId, employeeName);
+                        RefreshData();
                         return;
                     }
                 }
@@ -377,21 +384,29 @@ namespace SPCRUD
             {
                 MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
             }
-        }
+        } //done
 
         private void btnDeleteAllRecords_Click(object sender, EventArgs e)
         {
-            DialogResult dialog = MessageBox.Show("Do you want to DELETE ALL Employee Records?", "Continue Process?", MessageBoxButtons.YesNo);
+            int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
+            string messageHeader = "Continue Process?";
+            string messageContent = "Do you want to DELETE ALL Employee Records?";
+
+            DialogResult dialog = MessageBox.Show(messageContent, messageHeader, MessageBoxButtons.YesNo);
             if (dialog == DialogResult.Yes)
             {
-                DeleteAllRecords();
+                //DeleteAllRecords();
+                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+                employeeOperation.DeleteAllRecords(selectedRowCount);
+                RefreshData();
             }
 
-        }
+        } //done
 
         private void btnDisplayAllEmployees_Click(object sender, EventArgs e)
         {
-            DisplayEmployeeRecords("DisplayAllEmployees");
+            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -401,6 +416,21 @@ namespace SPCRUD
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            string name = txtEmpName.Text;
+            string city = txtEmpCity.Text;
+            string department = txtEmpDept.Text;
+            string gender = cboEmpGender.Text;
+
+            string healthInsProvider = txtEmpHealthInsuranceProvider.Text;
+            string insPlanName = txtEmpInsurancePlanName.Text;
+            string insMonthlyFee = txtEmpInsuranceMonthlyFee.Text;
+            DateTime insStartDate = dtpInsuranceStartDate.Value.Date;
+
+            PictureBox employeeImage = pictureBox1;
+            string fileExtension = lblFileExtension.Text;
+
+            string btnSaveText = btnSave.Text;
+
             //Save or Update btn
             if (string.IsNullOrWhiteSpace(txtEmpName.Text))
             {
@@ -420,7 +450,18 @@ namespace SPCRUD
             }
             else
             {
-                SaveEmployeeRecord();
+                //SaveEmployeeRecord();
+                SaveEmployee saveEmployee = new SaveEmployee(ConnectionString.config)
+                {
+                    HealthInsProvider = healthInsProvider,
+                    InsPlanName = insPlanName,
+                    InsMonthlyFee = insMonthlyFee
+                };
+                saveEmployee.InsertOrUpdate(EmployeeId, name, city, department, gender,
+                                            healthInsProvider, insPlanName, insMonthlyFee, insStartDate,
+                                            employeeImage, fileExtension,
+                                            btnSaveText);
+                RefreshData();
             }
         }
 
@@ -428,21 +469,25 @@ namespace SPCRUD
         {
             if (btnSortEmployees.Text == "Employees Without Healh Insurance")
             {
-                DisplayEmployeeRecords("DisplayEmployeesWithoutHealthInsuranceRecords");
+
+                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+                employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithoutHealthInsuranceRecords", dgvEmpDetails);
                 btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
             }
             else
             {
-                DisplayEmployeeRecords("DisplayEmployeesWithHealthInsuranceRecords");
+
+                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+                employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithHealthInsuranceRecords", dgvEmpDetails);
                 btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
             }
             btnSortEmployees.Text = (btnSortEmployees.Text == "Employees Without Healh Insurance") ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
         }
-        //--------------- < /region Buttons > ---------------
+        //------------------------------ < /region Buttons > ------------------------------
         #endregion
 
         #region DataGridView
-        //--------------- < region DataGridView > ---------------
+        //------------------------------ < region DataGridView > ------------------------------
         private void dgvEmpDetails_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -471,10 +516,12 @@ namespace SPCRUD
                     {
                         dtpInsuranceStartDate.Value = DateTime.Parse(row.Cells[8].Value?.ToString());
                     }
-
-                    DisplayEmployeeImge();
                     btnSave.Text = "Update";
                     btnDelete.Enabled = true;
+
+                    EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
+                    employeeOperation.DisplayEmployeeImage(EmployeeId, pictureBox1, lblFileExtension);
+                    // DisplayEmployeeImge();
                 }
             }
             catch (InvalidCastException)
@@ -488,11 +535,11 @@ namespace SPCRUD
                 MessageBox.Show($"Something is wrong with the selected record! \nError: { ex.GetType().FullName }");
             }
         }
-        //--------------- < /region DataGridView > ---------------
+        //------------------------------ < /region DataGridView > ------------------------------
         #endregion
 
         #region PictureBox
-        //--------------- < region PictureBox > ---------------
+        //------------------------------ < region PictureBox > ------------------------------
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             //if image is not present in the picturebox -> paint its border
@@ -507,7 +554,7 @@ namespace SPCRUD
                 ControlPaint.DrawBorder(e.Graphics, pictureBox1.ClientRectangle, themeColor, ButtonBorderStyle.Solid);
             }
         }
-        //--------------- </ region PictureBox > ---------------
+        //------------------------------ </ region PictureBox > ------------------------------
         #endregion
     }
 }

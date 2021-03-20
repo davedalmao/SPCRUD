@@ -520,7 +520,6 @@ namespace SPCRUD
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnRefresh;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnDelete;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView dgvEmpDetails;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtEmpName;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtEmpCity;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
@@ -552,6 +551,7 @@ namespace SPCRUD
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private System.Windows.Forms.Label lblFileExtension;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox txtEmpName;
     }
 }
 
