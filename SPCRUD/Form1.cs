@@ -23,10 +23,7 @@ namespace SPCRUD
     //Icon Color: #ACBCD4
     public partial class Form1 : Form
     {
-        //change to "SystemDatabaseConnection"(the final connectionString) when app is ready to be deployed
-        static string connectionStringConfig = ConfigurationManager.ConnectionStrings["SystemDatabaseConnectionTemp"].ConnectionString;
         string EmployeeId = "";
-        readonly Color themeColor = Color.FromArgb(172, 188, 212);
 
         #region Form1
         //------------------------------ < region Form1 > ------------------------------
@@ -50,7 +47,10 @@ namespace SPCRUD
         //------------------------------ < region Methods > ------------------------------
         private void RefreshData()
         {
-            ResethHealthInsuranceFields();
+            txtEmpHealthInsuranceProvider.Text = "";
+            txtEmpInsurancePlanName.Text = "";
+            txtEmpInsuranceMonthlyFee.Text = "0.00";
+            dtpInsuranceStartDate.Value = DateTime.Now;
             btnSave.Text = "Save";
             EmployeeId = "";
             txtEmpName.Text = "";
@@ -66,256 +66,6 @@ namespace SPCRUD
             EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
             employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
         }
-
-        private bool CheckHealthInsuranceFields()
-        {
-            //if true ->  one of the health insurance fields is blank
-            if (string.IsNullOrWhiteSpace(txtEmpHealthInsuranceProvider.Text) ||
-                string.IsNullOrWhiteSpace(txtEmpInsurancePlanName.Text) ||
-                string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) ||
-                float.Parse(txtEmpInsuranceMonthlyFee.Text) < 1)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private void ResethHealthInsuranceFields()
-        {
-            txtEmpHealthInsuranceProvider.Text = "";
-            txtEmpInsurancePlanName.Text = "";
-            txtEmpInsuranceMonthlyFee.Text = "0.00";
-            dtpInsuranceStartDate.Value = DateTime.Now;
-        }
-
-        private void DeleteAllRecords()
-        {
-            int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            using (SqlConnection con = new SqlConnection(connectionStringConfig))
-            using (SqlCommand sqlCmd = new SqlCommand("spDeleteAllEmployeeRecords", con))
-            {
-                try
-                {
-                    con.Open();
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    int numRes = sqlCmd.ExecuteNonQuery();
-                    if (numRes > 0)
-                    {
-                        MessageBox.Show("All Employee Records DELETED Successfully!");
-                        RefreshData();
-                        return;
-                    }
-
-                    if (selectedRowCount > 0)
-                    {
-                        MessageBox.Show($"Cannot DELETE records! ");
-                        return;
-                    }
-                    MessageBox.Show($"No records to DELETE! ");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
-                }
-            }
-        } //done
-
-        private void DeleteEmployee()
-        {
-            using (SqlConnection con = new SqlConnection(connectionStringConfig))
-            using (SqlCommand sqlCmd = new SqlCommand("spDeleteData", con))
-            {
-                try
-                {
-                    con.Open();
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
-
-                    int numRes = sqlCmd.ExecuteNonQuery();
-                    if (numRes > 0)
-                    {
-                        MessageBox.Show($"{ txtEmpName.Text }'s Record DELETED Successfully!");
-                        RefreshData();
-                        return;
-                    }
-                    MessageBox.Show($"Cannot DELETE records! ");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
-                }
-
-            }
-        } //done
-
-        /* private void DisplayEmployeeImge()
-         {
-             //Display user image
-             string sqlQuery = "SELECT user_image, file_extension FROM dbo.Employee_Image WHERE employee_id=@employee_id";
-             using (SqlConnection con = new SqlConnection(connectionStringConfig))
-             using (SqlCommand sqlCmd = new SqlCommand(sqlQuery, con))
-             {
-                 con.Open();
-                 sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
-
-                 using (SqlDataReader reader = sqlCmd.ExecuteReader())
-                 {
-                     if (reader.HasRows)
-                     {
-                         reader.Read();
-                         if (reader.GetValue(0) == null && reader.GetValue(0) == null) //if image is null add border color to tag
-                         {
-                             pictureBox1.Tag = themeColor;
-                         }
-                         else
-                         {
-                             pictureBox1.Tag = null;
-                             lblFileExtension.Text = reader.GetValue(1).ToString();
-                             pictureBox1.Image = ImageOperations.BytesToImage((byte[])(reader.GetValue(0)));
-                         }
-                         return;
-                     }
-                     pictureBox1.Image = null; //if (!reader.HasRows)
-                 }
-             }
-         }*/ //done
-
-        /*private void DisplayEmployeeRecords(string displayType)
-        {//Load/Read Data from database
-            using (SqlConnection con = new SqlConnection(connectionStringConfig))
-            using (SqlCommand sqlCmd = new SqlCommand("spDisplayEmployeeRecords", con))
-            {
-                try
-                {
-                    con.Open();
-                    DataTable dt = new DataTable();
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.Add("@display_type", SqlDbType.NVarChar).Value = displayType;
-
-                    sqlCmd.Connection = con;
-                    SqlDataAdapter sqlSda = new SqlDataAdapter(sqlCmd);
-                    sqlSda.Fill(dt);
-
-                    dgvEmpDetails.AutoGenerateColumns = false;//if true displays all the records in the database
-
-                    // The property names are the column names in dbo.Employee
-                    dgvEmpDetails.Columns[0].DataPropertyName = "employee_id"; // This is Employee Id at the datagridview
-                    dgvEmpDetails.Columns[1].DataPropertyName = "employee_name";
-                    dgvEmpDetails.Columns[2].DataPropertyName = "city";
-                    dgvEmpDetails.Columns[3].DataPropertyName = "department";
-                    dgvEmpDetails.Columns[4].DataPropertyName = "gender";
-
-                    // The property names are the column names in dbo.Employee_Health_Insurance
-                    dgvEmpDetails.Columns[5].DataPropertyName = "health_insurance_provider";
-                    dgvEmpDetails.Columns[6].DataPropertyName = "plan_name";
-                    dgvEmpDetails.Columns[7].DataPropertyName = "monthly_fee";
-                    dgvEmpDetails.Columns[8].DataPropertyName = "insurance_start_date";
-
-                    // Custom cell format
-                    dgvEmpDetails.Columns[7].DefaultCellStyle.Format = "#,##0.00";
-                    dgvEmpDetails.Columns[8].DefaultCellStyle.Format = "MMMM dd, yyyy";
-
-                    dgvEmpDetails.DataSource = dt;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Cannot DISPLAY data in the datagridview! \nError: { ex.Message }");
-                }
-            }
-        }*/ //done
-
-        /*private void SaveEmployeeRecord()
-        {
-            using (SqlConnection con = new SqlConnection(connectionStringConfig))
-            using (SqlCommand sqlCmd = new SqlCommand("spCreateOrUpdateData", con))
-            {
-                try
-                {
-                    // If at least one of the health insurance fields is blank, save only the employee record without the health insurance record
-                    if (CheckHealthInsuranceFields()) { ResethHealthInsuranceFields(); }
-
-                    con.Open();
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-
-                    //Employee Record
-                    sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = EmployeeId;
-                    sqlCmd.Parameters.Add("@employee_name", SqlDbType.NVarChar, 250).Value = txtEmpName.Text;
-                    sqlCmd.Parameters.Add("@city", SqlDbType.NVarChar, 50).Value = txtEmpCity.Text;
-                    sqlCmd.Parameters.Add("@department", SqlDbType.NVarChar, 50).Value = txtEmpDept.Text;
-                    sqlCmd.Parameters.Add("@gender", SqlDbType.NVarChar, 6).Value = cboEmpGender.Text;
-
-                    //Employee Health Insurance Record
-                    sqlCmd.Parameters.Add("@health_insurance_provider", SqlDbType.NVarChar, 100).Value = txtEmpHealthInsuranceProvider.Text;
-                    sqlCmd.Parameters.Add("@plan_name", SqlDbType.NVarChar, 100).Value = txtEmpInsurancePlanName.Text;
-                    sqlCmd.Parameters.Add(new SqlParameter("@monthly_fee", SqlDbType.Decimal)
-                    {
-                        Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
-                        Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
-                        Value = string.IsNullOrWhiteSpace(txtEmpInsuranceMonthlyFee.Text) //add 0 as default value in database
-                              ? 0
-                              : decimal.Parse(txtEmpInsuranceMonthlyFee.Text)
-                    });
-
-                    // Save insurance start date:
-                    if (CheckHealthInsuranceFields())
-                    {
-                        sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = DBNull.Value;
-                    }
-                    else
-                    {
-                        sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = dtpInsuranceStartDate.Value.Date;
-                    }
-
-                    //Employee Image and File Extension
-                    if (pictureBox1.Tag != null && string.IsNullOrWhiteSpace(lblFileExtension.Text)) //if tag has a value (save null)
-                    {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = DBNull.Value;
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = DBNull.Value;
-
-                    }
-                    else
-                    {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(pictureBox1.Image, lblFileExtension.Text);
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = lblFileExtension.Text;
-                    }
-
-                    int numRes = sqlCmd.ExecuteNonQuery();
-                    string ActionType = (btnSave.Text == "Save") ? "Saved" : "Updated";
-                    if (numRes > 0) //if query is successful
-                    {
-                        if (CheckHealthInsuranceFields())
-                        {
-                            MessageBox.Show($"{ txtEmpName.Text }'s record is { ActionType } successfully !!! \nAdd Health Insurance records later on.");
-                        }
-                        else
-                        {
-                            MessageBox.Show($"{ txtEmpName.Text }'s record is { ActionType } successfully !!!");
-                        }
-                        RefreshData();
-                        return;
-                    }
-
-                    MessageBox.Show($"{txtEmpName.Text} Already Exist !!!");
-                }
-                catch (SqlException ex)
-                {
-                    if (ex.Number == 2627)// Violation of unique constraint (Name should be unique)
-                    {
-                        MessageBox.Show($"{txtEmpName.Text} Already Exist !!!");
-                        return;
-                    }
-                    MessageBox.Show($"An SQL error occured while processing data. \nError: { ex.Message }");
-                }
-                catch (FormatException ex)
-                {
-                    MessageBox.Show($"Some fields might have a wrong format supplied to them! \nCheck your inputs please. \nError: { ex.Message }");
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Cannot INSERT or UPDATE data! \nError: { ex.Message }");
-                }
-            }
-        }*/
         //------------------------------ </ region Methods > ------------------------------
         #endregion
 
@@ -363,14 +113,16 @@ namespace SPCRUD
         {
             int selectedRowCount = dgvEmpDetails.Rows.GetRowCount(DataGridViewElementStates.Selected);
             string employeeName = txtEmpName.Text;
+            string messageHeader = "Continue Process?";
+            string messageContent = $"Do you want to DELETE { employeeName }'s record?";
+
             try
             {
                 if (selectedRowCount >= 0)
                 {
-                    DialogResult dialog = MessageBox.Show($"Do you want to DELETE { txtEmpName.Text }'s record?", "Continue Process?", MessageBoxButtons.YesNo);
+                    DialogResult dialog = MessageBox.Show(messageContent, messageHeader, MessageBoxButtons.YesNo);
                     if (dialog == DialogResult.Yes)
                     {
-                        //DeleteEmployee();
                         EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
                         employeeOperation.DeleteEmployee(EmployeeId, employeeName);
                         RefreshData();
@@ -384,7 +136,7 @@ namespace SPCRUD
             {
                 MessageBox.Show($"Cannot DELETE { txtEmpName.Text }'s record! \nError: { ex.Message }");
             }
-        } //done
+        }
 
         private void btnDeleteAllRecords_Click(object sender, EventArgs e)
         {
@@ -395,13 +147,12 @@ namespace SPCRUD
             DialogResult dialog = MessageBox.Show(messageContent, messageHeader, MessageBoxButtons.YesNo);
             if (dialog == DialogResult.Yes)
             {
-                //DeleteAllRecords();
                 EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
                 employeeOperation.DeleteAllRecords(selectedRowCount);
                 RefreshData();
             }
 
-        } //done
+        }
 
         private void btnDisplayAllEmployees_Click(object sender, EventArgs e)
         {
@@ -416,31 +167,34 @@ namespace SPCRUD
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            //Required Employee Records
             string name = txtEmpName.Text;
             string city = txtEmpCity.Text;
             string department = txtEmpDept.Text;
             string gender = cboEmpGender.Text;
 
+            //Employee Health Insurance Records
             string healthInsProvider = txtEmpHealthInsuranceProvider.Text;
             string insPlanName = txtEmpInsurancePlanName.Text;
             string insMonthlyFee = txtEmpInsuranceMonthlyFee.Text;
             DateTime insStartDate = dtpInsuranceStartDate.Value.Date;
 
+            //Employee Image
             PictureBox employeeImage = pictureBox1;
             string fileExtension = lblFileExtension.Text;
 
+            //Action Type
             string btnSaveText = btnSave.Text;
 
-            //Save or Update btn
-            if (string.IsNullOrWhiteSpace(txtEmpName.Text))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 MessageBox.Show("Enter Employee Name !!!");
             }
-            else if (string.IsNullOrWhiteSpace(txtEmpCity.Text))
+            else if (string.IsNullOrWhiteSpace(city))
             {
                 MessageBox.Show("Enter Current City !!!");
             }
-            else if (string.IsNullOrWhiteSpace(txtEmpDept.Text))
+            else if (string.IsNullOrWhiteSpace(department))
             {
                 MessageBox.Show("Enter Department !!!");
             }
@@ -450,9 +204,9 @@ namespace SPCRUD
             }
             else
             {
-                //SaveEmployeeRecord();
                 SaveEmployee saveEmployee = new SaveEmployee(ConnectionString.config)
                 {
+                    //Properties of SaveEmployee class
                     HealthInsProvider = healthInsProvider,
                     InsPlanName = insPlanName,
                     InsMonthlyFee = insMonthlyFee
@@ -469,14 +223,12 @@ namespace SPCRUD
         {
             if (btnSortEmployees.Text == "Employees Without Healh Insurance")
             {
-
                 EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
                 employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithoutHealthInsuranceRecords", dgvEmpDetails);
                 btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
             }
             else
             {
-
                 EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
                 employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithHealthInsuranceRecords", dgvEmpDetails);
                 btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
@@ -496,7 +248,7 @@ namespace SPCRUD
                 {
                     DataGridViewRow row = dgvEmpDetails.Rows[e.RowIndex];
                     //the ? new .Value would assign null to the Text property of the textboxes in case the cell value is null 
-                    EmployeeId = row.Cells[0].Value?.ToString(); //The Employee ID is determined here (the variable EmployeeId will be assigned a new value that is in the dgv)
+                    EmployeeId = row.Cells[0].Value?.ToString(); //The Employee ID is determined here (the variable EmployeeId will be assigned a new value that is in this dgv cell)
                     txtEmpName.Text = row.Cells[1].Value?.ToString();
                     txtEmpCity.Text = row.Cells[2].Value?.ToString();
                     txtEmpDept.Text = row.Cells[3].Value?.ToString();
@@ -508,7 +260,7 @@ namespace SPCRUD
                     //Displaying the date in dateTimePicker
                     var cellValue = dgvEmpDetails.Rows[e.RowIndex].Cells[8].Value;
                     if (cellValue == null || cellValue == DBNull.Value
-                        || String.IsNullOrWhiteSpace(cellValue.ToString()))
+                        || string.IsNullOrWhiteSpace(cellValue.ToString()))
                     {
                         dtpInsuranceStartDate.Value = DateTime.Now;
                     }
@@ -519,9 +271,9 @@ namespace SPCRUD
                     btnSave.Text = "Update";
                     btnDelete.Enabled = true;
 
+                    //Display Employee Image
                     EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
                     employeeOperation.DisplayEmployeeImage(EmployeeId, pictureBox1, lblFileExtension);
-                    // DisplayEmployeeImge();
                 }
             }
             catch (InvalidCastException)
@@ -542,8 +294,8 @@ namespace SPCRUD
         //------------------------------ < region PictureBox > ------------------------------
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            //if image is not present in the picturebox -> paint its border
-            if (pictureBox1.Image == null)
+            Color themeColor = Color.FromArgb(172, 188, 212);
+            if (pictureBox1.Image == null) //if image is not present in the picturebox -> paint its border
             {
                 pictureBox1.Tag = themeColor;
                 pictureBox1.Image = Properties.Resources.default_Employee_Image;

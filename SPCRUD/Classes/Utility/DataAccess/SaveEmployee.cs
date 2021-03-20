@@ -21,10 +21,6 @@ namespace SPCRUD.Classes.Utility.DataAccess
             _connectionString = connectionString;
         }
 
-        // inag access
-        // SaveEmployee.HealthInsProvider = txtEmpHealthInsuranceProvider.text (initialize all properties like this)
-        //
-
         public string HealthInsProvider
         {
             get { return _healthInsProvider; }
@@ -41,18 +37,6 @@ namespace SPCRUD.Classes.Utility.DataAccess
         {
             get { return _insMonthlyFee; }
             set { _insMonthlyFee = value; }
-        }
-
-        private bool CheckHealthInsFields(string healthInsProvider, string insPlanName, string insMonthlyFee)
-        {
-            if (string.IsNullOrWhiteSpace(healthInsProvider) ||
-                string.IsNullOrWhiteSpace(insPlanName) ||
-                string.IsNullOrWhiteSpace(insMonthlyFee) ||
-                decimal.Parse(insMonthlyFee) < 1)
-            {
-                return true;
-            }
-            return false;
         }
 
         public void InsertOrUpdate(string id, string name, string city, string department, string gender, string healthInsProvider, string insPlanName, string insMonthlyFee, DateTime insStartDate, PictureBox employeeImage, string fileExtension, string btnSaveText)
@@ -149,17 +133,17 @@ namespace SPCRUD.Classes.Utility.DataAccess
                 }
             }
         }
+
+        private bool CheckHealthInsFields(string healthInsProvider, string insPlanName, string insMonthlyFee)
+        {
+            if (string.IsNullOrWhiteSpace(healthInsProvider) ||
+                string.IsNullOrWhiteSpace(insPlanName) ||
+                string.IsNullOrWhiteSpace(insMonthlyFee) ||
+                decimal.Parse(insMonthlyFee) < 1)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
-
-//if (string.IsNullOrWhiteSpace(healthInsProvider) ||
-//    string.IsNullOrWhiteSpace(insPlanName) ||
-//    string.IsNullOrWhiteSpace(insMonthlyFee) ||
-//    decimal.Parse(insMonthlyFee) < 1)
-//{
-//    healthInsProvider = "";
-//    insPlanName = "";
-//    insMonthlyFee = "0.00";
-//    decimal.Parse(insMonthlyFee);
-//    insStartDate = DateTime.Now;
-//}
