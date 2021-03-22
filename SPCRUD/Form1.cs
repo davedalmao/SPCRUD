@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
+using SPCRUD.Classes.DataAccess;
+using SPCRUD.Classes.Models;
 using SPCRUD.Classes.Utility;
-using SPCRUD.Classes.Utility.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,8 +38,9 @@ namespace SPCRUD
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
+            DisplayEmployee displayEmployee = new DisplayEmployee(ConnectionString.config);
+            displayEmployee.AllRecords("DisplayAllEmployees", dgvEmpDetails);
+
         }
         //------------------------------ </ region Form1 > ------------------------------
         #endregion
@@ -63,8 +65,8 @@ namespace SPCRUD
             lblFileExtension.Text = "";
             txtEmpName.Focus();
 
-            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
+            DisplayEmployee displayEmployee = new DisplayEmployee(ConnectionString.config);
+            displayEmployee.AllRecords("DisplayAllEmployees", dgvEmpDetails);
         }
         //------------------------------ </ region Methods > ------------------------------
         #endregion
@@ -123,8 +125,8 @@ namespace SPCRUD
                     DialogResult dialog = MessageBox.Show(messageContent, messageHeader, MessageBoxButtons.YesNo);
                     if (dialog == DialogResult.Yes)
                     {
-                        EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-                        employeeOperation.DeleteEmployee(EmployeeId, employeeName);
+                        DeleteEmployee deleteEmployee = new DeleteEmployee(ConnectionString.config);
+                        deleteEmployee.SpecificRecord(EmployeeId, employeeName);
                         RefreshData();
                         return;
                     }
@@ -147,8 +149,8 @@ namespace SPCRUD
             DialogResult dialog = MessageBox.Show(messageContent, messageHeader, MessageBoxButtons.YesNo);
             if (dialog == DialogResult.Yes)
             {
-                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-                employeeOperation.DeleteAllRecords(selectedRowCount);
+                DeleteEmployee deleteEmployee = new DeleteEmployee(ConnectionString.config);
+                deleteEmployee.AllRecords(selectedRowCount);
                 RefreshData();
             }
 
@@ -156,8 +158,8 @@ namespace SPCRUD
 
         private void btnDisplayAllEmployees_Click(object sender, EventArgs e)
         {
-            EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-            employeeOperation.DisplayEmployeeRecords("DisplayAllEmployees", dgvEmpDetails);
+            DisplayEmployee displayEmployee = new DisplayEmployee(ConnectionString.config);
+            displayEmployee.AllRecords("DisplayAllEmployees", dgvEmpDetails);
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -204,6 +206,23 @@ namespace SPCRUD
             }
             else
             {
+                //TestSave t = new TestSave(ConnectionString.config)
+                //{
+                //    Id = EmployeeId,
+                //    Name = name,
+                //    City = city,
+                //    Department = department,
+                //    Gender = gender,
+
+                //    HealthInsuranceProvider = healthInsProvider,
+                //    InsurancePlanName = insPlanName,
+                //    InsuranceMonthlyFee = insMonthlyFee,
+                //    InsuranceStartDate = insStartDate,
+
+                //    EmployeeImage = employeeImage,
+                //    FileExtension = fileExtension
+                //};
+                //t.InsertOrUpdate(btnSaveText);
                 SaveEmployee saveEmployee = new SaveEmployee(ConnectionString.config)
                 {
                     //Properties of SaveEmployee class
@@ -211,6 +230,7 @@ namespace SPCRUD
                     InsPlanName = insPlanName,
                     InsMonthlyFee = insMonthlyFee
                 };
+
                 saveEmployee.InsertOrUpdate(EmployeeId, name, city, department, gender,
                                             healthInsProvider, insPlanName, insMonthlyFee, insStartDate,
                                             employeeImage, fileExtension,
@@ -223,17 +243,19 @@ namespace SPCRUD
         {
             if (btnSortEmployees.Text == "Employees Without Healh Insurance")
             {
-                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-                employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithoutHealthInsuranceRecords", dgvEmpDetails);
+                DisplayEmployee withoutHealthInsurance = new DisplayEmployee(ConnectionString.config);
+                withoutHealthInsurance.AllRecords("DisplayEmployeesWithoutHealthInsuranceRecords", dgvEmpDetails);
+
+                btnSortEmployees.Text = "Employees With Healh Insurance";
                 btnSortEmployees.Values.Image = Properties.Resources.emotion_happy_fill;
+                return;
             }
-            else
-            {
-                EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-                employeeOperation.DisplayEmployeeRecords("DisplayEmployeesWithHealthInsuranceRecords", dgvEmpDetails);
-                btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
-            }
-            btnSortEmployees.Text = (btnSortEmployees.Text == "Employees Without Healh Insurance") ? "Employees With Healh Insurance" : "Employees Without Healh Insurance";
+
+            DisplayEmployee withHealthInsurance = new DisplayEmployee(ConnectionString.config);
+            withHealthInsurance.AllRecords("DisplayEmployeesWithHealthInsuranceRecords", dgvEmpDetails);
+
+            btnSortEmployees.Text = "Employees Without Healh Insurance";
+            btnSortEmployees.Values.Image = Properties.Resources.emotion_unhappy_fill;
         }
         //------------------------------ < /region Buttons > ------------------------------
         #endregion
@@ -259,8 +281,7 @@ namespace SPCRUD
 
                     //Displaying the date in dateTimePicker
                     var cellValue = dgvEmpDetails.Rows[e.RowIndex].Cells[8].Value;
-                    if (cellValue == null || cellValue == DBNull.Value
-                        || string.IsNullOrWhiteSpace(cellValue.ToString()))
+                    if (cellValue == null || cellValue == DBNull.Value || string.IsNullOrWhiteSpace(cellValue.ToString()))
                     {
                         dtpInsuranceStartDate.Value = DateTime.Now;
                     }
@@ -272,14 +293,12 @@ namespace SPCRUD
                     btnDelete.Enabled = true;
 
                     //Display Employee Image
-                    EmployeeOperations employeeOperation = new EmployeeOperations(ConnectionString.config);
-                    employeeOperation.DisplayEmployeeImage(EmployeeId, pictureBox1, lblFileExtension);
+                    DisplayEmployee displayEmployee = new DisplayEmployee(ConnectionString.config);
+                    displayEmployee.Image(EmployeeId, pictureBox1, lblFileExtension);
                 }
             }
             catch (InvalidCastException)
             {
-                //MessageBox.Show($"This record has no image! \nError: { ex.Message }");
-                //if record has null image (it will throw InvalidCastException)
                 pictureBox1.Image = null;
             }
             catch (Exception ex)

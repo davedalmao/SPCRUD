@@ -88,10 +88,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\DataAccess\TestSave.cs" />
+    <Compile Include="Classes\Models\Employee.cs" />
+    <Compile Include="Classes\Models\Employeet.cs" />
     <Compile Include="Classes\Utility\AddRemoveProgramsIcon.cs" />
-    <Compile Include="Classes\Utility\DataAccess\ConnectionString.cs" />
-    <Compile Include="Classes\Utility\DataAccess\EmployeeOperations.cs" />
-    <Compile Include="Classes\Utility\DataAccess\SaveEmployee.cs" />
+    <Compile Include="Classes\Utility\ConnectionString.cs" />
+    <Compile Include="Classes\DataAccess\DeleteEmployee.cs" />
+    <Compile Include="Classes\DataAccess\DisplayEmployee.cs" />
+    <Compile Include="Classes\DataAccess\SaveEmployee.cs" />
     <Compile Include="Classes\Utility\ImageOperations.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
