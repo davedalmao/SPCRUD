@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SPCRUD.Classes.Utility
 {
-    class AddRemoveProgramsIcon
+    static class AddRemoveProgramsIcon
     {
         public static void SetAddRemoveProgramsIcon()
         {

@@ -12,84 +12,153 @@ namespace SPCRUD.Classes.DataAccess
 {
     class SaveEmployee
     {
+        //try to implement CheckHealthInsFields to the stored procedure
         private readonly string _connectionString;
-        private string _healthInsProvider;
-        private string _insPlanName;
-        private string _insMonthlyFee;
 
+        private string _id;
+        private string _name;
+        private string _city;
+        private string _department;
+        private string _gender;
+
+        private string _healthInsuranceProvider;
+        private string _insurancePlanName;
+        private string _insuranceMonthlyFee; //will be parsed to decimal
+        private DateTime? _insuranceStartDate;
+
+        private PictureBox _employeeImage;
+        private string _fileExtension;
+
+        private string _actionType;
+        #region Constructor
         public SaveEmployee(string connectionString)
         {
             _connectionString = connectionString;
         }
+        #endregion
 
-        public string HealthInsProvider
+        #region "Required Records" Properties
+        public string Id
         {
-            get { return _healthInsProvider; }
-            set { _healthInsProvider = value; }
+            get { return _id; }
+            set { _id = value; }
         }
 
-        public string InsPlanName
+        public string Name
         {
-            get { return _insPlanName; }
-            set { _insPlanName = value; }
+            get { return _name; }
+            set { _name = value; }
+
         }
 
-        public string InsMonthlyFee
+        public string City
         {
-            get { return _insMonthlyFee; }
-            set { _insMonthlyFee = value; }
+            get { return _city; }
+            set { _city = value; }
+
         }
 
-        public void InsertOrUpdate(string id, string name, string city, string department, string gender, string healthInsProvider, string insPlanName, string insMonthlyFee, DateTime insStartDate, PictureBox employeeImage, string fileExtension, string btnSaveText)
+        public string Department
+        {
+            get { return _department; }
+            set { _department = value; }
+
+        }
+
+        public string Gender
+        {
+            get { return _gender; }
+            set { _gender = value; }
+
+        }
+        #endregion
+
+        #region "Health Insurance" Properties
+        public string HealthInsuranceProvider
+        {
+            get { return _healthInsuranceProvider; }
+            set { _healthInsuranceProvider = value; }
+        }
+
+        public string InsurancePlanName
+        {
+            get { return _insurancePlanName; }
+            set { _insurancePlanName = value; }
+        }
+
+        public string InsuranceMonthlyFee
+        {
+            get { return _insuranceMonthlyFee; }
+            set { _insuranceMonthlyFee = value; }
+        }
+
+        public DateTime? InsuranceStartDate
+        {
+            get { return _insuranceStartDate; }
+            set { _insuranceStartDate = value; }
+        }
+        #endregion
+
+        #region Employee Image
+        public PictureBox EmployeeImage
+        {
+            get { return _employeeImage; }
+            set { _employeeImage = value; }
+        }
+
+        public string FileExtension
+        {
+            get { return _fileExtension; }
+            set { _fileExtension = value; }
+        }
+        #endregion
+
+        #region Insert Or Update
+        public string ActionType
+        {
+            get { return _actionType; }
+            set { _actionType = value; }
+        }
+        #endregion
+
+        public void InsertOrUpdate()
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand sqlCmd = new SqlCommand("spCreateOrUpdateData", con))
             {
                 try
                 {
-                    if (CheckHealthInsFields(HealthInsProvider, InsPlanName, InsMonthlyFee))
+                    if (CheckHealthInsFields(HealthInsuranceProvider, InsurancePlanName, InsuranceMonthlyFee))
                     {
-                        healthInsProvider = "";
-                        insPlanName = "";
-                        insMonthlyFee = "0.00";
-                        decimal.Parse(insMonthlyFee);
-                        insStartDate = DateTime.Now;
+                        HealthInsuranceProvider = "";
+                        InsurancePlanName = "";
+                        InsuranceMonthlyFee = "0.00";
+                        InsuranceStartDate = null;
                     }
 
                     con.Open();
                     sqlCmd.CommandType = CommandType.StoredProcedure;
 
                     //Employee Record
-                    sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = id;
-                    sqlCmd.Parameters.Add("@employee_name", SqlDbType.NVarChar, 250).Value = name;
-                    sqlCmd.Parameters.Add("@city", SqlDbType.NVarChar, 50).Value = city;
-                    sqlCmd.Parameters.Add("@department", SqlDbType.NVarChar, 50).Value = department;
-                    sqlCmd.Parameters.Add("@gender", SqlDbType.NVarChar, 6).Value = gender;
+                    sqlCmd.Parameters.Add("@employee_id", SqlDbType.NVarChar).Value = Id;
+                    sqlCmd.Parameters.Add("@employee_name", SqlDbType.NVarChar, 250).Value = Name;
+                    sqlCmd.Parameters.Add("@city", SqlDbType.NVarChar, 50).Value = City;
+                    sqlCmd.Parameters.Add("@department", SqlDbType.NVarChar, 50).Value = Department;
+                    sqlCmd.Parameters.Add("@gender", SqlDbType.NVarChar, 6).Value = Gender;
 
                     //Employee Health Insurance Record
-                    sqlCmd.Parameters.Add("@health_insurance_provider", SqlDbType.NVarChar, 100).Value = healthInsProvider;
-                    sqlCmd.Parameters.Add("@plan_name", SqlDbType.NVarChar, 100).Value = insPlanName;
+                    sqlCmd.Parameters.Add("@health_insurance_provider", SqlDbType.NVarChar, 100).Value = HealthInsuranceProvider;
+                    sqlCmd.Parameters.Add("@plan_name", SqlDbType.NVarChar, 100).Value = InsurancePlanName;
                     sqlCmd.Parameters.Add(new SqlParameter("@monthly_fee", SqlDbType.Decimal)
                     {
                         Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
                         Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
-                        Value = string.IsNullOrWhiteSpace(insMonthlyFee) //add 0 as default value in database
-                              ? 0
-                              : decimal.Parse(insMonthlyFee)
+                        Value = decimal.Parse(InsuranceMonthlyFee)
                     });
-
-                    // Save insurance start date:
-                    if (CheckHealthInsFields(HealthInsProvider, InsPlanName, InsMonthlyFee))
-                    {
-                        sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = DBNull.Value;
-                    }
-                    else
-                    {
-                        sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = insStartDate;
-                    }
+                    sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = InsuranceStartDate;
 
                     //Employee Image and File Extension
-                    if (employeeImage.Tag != null && string.IsNullOrWhiteSpace(fileExtension)) //if tag has a value (save null)
+                    if (EmployeeImage.Tag != null && string.IsNullOrWhiteSpace(FileExtension)) //if tag has a value (save null)
                     {
                         sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = DBNull.Value;
                         sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = DBNull.Value;
@@ -97,20 +166,20 @@ namespace SPCRUD.Classes.DataAccess
                     }
                     else
                     {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(employeeImage.Image, fileExtension);
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = fileExtension;
+                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(EmployeeImage.Image, FileExtension);
+                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = FileExtension;
                     }
 
                     int numRes = sqlCmd.ExecuteNonQuery();
-                    string actionType = (btnSaveText == "Save") ? "Saved" : "Updated";
-                    ExecuteNonQueryResult(numRes, name, actionType);
+                    string actionType = (ActionType == "Save") ? "Saved" : "Updated";
+                    ExecuteNonQueryResult(numRes, Name, actionType);
                 }
 
                 catch (SqlException ex)
                 {
                     if (ex.Number == 2627)// Violation of unique constraint (Name should be unique)
                     {
-                        MessageBox.Show($"{name} Already Exist !!!");
+                        MessageBox.Show($"{Name} Already Exist !!!");
                         return;
                     }
                     MessageBox.Show($"An SQL error occured while processing data. \nError: { ex.Message }");
@@ -128,7 +197,7 @@ namespace SPCRUD.Classes.DataAccess
 
         private void ActionMessage(string name, string actionType)
         {
-            if (CheckHealthInsFields(HealthInsProvider, InsPlanName, InsMonthlyFee))
+            if (CheckHealthInsFields(HealthInsuranceProvider, InsurancePlanName, InsuranceMonthlyFee))
             {
                 MessageBox.Show($"{name}'s record is { actionType } successfully !!! \nAdd Health Insurance records later on.");
                 return;

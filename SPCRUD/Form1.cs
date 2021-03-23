@@ -186,7 +186,7 @@ namespace SPCRUD
             string fileExtension = lblFileExtension.Text;
 
             //Action Type
-            string btnSaveText = btnSave.Text;
+            string actionType = btnSave.Text;
 
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -225,16 +225,23 @@ namespace SPCRUD
                 //t.InsertOrUpdate(btnSaveText);
                 SaveEmployee saveEmployee = new SaveEmployee(ConnectionString.config)
                 {
-                    //Properties of SaveEmployee class
-                    HealthInsProvider = healthInsProvider,
-                    InsPlanName = insPlanName,
-                    InsMonthlyFee = insMonthlyFee
-                };
+                    Id = EmployeeId,
+                    Name = name,
+                    City = city,
+                    Department = department,
+                    Gender = gender,
 
-                saveEmployee.InsertOrUpdate(EmployeeId, name, city, department, gender,
-                                            healthInsProvider, insPlanName, insMonthlyFee, insStartDate,
-                                            employeeImage, fileExtension,
-                                            btnSaveText);
+                    HealthInsuranceProvider = healthInsProvider,
+                    InsurancePlanName = insPlanName,
+                    InsuranceMonthlyFee = insMonthlyFee,
+                    InsuranceStartDate = insStartDate,
+
+                    EmployeeImage = employeeImage,
+                    FileExtension = fileExtension,
+
+                    ActionType = actionType
+                };
+                saveEmployee.InsertOrUpdate();
                 RefreshData();
             }
         }

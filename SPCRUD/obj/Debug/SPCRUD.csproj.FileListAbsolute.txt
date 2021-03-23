@@ -16,4 +16,3 @@ D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.application
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csproj.CopyComplete
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.exe
 D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.pdb
-D:\Visual Studio\SPCRUD\SPCRUD\obj\Debug\SPCRUD.csprojAssemblyReference.cache
