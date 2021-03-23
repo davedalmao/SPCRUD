@@ -128,6 +128,7 @@ namespace SPCRUD.Classes.DataAccess
             {
                 try
                 {
+                    CheckImageTag();
                     if (CheckHealthInsFields(HealthInsuranceProvider, InsurancePlanName, InsuranceMonthlyFee))
                     {
                         HealthInsuranceProvider = "";
@@ -149,26 +150,17 @@ namespace SPCRUD.Classes.DataAccess
                     //Employee Health Insurance Record
                     sqlCmd.Parameters.Add("@health_insurance_provider", SqlDbType.NVarChar, 100).Value = HealthInsuranceProvider;
                     sqlCmd.Parameters.Add("@plan_name", SqlDbType.NVarChar, 100).Value = InsurancePlanName;
+                    sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = InsuranceStartDate;
                     sqlCmd.Parameters.Add(new SqlParameter("@monthly_fee", SqlDbType.Decimal)
                     {
                         Precision = 15, //Precision specifies the number of digits used to represent the value of the parameter.
                         Scale = 2, //Scale is used to specify the number of decimal places in the value of the parameter.
                         Value = decimal.Parse(InsuranceMonthlyFee)
                     });
-                    sqlCmd.Parameters.AddWithValue("@insurance_start_date", SqlDbType.Date).Value = InsuranceStartDate;
 
                     //Employee Image and File Extension
-                    if (EmployeeImage.Tag != null && string.IsNullOrWhiteSpace(FileExtension)) //if tag has a value (save null)
-                    {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = DBNull.Value;
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = DBNull.Value;
-
-                    }
-                    else
-                    {
-                        sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(EmployeeImage.Image, FileExtension);
-                        sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = FileExtension;
-                    }
+                    sqlCmd.Parameters.Add("@user_image", SqlDbType.VarBinary).Value = ImageOperations.ImageToBytes(EmployeeImage.Image, FileExtension);
+                    sqlCmd.Parameters.Add("@file_extension", SqlDbType.NVarChar, 12).Value = FileExtension;
 
                     int numRes = sqlCmd.ExecuteNonQuery();
                     string actionType = (ActionType == "Save") ? "Saved" : "Updated";
@@ -226,6 +218,16 @@ namespace SPCRUD.Classes.DataAccess
                 return true;
             }
             return false;
+        }
+
+        private void CheckImageTag()
+        {
+            //Employee Image and File Extension
+            if (EmployeeImage.Tag != null && string.IsNullOrWhiteSpace(FileExtension)) //if tag has a value (save null)
+            {
+                EmployeeImage.Image = null;
+                FileExtension = null;
+            }
         }
     }
 }

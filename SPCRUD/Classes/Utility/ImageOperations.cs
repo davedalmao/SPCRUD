@@ -18,6 +18,7 @@ namespace SPCRUD.Classes.Utility
     {
         public static byte[] ImageToBytes(Image userImage, string fileExtension) //Get bytes of the image
         {
+            if (userImage == null) { return null; }
             using (MemoryStream ms = new MemoryStream())
             using (Bitmap tempImage = new Bitmap(userImage))
             {
