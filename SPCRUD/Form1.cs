@@ -242,6 +242,7 @@ namespace SPCRUD
                     ActionType = actionType
                 };
                 saveEmployee.InsertOrUpdate();
+                //check if InsertOrUpdate, if not, dont refresh
                 RefreshData();
             }
         }
